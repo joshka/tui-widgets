@@ -11,6 +11,10 @@
 //! # Example
 //!
 //! ```rust
+//! use anyhow::Result;
+//! use ratatui::prelude::*;
+//! use tui_big_text::BigTextBuilder;
+//!
 //! fn render<B: Backend>(frame: &mut Frame<B>) -> Result<()> {
 //!     let big_text = BigTextBuilder::default()
 //!         .style(Style::new().blue())
