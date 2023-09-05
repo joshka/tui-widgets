@@ -22,7 +22,7 @@ use ratatui::{prelude::*, text::StyledGrapheme, widgets::Widget};
 ///         "World".blue().into(),
 ///         "=====".into(),
 ///     ])
-///    .build()?;
+///    .build();
 /// ```
 ///
 /// Renders:
@@ -85,9 +85,11 @@ impl BigText<'_> {
                 (0..area.width)
                     .step_by(8)
                     .map(|x| {
+                        let xx = x + area.x;
+                        let yy = y + area.y;
                         let width = min(area.width - x, 8);
                         let height = min(area.height - y, 8);
-                        Rect::new(x, y, width, height)
+                        Rect::new(xx, yy, width, height)
                     })
                     .collect_vec()
             })
