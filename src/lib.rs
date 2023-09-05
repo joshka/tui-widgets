@@ -35,7 +35,6 @@ use std::cmp::min;
 
 use derive_builder::Builder;
 use font8x8::UnicodeFonts;
-use itertools::Itertools;
 use ratatui::{prelude::*, text::StyledGrapheme, widgets::Widget};
 
 /// Displays one or more lines of text using 8x8 pixel characters.
@@ -95,63 +94,46 @@ pub struct BigText<'a> {
 
 impl Widget for BigText<'_> {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        self.render_lines(area, buf);
-    }
-}
-
-impl BigText<'_> {
-    fn render_lines(&self, area: Rect, buf: &mut Buffer) {
-        let layout = Self::layout(area);
+        let layout = layout(area);
         for (line, line_layout) in self.lines.iter().zip(layout) {
             for (g, cell) in line.styled_graphemes(self.style).zip(line_layout) {
-                Self::render_symbol(g, cell, buf);
+                render_symbol(g, cell, buf);
             }
         }
     }
+}
 
-    /// Chunk the area into as many 8x8 cells as possible returned as a 2D iterator of `Rect`s
-    /// representing the rows of cells.
-    fn layout(area: Rect) -> impl IntoIterator<Item = impl IntoIterator<Item = Rect>> {
-        (0..area.height)
-            .step_by(8)
-            .map(|y| {
-                (0..area.width)
-                    .step_by(8)
-                    .map(|x| {
-                        let xx = x + area.x;
-                        let yy = y + area.y;
-                        let width = min(area.width - x, 8);
-                        let height = min(area.height - y, 8);
-                        Rect::new(xx, yy, width, height)
-                    })
-                    .collect_vec()
-            })
-            .collect_vec()
+/// Chunk the area into as many 8x8 cells as possible returned as a 2D iterator of `Rect`s
+/// representing the rows of cells.
+fn layout(area: Rect) -> impl IntoIterator<Item = impl IntoIterator<Item = Rect>> {
+    (area.top()..area.bottom()).step_by(8).map(move |y| {
+        (area.left()..area.right()).step_by(8).map(move |x| {
+            let width = min(area.right() - x, 8);
+            let height = min(area.bottom() - y, 8);
+            Rect::new(x, y, width, height)
+        })
+    })
+}
+
+/// Render a single grapheme into a cell by looking up the corresponding 8x8 bitmap in the
+/// `BITMAPS` array and setting the corresponding cells in the buffer.
+fn render_symbol(grapheme: StyledGrapheme, area: Rect, buf: &mut Buffer) {
+    buf.set_style(area, grapheme.style);
+    let c = grapheme.symbol.chars().next().unwrap(); // TODO: handle multi-char graphemes
+    if let Some(glyph) = font8x8::BASIC_FONTS.get(c) {
+        render_glyph(glyph, area, buf);
     }
+}
 
-    /// Render a single grapheme into a cell by looking up the corresponding 8x8 bitmap in the
-    /// `BITMAPS` array and setting the corresponding cells in the buffer.
-    fn render_symbol(grapheme: StyledGrapheme, area: Rect, buf: &mut Buffer) {
-        buf.set_style(area, grapheme.style);
-        let c = grapheme.symbol.chars().next().unwrap(); // TODO: handle multi-char graphemes
-        if let Some(glyph) = font8x8::BASIC_FONTS.get(c) {
-            for (dy, glyph_row) in glyph.iter().enumerate() {
-                let y = area.y + dy as u16;
-                if y >= area.bottom() {
-                    break;
-                }
-                for dx in 0..8 {
-                    let x = area.x + dx;
-                    if x >= area.right() {
-                        break;
-                    }
-                    let cell = buf.get_mut(area.x + dx, area.y + dy as u16);
-                    match glyph_row & (1 << dx) {
-                        0 => cell.set_symbol(" "),
-                        _ => cell.set_symbol("█"),
-                    };
-                }
-            }
+/// Render a single 8x8 glyph into a cell by setting the corresponding cells in the buffer.
+fn render_glyph(glyph: [u8; 8], area: Rect, buf: &mut Buffer) {
+    for (row, y) in glyph.iter().zip(area.top()..area.bottom()) {
+        for (col, x) in (area.left()..area.right()).enumerate() {
+            let cell = buf.get_mut(x, y);
+            match row & (1 << col) {
+                0 => cell.set_symbol(" "),
+                _ => cell.set_symbol("█"),
+            };
         }
     }
 }
