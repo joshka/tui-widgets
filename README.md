@@ -7,9 +7,9 @@
 [![Codecov](https://img.shields.io/codecov/c/github/joshka/tui-big-text?logo=codecov&style=for-the-badge&token=BAQ8SOKEST)](https://app.codecov.io/gh/joshka/tui-big-text)
 [![Discord](https://img.shields.io/discord/1070692720437383208?label=ratatui+discord&logo=discord&style=for-the-badge)](https://discord.gg/pMCEU9hNEj)
 
-[tui-big-text](https://crates.io/crates/tui-big-text) is a rust crate that renders large pixel
-text as a [ratatui](https://crates.io/crates/ratatui) widget using the glyphs from the [font8x8](https://crates.io/crates/font8x8)
-crate.
+[tui-big-text](https://crates.io/crates/tui-big-text) is a rust crate that renders large pixel text
+as a [ratatui](https://crates.io/crates/ratatui) widget using the glyphs from the
+[font8x8](https://crates.io/crates/font8x8) crate.
 
 ## Installation
 
