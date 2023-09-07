@@ -9,15 +9,9 @@ Enter
 Sleep 2s
 Show
 Sleep 2s
-Space
-Sleep 1s
-Space
-Sleep 2s
-Space
-Sleep 3s
-Space
-Sleep 4s
-Space
-Sleep 5s
+Space@2s 5
+Space@1s 5
+Space@0.5s 10
+Space@0.25s 20
 Enter
 Sleep 2s

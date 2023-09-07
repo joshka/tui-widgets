@@ -1,5 +1,5 @@
 use std::{
-    io::{self, Stdout},
+    io::{stdout, Stdout},
     time::{Duration, Instant},
 };
 
@@ -9,20 +9,22 @@ use color_eyre::{
 };
 use crossterm::{
     event::{self, KeyCode},
-    execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+    ExecutableCommand,
 };
 use futures::{FutureExt, StreamExt};
 // use futures::{select, FutureExt, StreamExt};
 use itertools::Itertools;
+use rand::seq::IteratorRandom;
 use ratatui::{prelude::*, widgets::Paragraph};
-use strum::EnumIs;
+use strum::{EnumIs, IntoEnumIterator};
 use tokio::select;
 use tui_big_text::BigText;
+use zx_origins::{fonts::AvailableFonts, Font};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let mut app = StopwatchApp::default();
+    let mut app = StopwatchApp::new();
     app.run().await
 }
 
@@ -42,14 +44,24 @@ enum Message {
     Quit,
 }
 
-#[derive(Debug, Default, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 struct StopwatchApp {
     state: AppState,
     splits: Vec<Instant>,
+    font: Font,
     fps_counter: FpsCounter,
 }
 
 impl StopwatchApp {
+    fn new() -> Self {
+        Self {
+            state: AppState::Stopped,
+            splits: Vec::new(),
+            font: AvailableFonts::Anvil.font(),
+            fps_counter: FpsCounter::new(),
+        }
+    }
+
     async fn run(&mut self) -> Result<()> {
         let mut tui = Tui::init()?;
         let mut events = EventHandler::new(60.0);
@@ -103,6 +115,12 @@ impl StopwatchApp {
             return;
         }
         self.splits.push(Instant::now());
+
+        let mut rng = rand::thread_rng();
+        let font: AvailableFonts = AvailableFonts::iter()
+            .choose(&mut rng)
+            .expect("no fonts available");
+        self.font = font.font();
     }
 
     fn elapsed(&mut self) -> Duration {
@@ -122,7 +140,7 @@ impl StopwatchApp {
             let layout = layout(frame.area());
             frame.render_widget(Paragraph::new("Stopwatch Example"), layout[0]);
             frame.render_widget(self.fps_paragraph(), layout[1]);
-            frame.render_widget(self.timer_paragraph(), layout[2]);
+            frame.render_widget(self.timer(), layout[2]);
             frame.render_widget(Paragraph::new("Splits:"), layout[3]);
             frame.render_widget(self.splits_paragraph(), layout[4]);
             frame.render_widget(self.help_paragraph(), layout[5]);
@@ -134,7 +152,7 @@ impl StopwatchApp {
         Paragraph::new(fps).dim().right_aligned()
     }
 
-    fn timer_paragraph(&mut self) -> BigText<'_> {
+    fn timer(&mut self) -> BigText<'_> {
         let style = if self.state.is_running() {
             Style::new().green()
         } else {
@@ -142,7 +160,12 @@ impl StopwatchApp {
         };
         let duration = format_duration(self.elapsed());
         let lines = vec![duration.into()];
-        BigText::builder().lines(lines).style(style).build()
+        BigTextBuilder::default()
+            .lines(lines)
+            .style(style)
+            .font(self.font)
+            .build()
+            .unwrap()
     }
 
     /// Renders the splits as a list of lines.
@@ -325,7 +348,8 @@ impl Tui {
 impl Drop for Tui {
     fn drop(&mut self) {
         disable_raw_mode().expect("failed to disable raw mode");
-        execute!(self.terminal.backend_mut(), LeaveAlternateScreen)
+        stdout()
+            .execute(LeaveAlternateScreen)
             .expect("failed to switch to main screen");
         self.terminal.show_cursor().expect("failed to show cursor");
         self.terminal.clear().expect("failed to clear console");

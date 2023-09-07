@@ -84,6 +84,8 @@ pub struct BigText<'a> {
     /// Defaults to `Alignment::default()` (=> Alignment::Left)
     #[builder(default)]
     pub alignment: Alignment,
+    // #[builder(default = "zx_origins::fonts::AvailableFonts::Anvil.font()")]
+    // font: zx_origins::Font,
 }
 
 impl BigText<'static> {
@@ -138,6 +140,62 @@ impl Widget for BigText<'_> {
         }
     }
 }
+
+// zx-origins code
+
+// impl Widget for BigText<'_> {
+//     fn render(self, area: Rect, buf: &mut Buffer) {
+//         let layout = layout(area);
+//         for (line, line_layout) in self.lines.iter().zip(layout) {
+//             for (g, cell) in line.styled_graphemes(self.style).zip(line_layout) {
+//                 self.render_symbol(g, cell, buf);
+//             }
+//         }
+//     }
+// }
+
+// /// Chunk the area into as many 8x8 cells as possible returned as a 2D iterator of `Rect`s
+// /// representing the rows of cells.
+// fn layout(area: Rect) -> impl IntoIterator<Item = impl IntoIterator<Item = Rect>> {
+//     (area.top()..area.bottom()).step_by(8).map(move |y| {
+//         (area.left()..area.right()).step_by(8).map(move |x| {
+//             let width = min(area.right() - x, 8);
+//             let height = min(area.bottom() - y, 8);
+//             Rect::new(x, y, width, height)
+//         })
+//     })
+// }
+
+// impl BigText<'_> {
+//     /// Render a single grapheme into a cell by looking up the corresponding 8x8 bitmap in the
+//     /// `BITMAPS` array and setting the corresponding cells in the buffer.
+//     fn render_symbol(&self, grapheme: StyledGrapheme, area: Rect, buf: &mut Buffer) {
+//         buf.set_style(area, grapheme.style);
+//         let c = grapheme.symbol.chars().next().unwrap(); // TODO: handle multi-char graphemes
+//         if let Some(glyph) = self.font.strings(c, "█") {
+//             self.render_glyph(glyph, area, buf);
+//         }
+//     }
+
+//     /// Render a single 8x8 glyph into a cell by setting the corresponding cells in the buffer.
+//     fn render_glyph(&self, glyph: impl Iterator<Item = String>, area: Rect, buf: &mut Buffer) {
+//         for ((row1, row2), y) in glyph.tuples().zip(area.top()..area.bottom()) {
+//             for ((a, b), x) in row1
+//                 .chars()
+//                 .zip(row2.chars())
+//                 .zip(area.left()..area.right())
+//             {
+//                 let symbol = match (a, b) {
+//                     (' ', ' ') => ' ',
+//                     (' ', _) => '▄',
+//                     (_, ' ') => '▀',
+//                     (_, _) => '█',
+//                 };
+//                 buf.get_mut(x, y).set_symbol(&symbol.to_string());
+//             }
+//         }
+//     }
+// }
 
 /// Chunk the area into as many x*y cells as possible returned as a 2D iterator of `Rect`s
 /// representing the rows of cells. The size of each cell depends on given font size
