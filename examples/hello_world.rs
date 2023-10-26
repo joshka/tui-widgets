@@ -20,7 +20,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn render<B: Backend>(frame: &mut Frame<B>) -> Result<()> {
+fn render(frame: &mut Frame) -> Result<()> {
     let big_text = BigTextBuilder::default()
         .style(Style::new().blue())
         .lines(vec![

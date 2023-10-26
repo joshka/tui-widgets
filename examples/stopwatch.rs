@@ -323,7 +323,7 @@ impl Tui {
         Ok(Self { terminal })
     }
 
-    fn draw(&mut self, frame: impl FnOnce(&mut Frame<CrosstermBackend<Stdout>>)) -> Result<()> {
+    fn draw(&mut self, frame: impl FnOnce(&mut Frame)) -> Result<()> {
         self.terminal.draw(frame).context("failed to draw frame")?;
         Ok(())
     }
