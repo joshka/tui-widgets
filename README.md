@@ -22,7 +22,11 @@ cargo add ratatui tui-big-text
 ## Example
 
 ```rust
-fn render<B: Backend>(frame: &mut Frame<B>) -> Result<()> {
+use anyhow::Result;
+use ratatui::prelude::*;
+use tui_big_text::BigTextBuilder;
+
+fn render(frame: &mut Frame) -> Result<()> {
     let big_text = BigTextBuilder::default()
         .style(Style::new().blue())
         .lines(vec![

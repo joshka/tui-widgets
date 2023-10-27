@@ -18,7 +18,16 @@ jobs:
       run: cargo build --verbose
     - name: Run tests
       run: cargo test --verbose
-
+  check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install cargo-rdme
+      uses: taiki-e/install-action@v2
+      with:
+        tool: cargo-rdme
+    - name: Check README.md is up-to-date
+      run: cargo rdme --check
   coverage:
     runs-on: ubuntu-latest
     steps:
