@@ -1,6 +1,6 @@
 [package]
 name = "tui-big-text"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
 description = "A simple Ratatui widget for displaying big text using the font8x8 crate in a TUI (Terminal UI)."
 license = "MIT OR Apache-2.0"
