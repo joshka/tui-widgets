@@ -2,6 +2,8 @@
 //! text as a [ratatui](https://crates.io/crates/ratatui) widget using the glyphs from the
 //! [font8x8](https://crates.io/crates/font8x8) crate.
 //!
+//! ![Example Made with VHS](https://vhs.charm.sh/vhs-2UxNc2SJgiNqHoowbsXAMW.gif)
+//!
 //! # Installation
 //!
 //! ```shell
@@ -28,8 +30,6 @@
 //!     Ok(())
 //! }
 //! ```
-//!
-//! ![Example Made with VHS](https://vhs.charm.sh/vhs-1dIs1zoxqGwkP60aMcfpR8.gif)
 
 use std::cmp::min;
 
