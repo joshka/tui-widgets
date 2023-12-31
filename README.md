@@ -17,8 +17,9 @@ A popup widget for [Ratatui](https://ratatui.rs)
 use ratatui::prelude::*;
 use tui_popup::Popup;
 
-fn render(frame: &mut Frame) {
-    let popup = Popup::new("tui-popup demo", "Press any key to exit");
+fn render_popup(frame: &mut Frame) {
+    let popup = Popup::new("tui-popup demo", "Press any key to exit")
+       .style(Style::new().white().on_blue());
     frame.render_widget(popup.to_widget(), frame.size());
 }
 ```
