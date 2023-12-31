@@ -1,3 +1,17 @@
+//! A popup widget for tui-rs
+//!
+//! # Example
+//!
+//! ```rust
+//! use ratatui::prelude::*;
+//! use tui_popup::Popup;
+//!
+//! fn render(frame: &mut Frame) {
+//!     let popup = Popup::new("tui-popup demo", "Press any key to exit");
+//!     frame.render_widget(popup.to_widget(), frame.size());
+//! }
+//! ```
+
 use std::cmp::min;
 
 use ratatui::{
