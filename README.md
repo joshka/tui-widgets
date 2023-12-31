@@ -11,6 +11,8 @@
 
 A popup widget for [Ratatui](https://ratatui.rs)
 
+The popup widget is a simple widget that renders a popup in the center of the screen.
+
 ## Example
 
 ```rust
