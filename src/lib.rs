@@ -1,4 +1,4 @@
-//! A popup widget for tui-rs
+//! A popup widget for [Ratatui](https://ratatui.rs)
 //!
 //! # Example
 //!

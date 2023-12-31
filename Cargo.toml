@@ -2,7 +2,7 @@
 name = "tui-popup"
 authors = ["Joshka"]
 version = "0.1.0"
-description = "A simple popup for tui-rs"
+description = "A simple popup for ratatui"
 license = "MIT"
 repository = "https://github.com/joshka/tui-popup"
 documentation = "https://docs.rs/tui-popup"
