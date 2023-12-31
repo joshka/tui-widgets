@@ -43,6 +43,7 @@ use ratatui::{
 /// ```
 #[derive(Clone, Debug, Default, Setters)]
 #[setters(into)]
+#[non_exhaustive]
 pub struct Popup<'content> {
     /// The title of the popup.
     pub title: Line<'content>,
