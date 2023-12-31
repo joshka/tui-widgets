@@ -31,7 +31,7 @@ fn render(frame: &mut Frame) {
 
 - [x] automatically centers
 - [x] automatically sizes to content
-- [ ] style text
+- [x] style popup
 - [ ] configure size / position
 - [ ] handle text wrapping in body -> size
 - [ ] set border set / style

@@ -11,6 +11,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+derive_setters = "0.1.6"
 ratatui = "0.25.0"
 
 [dev-dependencies]

@@ -14,18 +14,20 @@
 
 use std::cmp::min;
 
+use derive_setters::Setters;
 use ratatui::{
-    buffer::Buffer,
-    layout::Rect,
-    text::{Line, Text},
+    prelude::*,
     widgets::{Block, Borders, Clear, Paragraph, Widget},
 };
 
+#[derive(Clone, Debug, Default, Setters)]
 pub struct Popup<'content> {
     pub title: Line<'content>,
     pub body: Text<'content>,
+    pub style: Style,
 }
 
+#[derive(Clone, Debug)]
 pub struct PopupWidget<'content> {
     popup: &'content Popup<'content>,
 }
@@ -39,6 +41,7 @@ impl<'content> Popup<'content> {
         Self {
             title: title.into(),
             body: body.into(),
+            ..Default::default()
         }
     }
 
@@ -59,6 +62,7 @@ impl Widget for PopupWidget<'_> {
             .title(self.popup.title.clone());
         Paragraph::new(self.popup.body.clone())
             .block(block)
+            .style(popup.style)
             .render(area, buf);
     }
 }

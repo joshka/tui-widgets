@@ -1,17 +1,16 @@
-use std::{io::stdout, thread::sleep, time::Duration};
+use std::io::stdout;
 
 use crossterm::{
-    event::{self, Event, KeyEvent},
+    event::{self, Event},
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen},
     ExecutableCommand,
 };
 use lipsum::lipsum;
 use ratatui::{
-    backend::CrosstermBackend,
-    style::Stylize,
+    prelude::*,
     widgets::{Paragraph, Wrap},
-    Terminal,
 };
+use tui_popup::Popup;
 
 fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
@@ -26,7 +25,8 @@ fn main() -> color_eyre::Result<()> {
             .dark_gray();
         frame.render_widget(background, area);
 
-        let popup = tui_popup::Popup::new("tui-popup demo", "Press any key to exit");
+        let popup = Popup::new("tui-popup demo", "Press any key to exit")
+            .style(Style::new().white().on_blue());
         frame.render_widget(popup.to_widget(), area);
     })?;
     while !matches!(event::read()?, Event::Key(_)) {}
@@ -36,7 +36,7 @@ fn main() -> color_eyre::Result<()> {
 
 fn init_terminal() -> Result<Terminal<CrosstermBackend<std::io::Stdout>>, color_eyre::eyre::Error> {
     stdout().execute(EnterAlternateScreen)?;
-    let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
+    let terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
     enable_raw_mode()?;
     Ok(terminal)
 }
