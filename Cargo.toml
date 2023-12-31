@@ -18,3 +18,9 @@ ratatui = "0.25.0"
 color-eyre = "0.6.2"
 crossterm = "0.27.0"
 lipsum = "0.9.0"
+
+[lints.clippy]
+pedantic = "warn"
+nursery = "warn"
+unwrap_used = "warn"
+expect_used = "warn"

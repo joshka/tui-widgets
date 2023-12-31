@@ -89,7 +89,8 @@ impl<'content> Popup<'content> {
     }
 
     /// Convert the popup into a Ratatui widget.
-    pub fn to_widget(&'content self) -> PopupWidget<'content> {
+    #[must_use]
+    pub const fn to_widget(&'content self) -> PopupWidget<'content> {
         PopupWidget { popup: self }
     }
 }
@@ -97,8 +98,12 @@ impl<'content> Popup<'content> {
 impl Widget for PopupWidget<'_> {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let popup = self.popup;
-        let height = popup.body.height() as u16 + 2;
-        let width = popup.body.width() as u16 + 2;
+        let height = u16::try_from(popup.body.height())
+            .unwrap_or(area.height)
+            .saturating_add(2);
+        let width = u16::try_from(popup.body.width())
+            .unwrap_or(area.width)
+            .saturating_add(2);
         let area = centered_rect(width, height, area);
         Clear.render(area, buf);
         let block = Block::default()
