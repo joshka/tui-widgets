@@ -1,8 +1,11 @@
 use std::{io::stdout, ops::ControlFlow};
 
 use crossterm::{
-    event::{self, Event, KeyCode, KeyEvent, KeyEventKind},
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen},
+    event::{
+        self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyEvent, KeyEventKind,
+        MouseButton,
+    },
+    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
     ExecutableCommand,
 };
 use lipsum::lipsum;
@@ -54,29 +57,46 @@ fn render(frame: &mut Frame<'_>, popup_state: &mut PopupState) {
 }
 
 fn handle_events(popup_state: &mut PopupState) -> color_eyre::Result<ControlFlow<()>> {
-    if let Event::Key(KeyEvent {
-        kind: KeyEventKind::Press,
-        code,
-        ..
-    }) = event::read()?
-    {
-        use KeyCode as key;
-        use KeyCode::Char as char;
-        match code {
-            char('q') | key::Esc => return Ok(ControlFlow::Break(())),
-            char('r') => *popup_state = PopupState::default(),
-            char('j') | key::Down => popup_state.move_by(0, 1),
-            char('k') | key::Up => popup_state.move_by(0, -1),
-            char('h') | key::Left => popup_state.move_by(-1, 0),
-            char('l') | key::Right => popup_state.move_by(1, 0),
-            _ => {}
+    match event::read()? {
+        Event::Key(KeyEvent {
+            kind: KeyEventKind::Press,
+            code,
+            ..
+        }) => {
+            use KeyCode as key;
+            use KeyCode::Char as char;
+            match code {
+                char('q') | key::Esc => return Ok(ControlFlow::Break(())),
+                char('r') => *popup_state = PopupState::default(),
+                char('j') | key::Down => popup_state.move_by(0, 1),
+                char('k') | key::Up => popup_state.move_by(0, -1),
+                char('h') | key::Left => popup_state.move_by(-1, 0),
+                char('l') | key::Right => popup_state.move_by(1, 0),
+                _ => {}
+            }
         }
+        Event::Mouse(event) => {
+            match event.kind {
+                event::MouseEventKind::Down(MouseButton::Left) => {
+                    popup_state.mouse_down(event.column, event.row)
+                }
+                event::MouseEventKind::Up(MouseButton::Left) => {
+                    popup_state.mouse_up(event.column, event.row)
+                }
+                event::MouseEventKind::Drag(MouseButton::Left) => {
+                    popup_state.mouse_drag(event.column, event.row)
+                }
+                _ => {}
+            };
+        }
+        _ => (),
     };
     Ok(ControlFlow::Continue(()))
 }
 
 fn init_terminal() -> Result<Terminal<CrosstermBackend<std::io::Stdout>>, color_eyre::eyre::Error> {
     stdout().execute(EnterAlternateScreen)?;
+    stdout().execute(EnableMouseCapture)?;
     let terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
     enable_raw_mode()?;
     Ok(terminal)
@@ -84,6 +104,7 @@ fn init_terminal() -> Result<Terminal<CrosstermBackend<std::io::Stdout>>, color_
 
 fn restore_terminal() -> Result<(), color_eyre::eyre::Error> {
     disable_raw_mode()?;
-    stdout().execute(crossterm::terminal::LeaveAlternateScreen)?;
+    stdout().execute(LeaveAlternateScreen)?;
+    stdout().execute(DisableMouseCapture)?;
     Ok(())
 }
