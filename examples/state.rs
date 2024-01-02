@@ -78,13 +78,13 @@ fn handle_events(popup_state: &mut PopupState) -> color_eyre::Result<ControlFlow
         Event::Mouse(event) => {
             match event.kind {
                 event::MouseEventKind::Down(MouseButton::Left) => {
-                    popup_state.mouse_down(event.column, event.row)
+                    popup_state.mouse_down(event.column, event.row);
                 }
                 event::MouseEventKind::Up(MouseButton::Left) => {
-                    popup_state.mouse_up(event.column, event.row)
+                    popup_state.mouse_up(event.column, event.row);
                 }
                 event::MouseEventKind::Drag(MouseButton::Left) => {
-                    popup_state.mouse_drag(event.column, event.row)
+                    popup_state.mouse_drag(event.column, event.row);
                 }
                 _ => {}
             };
