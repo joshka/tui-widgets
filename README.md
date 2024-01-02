@@ -83,9 +83,11 @@ match event.read()? {
 - [x] style popup
 - [x] move the popup (using state)
 - [x] handle mouse events for dragging
-- [ ] configure size / position
+- [x] move to position
+- [ ] resize
 - [ ] set border set / style
-- [ ] events for close action
+- [ ] add close button
+- [ ] add nicer styling of header etc.
 - [ ] configure text wrapping in body to conform to a specific size
 
 [Crates.io badge]: https://img.shields.io/crates/v/tui-popup?logo=rust&style=for-the-badge
