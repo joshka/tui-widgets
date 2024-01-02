@@ -50,6 +50,30 @@ fn move_up(popup_state: &mut PopupState) {
 }
 ```
 
+The popup can automatically handle being moved around by the mouse, by passing in the column and
+row of Mouse Up / Down / Drag events. The current implemntation of this checks whether the click is
+in the first row of the popup, otherwise ignores the event.
+
+```rust
+match event.read()? {
+    Event::Mouse(event) => {
+        match event.kind {
+            event::MouseEventKind::Down(MouseButton::Left) => {
+                popup_state.mouse_down(event.column, event.row)
+            }
+            event::MouseEventKind::Up(MouseButton::Left) => {
+                popup_state.mouse_up(event.column, event.row);
+            }
+            event::MouseEventKind::Drag(MouseButton::Left) => {
+                popup_state.mouse_drag(event.column, event.row);
+            }
+            _ => {}
+        };
+    }
+    // -- snip --
+}
+```
+
 ![state demo](./examples/state.gif)
 
 ## Features
@@ -58,9 +82,9 @@ fn move_up(popup_state: &mut PopupState) {
 - [x] automatically sizes to content
 - [x] style popup
 - [x] move the popup (using state)
+- [x] handle mouse events for dragging
 - [ ] configure size / position
 - [ ] set border set / style
-- [ ] handle mouse events for dragging
 - [ ] events for close action
 - [ ] configure text wrapping in body to conform to a specific size
 
