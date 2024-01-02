@@ -19,8 +19,6 @@ pub enum MouseState {
 
 impl PopupState {
     /// Move the popup by the given amount.
-    ///
-    /// I'm not sure if this method will be kept long-term
     pub fn move_by(&mut self, x: i32, y: i32) {
         if let Some(area) = self.area {
             self.area.replace(Rect {
@@ -34,6 +32,13 @@ impl PopupState {
                     .unwrap_or(area.y),
                 ..area
             });
+        }
+    }
+
+    /// Move the popup to the given position.
+    pub fn move_to(&mut self, x: u16, y: u16) {
+        if let Some(area) = self.area {
+            self.area.replace(Rect { x, y, ..area });
         }
     }
 
