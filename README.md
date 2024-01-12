@@ -1,19 +1,18 @@
 # tui-big-text
 
-[![Crates.io](https://img.shields.io/crates/v/tui-big-text?logo=rust&style=for-the-badge)](https://crates.io/crates/tui-big-text)
-[![License](https://img.shields.io/crates/l/tui-big-text?style=for-the-badge)](./LICENSE-MIT)
-[![Docs.rs](https://img.shields.io/docsrs/tui-big-text?logo=rust&style=for-the-badge)](https://docs.rs/crate/tui-big-text/)
-[![Dependency Status](https://deps.rs/repo/github/joshka/tui-big-text/status.svg?style=for-the-badge)](https://deps.rs/repo/github/joshka/tui-big-text)
-[![Codecov](https://img.shields.io/codecov/c/github/joshka/tui-big-text?logo=codecov&style=for-the-badge&token=BAQ8SOKEST)](https://app.codecov.io/gh/joshka/tui-big-text)
-[![Discord](https://img.shields.io/discord/1070692720437383208?label=ratatui+discord&logo=discord&style=for-the-badge)](https://discord.gg/pMCEU9hNEj)
+[![Crate badge]][tui-big-text]
+[![Docs.rs Badge]][API Docs]
+[![Deps.rs Badge]][Dependency Status]<br>
+[![License Badge]](./LICENSE-MIT)
+[![Codecov.io Badge]][Code Coverage]
+[![Discord Badge]][Ratatui Discord]
 
 <!-- cargo-rdme start -->
 
-[tui-big-text](https://crates.io/crates/tui-big-text) is a rust crate that renders large pixel
-text as a [ratatui](https://crates.io/crates/ratatui) widget using the glyphs from the
-[font8x8](https://crates.io/crates/font8x8) crate.
+[tui-big-text] is a rust crate that renders large pixel text as a [Ratatui] widget using the glyphs
+from the [font8x8] crate.
 
-![Example Made with VHS](https://vhs.charm.sh/vhs-2UxNc2SJgiNqHoowbsXAMW.gif)
+![Hello world Example](https://vhs.charm.sh/vhs-2UxNc2SJgiNqHoowbsXAMW.gif)
 
 ## Installation
 
@@ -65,3 +64,19 @@ for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
 dual licensed as above, without any additional terms or conditions.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+[Crate badge]: https://img.shields.io/crates/v/tui-big-text?logo=rust&style=for-the-badge
+[Docs.rs Badge]: https://img.shields.io/docsrs/tui-big-text?logo=rust&style=for-the-badge
+[Deps.rs Badge]: https://deps.rs/repo/github/joshka/tui-big-text/status.svg?style=for-the-badge
+[License Badge]: https://img.shields.io/crates/l/tui-big-text?style=for-the-badge
+[Codecov.io Badge]: https://img.shields.io/codecov/c/github/joshka/tui-big-text?logo=codecov&style=for-the-badge&token=BAQ8SOKEST
+[Discord Badge]: https://img.shields.io/discord/1070692720437383208?label=ratatui+discord&logo=discord&style=for-the-badge
+
+[tui-big-text]: https://crates.io/crates/tui-big-text
+[Ratatui]: https://crates.io/crates/ratatui
+[font8x8]: https://crates.io/crates/font8x8
+
+[API Docs]: https://docs.rs/crate/tui-big-text/
+[Dependency Status]: https://deps.rs/repo/github/joshka/tui-big-text
+[Code Coverage]: https://app.codecov.io/gh/joshka/tui-big-text
+[Ratatui Discord]: https://discord.gg/pMCEU9hNEj
