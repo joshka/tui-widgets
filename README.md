@@ -26,10 +26,11 @@ cargo add ratatui tui-big-text
 ```rust
 use anyhow::Result;
 use ratatui::prelude::*;
-use tui_big_text::BigTextBuilder;
+use tui_big_text::{BigTextBuilder, PixelSize};
 
 fn render(frame: &mut Frame) -> Result<()> {
     let big_text = BigTextBuilder::default()
+        .pixel_size(PixelSize::Full)
         .style(Style::new().blue())
         .lines(vec![
             "Hello".red().into(),
