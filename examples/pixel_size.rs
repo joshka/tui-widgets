@@ -24,80 +24,45 @@ fn main() -> Result<()> {
 
 fn render(frame: &mut Frame) -> Result<()> {
     // Setup layout for 4 blocks
-    let outer_layout = Layout::new(
-        Direction::Vertical,
-        [Constraint::Ratio(2, 3), Constraint::Ratio(1, 3)],
-    )
-    .split(frame.size());
-
-    let inner_layout_top = Layout::new(
-        Direction::Horizontal,
-        [Constraint::Ratio(2, 3), Constraint::Ratio(1, 3)],
-    )
-    .split(outer_layout[0]);
-
-    let inner_layout_bottom = Layout::new(
-        Direction::Horizontal,
-        [Constraint::Ratio(2, 3), Constraint::Ratio(1, 3)],
-    )
-    .split(outer_layout[1]);
+    use Constraint::*;
+    let layout =
+        Layout::new(Direction::Vertical, [Length(8), Length(4), Length(8)]).split(frame.size());
+    let [top, middle, bottom] = [layout[0], layout[1], layout[2]];
+    let bottom_layout = Layout::new(Direction::Horizontal, [Length(32), Length(32)]).split(bottom);
+    let [bottom_left, bottom_right] = [bottom_layout[0], bottom_layout[1]];
 
     // render one block for each font size
-    {
-        // Draw block showing Full size
-        let big_text_full = BigTextBuilder::default()
-            .pixel_size(tui_big_text::PixelSize::Full)
-            .style(Style::new().blue())
-            .lines(vec![
-                "Hello".red().into(),
-                "World".white().into(),
-                "~~~~~".into(),
-            ])
-            .build()?;
-        frame.render_widget(big_text_full, inner_layout_top[0]);
-    }
+    // Draw block showing Full size
+    let big_text_full = BigTextBuilder::default()
+        .pixel_size(tui_big_text::PixelSize::Full)
+        .style(Style::new().blue())
+        .lines(vec!["FullSize".white().into()])
+        .build()?;
+    frame.render_widget(big_text_full, top);
 
-    {
-        // Draw block showing HalfWidth size
-        let big_text_half_width = BigTextBuilder::default()
-            .pixel_size(tui_big_text::PixelSize::HalfWidth)
-            .style(Style::new().blue())
-            .lines(vec![
-                "Hello".red().into(),
-                "World".white().into(),
-                "~~~~~".into(),
-            ])
-            .build()?;
-        frame.render_widget(big_text_half_width, inner_layout_top[1]);
-    }
+    // Draw block showing HalfHeight size
+    let big_text_half_height = BigTextBuilder::default()
+        .pixel_size(tui_big_text::PixelSize::HalfHeight)
+        .style(Style::new().blue())
+        .lines(vec!["1/2 high".green().into()])
+        .build()?;
+    frame.render_widget(big_text_half_height, middle);
 
-    {
-        // Draw block showing HalfHeight size
-        let big_text_half_height = BigTextBuilder::default()
-            .pixel_size(tui_big_text::PixelSize::HalfHeight)
-            .style(Style::new().blue())
-            .lines(vec![
-                "Hello".red().into(),
-                "World".white().into(),
-                "~~~~~".into(),
-            ])
-            .build()?;
-        frame.render_widget(big_text_half_height, inner_layout_bottom[0]);
-    }
+    // Draw block showing HalfWidth size
+    let big_text_half_width = BigTextBuilder::default()
+        .pixel_size(tui_big_text::PixelSize::HalfWidth)
+        .style(Style::new().blue())
+        .lines(vec!["1/2 wide".red().into()])
+        .build()?;
+    frame.render_widget(big_text_half_width, bottom_left);
 
-    {
-        // Draw block showing Half size
-        let big_text_half_size = BigTextBuilder::default()
-            .pixel_size(tui_big_text::PixelSize::Quadrant)
-            .style(Style::new().blue())
-            .lines(vec![
-                "Hello".red().into(),
-                "World".white().into(),
-                "~~~~~".into(),
-            ])
-            .build()?;
-        frame.render_widget(big_text_half_size, inner_layout_bottom[1]);
-    }
+    // Draw block showing Half size
+    let big_text_half_size = BigTextBuilder::default()
+        .pixel_size(tui_big_text::PixelSize::Quadrant)
+        .style(Style::new().blue())
+        .lines(vec!["Quadrant".blue().into(), "1/2 both".blue().into()])
+        .build()?;
+    frame.render_widget(big_text_half_size, bottom_right);
 
     Ok(())
 }

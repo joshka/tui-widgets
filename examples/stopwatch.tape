@@ -1,6 +1,6 @@
 # VHS Tape (see https://github.com/charmbracelet/vhs)
 Output "target/stopwatch.gif"
-Set Theme "OceanicMaterial"
+Set Theme "Aardvark Blue"
 Set Width 1200
 Set Height 600
 Hide
