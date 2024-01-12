@@ -1,14 +1,20 @@
-//! [tui-big-text](https://crates.io/crates/tui-big-text) is a rust crate that renders large pixel
-//! text as a [ratatui](https://crates.io/crates/ratatui) widget using the glyphs from the
-//! [font8x8](https://crates.io/crates/font8x8) crate.
+//! [tui-big-text] is a rust crate that renders large pixel text as a [Ratatui] widget using the
+//! glyphs from the [font8x8] crate.
 //!
-//! ![Example Made with VHS](https://vhs.charm.sh/vhs-2UxNc2SJgiNqHoowbsXAMW.gif)
+//! ![Hello World example](https://vhs.charm.sh/vhs-2UxNc2SJgiNqHoowbsXAMW.gif)
 //!
 //! # Installation
 //!
 //! ```shell
 //! cargo add ratatui tui-big-text
 //! ```
+//!
+//! # Usage
+//!
+//! Create a [`BigText`] widget using `BigTextBuilder` and pass it to [`Frame::render_widget`] to
+//! render be rendered. The builder allows you to customize the [`Style`] of the widget and the
+//! [`PixelSize`] of the glyphs. The [`PixelSize`] can be used to control how many character cells
+//! are used to represent a single pixel of the 8x8 font.
 //!
 //! # Example
 //!
@@ -31,6 +37,14 @@
 //!     Ok(())
 //! }
 //! ```
+//!
+//! [tui-big-text]: https://crates.io/crates/tui-big-text
+//! [Ratatui]: https://crates.io/crates/ratatui
+//! [font8x8]: https://crates.io/crates/font8x8
+//! [`BigText`]: crate::BigText
+//! [`PixelSize`]: crate::PixelSize
+//! [`Frame::render_widget`]: ratatui::Frame::render_widget
+//! [`Style`]: ratatui::style::Style
 
 use std::cmp::min;
 
@@ -64,7 +78,7 @@ pub enum PixelSize {
 /// use ratatui::prelude::*;
 /// use tui_big_text::{BigTextBuilder, PixelSize};
 ///
-/// BigTextBuilder::default()
+/// BigText::builder()
 ///     .pixel_size(PixelSize::Full)
 ///     .style(Style::new().white())
 ///     .lines(vec![
