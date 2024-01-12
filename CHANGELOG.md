@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3.2](https://github.com/joshka/tui-big-text/releases/tag/0.3.2) - 2024-01-12
 
+### Features
+
+- [9ffb3bf](https://github.com/joshka/tui-big-text/commit/9ffb3bf11e5405ecb339752b52eeedf3897ed347)
+  Add PixelSize option
+
+  Add a new `TuiBigText::pixel_size()` option that indicates the size of a pixel in the font
+  - Full: a full character cell (`'█'`)
+  - HalfHeight: a half (upper/lower) character cell (`'▀', '▄'`)
+  - HalfWidth: a half (left/right) character cell (`'▌', '▐'`)
+  - Quadrant: a quadrant of a character cell (`'▘', '▝', '▖', '▗'`)
+
+  The Half height option leads to the most square looking pixels as terminals usually render
+  cells around twice as high as they are wide.
+
 ### Documentation
 
 - [f127fde](https://github.com/joshka/tui-big-text/commit/f127fde7e945310d77aed010fb2198eecd555dc5)
@@ -43,6 +57,7 @@ All notable changes to this project will be documented in this file.
   * ci: add check for cargo-rdme to ensure readme is updated when lib.rs docs are
   * docs: update readme with recent change for Frame no longer being generic
   ````
+
 - [3042382](https://github.com/joshka/tui-big-text/commit/3042382c09177574ca72563c5c99db43af26a815)
   Update dependencies to ratatui 0.25.0 and itertools 0.12.0 ([#18](https://github.com/joshka/tui-big-text/pull/18))
 
@@ -111,14 +126,12 @@ All notable changes to this project will be documented in this file.
   but extracting a variable fixes it.
   ````
 
-
 ## [0.1.2](https://github.com/joshka/tui-big-text/releases/tag/v0.1.2) - 2023-09-05
 
 ### Documentation
 
 - [3a1b8c6](https://github.com/joshka/tui-big-text/commit/3a1b8c60aa424b14b94b47d75c15cc625e800f71)
   Use cargo-rdme to sync lib.rs to README.md (#4)
-
 
 ## [0.1.1](https://github.com/joshka/tui-big-text/releases/tag/v0.1.1) - 2023-09-05
 
