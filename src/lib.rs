@@ -83,7 +83,7 @@ impl ScrollView {
     }
 }
 
-#[derive(Debug, Default, Clone, Eq, PartialEq, Hash)]
+#[derive(Debug, Default, Clone, Copy, Eq, PartialEq, Hash)]
 pub struct ScrollViewState {
     /// The offset is the number of rows and columns to shift the scroll view by.
     offset: (u16, u16),
