@@ -55,12 +55,22 @@ fn render(frame: &mut Frame) {
 
 <!-- cargo-rdme end -->
 
+## Example
+
+See [scrollview.rs](./examples/scrollview.rs)
+
+Run this with
+
+```shell
+cargo run --example scrollview
+```
+
 ## TODO
 
 - [x] Clamp scroll state to buffer area
 - [x] Add scrollbar
+- [x] Add example
 - [ ] Conditionally show scrollbar
-- [ ] Add example
 - [ ] Add demo GIF
 - [ ] Fix scrollbar size (Ratatui bug?)
 - [ ] Change offset to use `Position` once [Ratatui PR #790] is released (this will be breaking
