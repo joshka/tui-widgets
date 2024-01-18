@@ -5,7 +5,6 @@ authors = ["Joshka"]
 description = "A simple scrollable view for Ratatui"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/joshka/tui-scrollview"
-docs = "https://docs.rs/tui-scrollview"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
