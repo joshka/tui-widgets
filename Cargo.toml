@@ -1,5 +1,9 @@
 [package]
 name = "tui-scrollview"
+description = "A simple scrollable view for Ratatui"
+license = "MIT or Apache-2.0"
+repository = "https://github.com/joshka/tui-scrollview"
+docs = "https://docs.rs/tui-scrollview"
 version = "0.1.0"
 edition = "2021"
 
