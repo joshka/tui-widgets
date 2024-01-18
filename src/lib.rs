@@ -137,7 +137,9 @@ impl ScrollViewState {
 
     /// Move the scroll view state to the bottom of the buffer
     pub fn bottom(&mut self) {
-        self.offset = (0, self.offset.1);
+        // the render call will adjust the offset to ensure that we don't scroll past the end of
+        // the buffer, so we can just set the offset to the maximum value here
+        self.offset = (0, u16::MAX);
     }
 }
 
@@ -145,6 +147,18 @@ impl StatefulWidget for ScrollView {
     type State = ScrollViewState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
+        let (x, y) = state.offset;
+        // ensure that we don't scroll past the end of the buffer in either direction
+        // if x + the width of the area is greater than the width of the buffer, then we need to
+        // shift the buffer left by the difference between the two
+        if x.saturating_add(area.width) > self.buf.area.width {
+            state.offset.0 = self.buf.area.width.saturating_sub(area.width);
+        }
+        // if y + the height of the area is greater than the height of the buffer, then we need to
+        // shift the buffer up by the difference between the two
+        if y.saturating_add(area.height) > self.buf.area.height {
+            state.offset.1 = self.buf.area.height.saturating_sub(area.height);
+        }
         self.render_visible_area(state, area, buf);
     }
 }

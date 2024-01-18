@@ -57,6 +57,7 @@ fn render(frame: &mut Frame) {
 
 ## TODO
 
+- [x] Clamp scroll state to buffer area
 - [ ] Add scrollbar
 - [ ] Add example
 - [ ] Add demo GIF
