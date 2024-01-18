@@ -151,16 +151,8 @@ impl StatefulWidget for ScrollView {
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
         let (mut x, mut y) = state.offset;
         // ensure that we don't scroll past the end of the buffer in either direction
-        // if x + the width of the area is greater than the width of the buffer, then we need to
-        // shift the buffer left by the difference between the two
-        if x.saturating_add(area.width) > self.buf.area.width {
-            x = self.buf.area.width.saturating_sub(area.width);
-        }
-        // if y + the height of the area is greater than the height of the buffer, then we need to
-        // shift the buffer up by the difference between the two
-        if y.saturating_add(area.height) > self.buf.area.height {
-            y = self.buf.area.height.saturating_sub(area.height);
-        }
+        x = x.min(self.buf.area.width.saturating_sub(1));
+        y = y.min(self.buf.area.height.saturating_sub(1));
         state.offset = (x, y);
         let visible_area = Rect::new(x, y, area.width, area.height).intersection(self.buf.area);
         self.render_visible_area(area, buf, visible_area);
