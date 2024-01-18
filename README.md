@@ -57,6 +57,8 @@ fn render(frame: &mut Frame) {
 
 ## Example
 
+![Demo](https://vhs.charm.sh/vhs-1YENmvmweYHf1HZPEOBwDq.gif)
+
 See [scrollview.rs](./examples/scrollview.rs)
 
 Run this with
@@ -71,8 +73,8 @@ cargo run --example scrollview
 - [x] Add scrollbar
 - [x] Add example
 - [ ] Conditionally show scrollbar
-- [ ] Add demo GIF
-- [ ] Fix scrollbar size (Ratatui bug?)
+- [x] Add demo GIF
+- [x] Fix scrollbar size (~~Ratatui bug~~ [intended behavior](https://discord.com/channels/1070692720437383208/1072880020713898004/1197509375183564841))
 - [ ] Change offset to use `Position` once [Ratatui PR #790] is released (this will be breaking
   change for the ScrollViewState)
 
