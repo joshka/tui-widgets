@@ -99,6 +99,46 @@ impl ScrollViewState {
     pub fn with_offset(offset: (u16, u16)) -> Self {
         Self { offset }
     }
+
+    /// Set the offset of the scroll view state
+    pub fn set_offset(&mut self, offset: (u16, u16)) {
+        self.offset = offset;
+    }
+
+    /// Get the offset of the scroll view state
+    pub fn offset(&self) -> (u16, u16) {
+        self.offset
+    }
+
+    /// Move the scroll view state up by one row
+    pub fn up(&mut self) {
+        self.offset.1 = self.offset.1.saturating_sub(1);
+    }
+
+    /// Move the scroll view state down by one row
+    pub fn down(&mut self) {
+        self.offset.1 = self.offset.1.saturating_add(1);
+    }
+
+    /// Move the scroll view state left by one column
+    pub fn left(&mut self) {
+        self.offset.0 = self.offset.0.saturating_sub(1);
+    }
+
+    /// Move the scroll view state right by one column
+    pub fn right(&mut self) {
+        self.offset.0 = self.offset.0.saturating_add(1);
+    }
+
+    /// Move the scroll view state to the top of the buffer
+    pub fn top(&mut self) {
+        self.offset = (0, 0);
+    }
+
+    /// Move the scroll view state to the bottom of the buffer
+    pub fn bottom(&mut self) {
+        self.offset = (0, self.offset.1);
+    }
 }
 
 impl StatefulWidget for ScrollView {
