@@ -33,6 +33,12 @@
 //! }
 //! ```
 //!
+//! ## Example
+//!
+//! [scrollview.rs](https://github.com/joshka/tui-scrollview/tree/main/examples/scrollview.rs)
+//!
+//! ![Demo](https://vhs.charm.sh/vhs-hkWFxmfWuJInxosjYrSg9.gif)
+//!
 //! [Crates.io Badge]: https://img.shields.io/crates/v/tui-scrollview?logo=rust&style=for-the-badge
 //! [License Badge]: https://img.shields.io/crates/l/tui-scrollview?style=for-the-badge
 //! [Docs.rs Badge]: https://img.shields.io/docsrs/tui-scrollview?logo=rust&style=for-the-badge
