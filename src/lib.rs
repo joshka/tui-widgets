@@ -62,6 +62,7 @@ use ratatui::{buffer::Buffer, layout::Size, prelude::*, widgets::*};
 #[derive(Debug, Default, Clone, Eq, PartialEq, Hash)]
 pub struct ScrollView {
     buf: Buffer,
+    size: Size,
 }
 
 impl ScrollView {
@@ -71,6 +72,7 @@ impl ScrollView {
         let area = Rect::new(0, 0, size.width, size.height);
         Self {
             buf: Buffer::empty(area),
+            size,
         }
     }
 
@@ -147,32 +149,41 @@ impl StatefulWidget for ScrollView {
     type State = ScrollViewState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
-        let (x, y) = state.offset;
+        let (mut x, mut y) = state.offset;
         // ensure that we don't scroll past the end of the buffer in either direction
         // if x + the width of the area is greater than the width of the buffer, then we need to
         // shift the buffer left by the difference between the two
         if x.saturating_add(area.width) > self.buf.area.width {
-            state.offset.0 = self.buf.area.width.saturating_sub(area.width);
+            x = self.buf.area.width.saturating_sub(area.width);
         }
         // if y + the height of the area is greater than the height of the buffer, then we need to
         // shift the buffer up by the difference between the two
         if y.saturating_add(area.height) > self.buf.area.height {
-            state.offset.1 = self.buf.area.height.saturating_sub(area.height);
+            y = self.buf.area.height.saturating_sub(area.height);
         }
-        self.render_visible_area(state, area, buf);
+        state.offset = (x, y);
+        let visible_area = Rect::new(x, y, area.width, area.height).intersection(self.buf.area);
+        self.render_visible_area(area, buf, visible_area);
+        // TODO work out whether to render the scrollbars or not
+        self.render_vertical_scrollbar(area, buf, &state);
     }
 }
 
 impl ScrollView {
-    fn render_visible_area(self, state: &mut ScrollViewState, area: Rect, buf: &mut Buffer) {
-        let (x, y) = state.offset;
-        let visible_area = Rect::new(x, y, area.width, area.height).intersection(self.buf.area);
+    fn render_visible_area(&self, area: Rect, buf: &mut Buffer, visible_area: Rect) {
         // TODO: there's probably a more efficient way to do this
         for (src_row, dst_row) in visible_area.rows().zip(area.rows()) {
             for (src_col, dst_col) in src_row.columns().zip(dst_row.columns()) {
                 *buf.get_mut(dst_col.x, dst_col.y) = self.buf.get(src_col.x, src_col.y).clone();
             }
         }
+    }
+
+    fn render_vertical_scrollbar(&self, area: Rect, buf: &mut Buffer, state: &ScrollViewState) {
+        let mut scrollbar_state =
+            ScrollbarState::new(self.size.height as usize).position(state.offset.1 as usize);
+        let scrollbar = Scrollbar::new(ScrollbarOrientation::VerticalRight);
+        scrollbar.render(area, buf, &mut scrollbar_state);
     }
 }
 
