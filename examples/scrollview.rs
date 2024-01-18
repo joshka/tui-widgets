@@ -87,9 +87,9 @@ impl Widget for &mut App {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let layout = Layout::vertical([Constraint::Length(1), Constraint::Min(0)]);
         let [title, body] = area.split(&layout);
-
+        let size = Size::new(area.width, 100);
         self.render_title(title, buf);
-        self.render_scrollview(area, body, buf);
+        self.render_scrollview(body, buf, size);
     }
 }
 
@@ -100,8 +100,7 @@ impl App {
             .render(title, buf);
     }
 
-    fn render_scrollview(&mut self, area: Rect, body: Rect, buf: &mut Buffer) {
-        let size = Size::new(area.width, 100);
+    fn render_scrollview(&mut self, body: Rect, buf: &mut Buffer, size: Size) {
         let mut scroll_view = ScrollView::new(size);
         self.render_into_scrollview(&mut scroll_view, size);
         scroll_view.render(body, buf, &mut self.scroll);
@@ -109,23 +108,38 @@ impl App {
 
     fn render_into_scrollview(&self, scroll_view: &mut ScrollView, size: Size) {
         let scroll_area = Rect::new(0, 0, size.width, size.height);
-        let [numbers, text] = scroll_area.split(&Layout::horizontal([
+        let [numbers_area, text_area] = scroll_area.split(&Layout::horizontal([
             Constraint::Length(5),
             Constraint::Min(0),
         ]));
+        let gauge_area = Rect::new(20, 10, size.width - 40, 10);
+
+        self.render_line_numbers(numbers_area, scroll_view, size);
+        self.render_text(text_area, scroll_view);
+
+        self.render_gauge(gauge_area, scroll_view);
+    }
+
+    fn render_line_numbers(&self, area: Rect, scroll_view: &mut ScrollView, size: Size) {
         let line_numbers = (1..=size.height)
             .map(|n| format!("{n:>4} \n"))
             .collect::<String>();
-        scroll_view.render_widget(Paragraph::new(line_numbers).dim(), numbers);
+        scroll_view.render_widget(Paragraph::new(line_numbers).dim(), area);
+    }
+
+    fn render_text(&self, area: Rect, scroll_view: &mut ScrollView) {
         scroll_view.render_widget(
             Paragraph::new(self.text.clone()).wrap(Wrap { trim: false }),
-            text,
+            area,
         );
-        let percent = (self.scroll.offset().1.saturating_mul(2)).min(100);
+    }
+
+    fn render_gauge(&self, area: Rect, scroll_view: &mut ScrollView) {
+        let percent = (self.scroll.offset().1.saturating_mul(10)).min(100);
         let gauge = Gauge::default()
             .gauge_style(Style::new().blue().on_light_blue())
             .percent(percent);
-        scroll_view.render_widget(gauge, Rect::new(text.x + 20, 45, text.width - 40, 10));
+        scroll_view.render_widget(gauge, area);
     }
 }
 
