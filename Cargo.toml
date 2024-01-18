@@ -1,0 +1,10 @@
+[package]
+name = "tui-scrollview"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+indoc = "2.0.4"
+ratatui = "0.26.0-alpha.1"
