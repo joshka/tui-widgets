@@ -10,7 +10,7 @@ Enter
 Sleep 2s
 Show
 Sleep 2s
-Down @0.5s 10
+Down @0.5s 5
 Sleep 4s
-Up @0.5s 10
+Up @0.5s 5
 Sleep 2s
