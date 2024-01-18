@@ -152,7 +152,7 @@ impl StatefulWidget for ScrollView {
 impl ScrollView {
     fn render_visible_area(self, state: &mut ScrollViewState, area: Rect, buf: &mut Buffer) {
         let (x, y) = state.offset;
-        let visible_area = Rect::new(x, y, area.width, area.height);
+        let visible_area = Rect::new(x, y, area.width, area.height).intersection(self.buf.area);
         // TODO: there's probably a more efficient way to do this
         for (src_row, dst_row) in visible_area.rows().zip(area.rows()) {
             for (src_col, dst_col) in src_row.columns().zip(dst_row.columns()) {
