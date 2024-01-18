@@ -121,7 +121,7 @@ impl App {
             Paragraph::new(self.text.clone()).wrap(Wrap { trim: false }),
             text,
         );
-        let percent = (self.scroll.offset().1 * 2).min(100);
+        let percent = (self.scroll.offset().1.saturating_mul(2)).min(100);
         let gauge = Gauge::default()
             .gauge_style(Style::new().blue().on_light_blue())
             .percent(percent);
