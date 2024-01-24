@@ -67,10 +67,10 @@ impl App {
         match event::read()? {
             Event::Key(key) if key.kind == KeyEventKind::Press => match key.code {
                 Char('q') | Esc => self.quit(),
-                Char('j') | Down => self.scroll.down(),
-                Char('k') | Up => self.scroll.up(),
-                Char('g') | Home => self.scroll.top(),
-                Char('G') | End => self.scroll.bottom(),
+                Char('j') | Down => self.scroll.scroll_down(),
+                Char('k') | Up => self.scroll.scroll_up(),
+                Char('g') | Home => self.scroll.scroll_to_top(),
+                Char('G') | End => self.scroll.scroll_to_bottom(),
                 _ => (),
             },
             _ => {}
@@ -135,7 +135,7 @@ impl App {
     }
 
     fn render_gauge(&self, area: Rect, scroll_view: &mut ScrollView) {
-        let percent = (self.scroll.offset().1.saturating_mul(10)).min(100);
+        let percent = (self.scroll.offset().y.saturating_mul(10)).min(100);
         let gauge = Gauge::default()
             .gauge_style(Style::new().blue().on_light_blue())
             .percent(percent);
