@@ -63,14 +63,8 @@ fn render(frame: &mut Frame) {
 
 ## TODO
 
-- [x] Clamp scroll state to buffer area
-- [x] Add scrollbar
-- [x] Add example
 - [ ] Conditionally show scrollbar
-- [x] Add demo GIF
-- [x] Fix scrollbar size (~~Ratatui bug~~ [intended behavior](https://discord.com/channels/1070692720437383208/1072880020713898004/1197509375183564841))
-- [ ] Change offset to use `Position` once [Ratatui PR #790] is released (this will be breaking
-  change for the ScrollViewState)
+- [ ] Implement horizontal scrolling and bar
 
 ## License
 
@@ -91,5 +85,3 @@ work by you, as defined in the Apache-2.0 license, shall be dual licensed as abo
 additional terms or conditions.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
-
-[Ratatui PR #790]: https://github.com/ratatui-org/ratatui/pull/790
