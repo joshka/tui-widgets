@@ -37,9 +37,13 @@ fn render(frame: &mut Frame) {
 
 ## Example
 
-[scrollview.rs](https://github.com/joshka/tui-scrollview/tree/main/examples/scrollview.rs)
+This example shows a scrollable view with two paragraphs of text, one for the line numbers and
+one for the text. On top of this a Gauge widget is rendered to show that this can be used in
+combination with any other widget.
 
 ![Demo](https://vhs.charm.sh/vhs-hkWFxmfWuJInxosjYrSg9.gif)
+
+[scrollview.rs](https://github.com/joshka/tui-scrollview/tree/main/examples/scrollview.rs)
 
 [Crates.io Badge]: https://img.shields.io/crates/v/tui-scrollview?logo=rust&style=for-the-badge
 [License Badge]: https://img.shields.io/crates/l/tui-scrollview?style=for-the-badge
