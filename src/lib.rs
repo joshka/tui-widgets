@@ -78,7 +78,7 @@ pub enum PixelSize {
 /// use ratatui::prelude::*;
 /// use tui_big_text::{BigTextBuilder, PixelSize};
 ///
-/// BigText::builder()
+/// BigTextBuilder::default()
 ///     .pixel_size(PixelSize::Full)
 ///     .style(Style::new().white())
 ///     .lines(vec![
