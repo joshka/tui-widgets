@@ -128,9 +128,7 @@ impl StopwatchApp {
 
     fn fps_paragraph(&mut self) -> Paragraph<'_> {
         let fps = format!("{:.2} fps", self.fps_counter.fps);
-        Paragraph::new(fps)
-            .style(Style::new().dim())
-            .alignment(Alignment::Right)
+        Paragraph::new(fps).dim().right_aligned()
     }
 
     fn timer_paragraph(&mut self) -> BigText<'_> {
@@ -187,23 +185,19 @@ impl StopwatchApp {
 }
 
 fn layout(area: Rect) -> Vec<Rect> {
-    let layout = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints(vec![
-            Constraint::Length(2), // top bar
-            Constraint::Length(8), // timer
-            Constraint::Length(1), // splits header
-            Constraint::Min(0),    // splits
-            Constraint::Length(1), // help
-        ])
-        .split(area);
-    let top_layout = Layout::default()
-        .direction(Direction::Horizontal)
-        .constraints(vec![
-            Constraint::Length(20), // title
-            Constraint::Min(0),     // fps counter
-        ])
-        .split(layout[0]);
+    let layout = Layout::vertical(vec![
+        Constraint::Length(2), // top bar
+        Constraint::Length(8), // timer
+        Constraint::Length(1), // splits header
+        Constraint::Min(0),    // splits
+        Constraint::Length(1), // help
+    ])
+    .split(area);
+    let top_layout = Layout::horizontal(vec![
+        Constraint::Length(20), // title
+        Constraint::Min(0),     // fps counter
+    ])
+    .split(layout[0]);
 
     // return a new vec with the top_layout rects and then rest of layout
     top_layout[..]

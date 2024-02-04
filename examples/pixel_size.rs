@@ -25,11 +25,10 @@ fn main() -> Result<()> {
 fn render(frame: &mut Frame) -> Result<()> {
     // Setup layout for 4 blocks
     use Constraint::*;
-    let layout =
-        Layout::new(Direction::Vertical, [Length(8), Length(4), Length(8)]).split(frame.size());
-    let [top, middle, bottom] = [layout[0], layout[1], layout[2]];
-    let bottom_layout = Layout::new(Direction::Horizontal, [Length(32), Length(32)]).split(bottom);
-    let [bottom_left, bottom_right] = [bottom_layout[0], bottom_layout[1]];
+    let [top, middle, bottom] =
+        Layout::new(Direction::Vertical, [Length(8), Length(4), Length(8)]).areas(frame.size());
+    let [bottom_left, bottom_right] =
+        Layout::new(Direction::Horizontal, [Length(32), Length(32)]).areas(bottom);
 
     // render one block for each font size
     // Draw block showing Full size
