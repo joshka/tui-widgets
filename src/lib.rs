@@ -120,7 +120,7 @@ pub struct BigText<'a> {
     /// The style of the widget
     ///
     /// Defaults to `Style::default()`
-    #[builder(default)]
+    #[builder(default, setter(into))]
     style: Style,
 
     /// The size of single glyphs
