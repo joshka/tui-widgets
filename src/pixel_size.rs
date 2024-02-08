@@ -67,14 +67,14 @@ impl PixelSize {
             }
             PixelSize::ThirdHeight => {
                 let top = glyph[row] & (1 << col);
-                let is_middle_avalable = (row + 1) < glyph.len();
-                let middle = if is_middle_avalable {
+                let is_middle_available = (row + 1) < glyph.len();
+                let middle = if is_middle_available {
                     glyph[row + 1] & (1 << col)
                 } else {
                     0
                 };
-                let is_bottom_avalable = (row + 2) < glyph.len();
-                let bottom = if is_bottom_avalable {
+                let is_bottom_available = (row + 2) < glyph.len();
+                let bottom = if is_bottom_available {
                     glyph[row + 2] & (1 << col)
                 } else {
                     0
@@ -84,8 +84,8 @@ impl PixelSize {
             PixelSize::Sextant => {
                 let top_left = glyph[row] & (1 << col);
                 let top_right = glyph[row] & (1 << (col + 1));
-                let is_middle_avalable = (row + 1) < glyph.len();
-                let (middle_left, middle_right) = if is_middle_avalable {
+                let is_middle_available = (row + 1) < glyph.len();
+                let (middle_left, middle_right) = if is_middle_available {
                     (
                         glyph[row + 1] & (1 << col),
                         glyph[row + 1] & (1 << (col + 1)),
@@ -93,8 +93,8 @@ impl PixelSize {
                 } else {
                     (0, 0)
                 };
-                let is_bottom_avalable = (row + 2) < glyph.len();
-                let (bottom_left, bottom_right) = if is_bottom_avalable {
+                let is_bottom_available = (row + 2) < glyph.len();
+                let (bottom_left, bottom_right) = if is_bottom_available {
                     (
                         glyph[row + 2] & (1 << col),
                         glyph[row + 2] & (1 << (col + 1)),
