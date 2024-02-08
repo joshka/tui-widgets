@@ -6,7 +6,7 @@ use crossterm::{
     ExecutableCommand,
 };
 use ratatui::prelude::*;
-use tui_big_text::BigTextBuilder;
+use tui_big_text::{BigTextBuilder, PixelSize};
 
 fn main() -> Result<()> {
     stdout().execute(EnterAlternateScreen)?;
@@ -23,45 +23,49 @@ fn main() -> Result<()> {
 }
 
 fn render(frame: &mut Frame) -> Result<()> {
-    // Setup layout for 4 blocks
-    use Constraint::*;
-    let [top, middle, bottom] =
-        Layout::new(Direction::Vertical, [Length(8), Length(4), Length(8)]).areas(frame.size());
-    let [bottom_left, bottom_right] =
-        Layout::new(Direction::Horizontal, [Length(32), Length(32)]).areas(bottom);
-
-    // render one block for each font size
-    // Draw block showing Full size
-    let big_text_full = BigTextBuilder::default()
-        .pixel_size(tui_big_text::PixelSize::Full)
-        .style(Style::new().blue())
+    let full_size_text = BigTextBuilder::default()
+        .pixel_size(PixelSize::Full)
         .lines(vec!["FullSize".white().into()])
         .build()?;
-    frame.render_widget(big_text_full, top);
 
-    // Draw block showing HalfHeight size
-    let big_text_half_height = BigTextBuilder::default()
-        .pixel_size(tui_big_text::PixelSize::HalfHeight)
-        .style(Style::new().blue())
+    let half_height_text = BigTextBuilder::default()
+        .pixel_size(PixelSize::HalfHeight)
         .lines(vec!["1/2 high".green().into()])
         .build()?;
-    frame.render_widget(big_text_half_height, middle);
 
-    // Draw block showing HalfWidth size
-    let big_text_half_width = BigTextBuilder::default()
-        .pixel_size(tui_big_text::PixelSize::HalfWidth)
-        .style(Style::new().blue())
+    let half_wide_text = BigTextBuilder::default()
+        .pixel_size(PixelSize::HalfWidth)
         .lines(vec!["1/2 wide".red().into()])
         .build()?;
-    frame.render_widget(big_text_half_width, bottom_left);
 
-    // Draw block showing Half size
-    let big_text_half_size = BigTextBuilder::default()
-        .pixel_size(tui_big_text::PixelSize::Quadrant)
-        .style(Style::new().blue())
-        .lines(vec!["Quadrant".blue().into(), "1/2 both".blue().into()])
+    let quadrant_text = BigTextBuilder::default()
+        .pixel_size(PixelSize::Quadrant)
+        .lines(vec!["Quadrant".blue().into(), " 1/2*1/2".blue().into()])
         .build()?;
-    frame.render_widget(big_text_half_size, bottom_right);
+
+    let third_text = BigTextBuilder::default()
+        .pixel_size(PixelSize::ThirdHeight)
+        .lines(vec!["1/3".yellow().into(), "high".yellow().into()])
+        .build()?;
+
+    let sextant_text = BigTextBuilder::default()
+        .pixel_size(PixelSize::Sextant)
+        .lines(vec!["Sextant".cyan().into(), " 1/2*1/3".cyan().into()])
+        .build()?;
+
+    // Setup layout for 6 blocks
+    use Constraint::*;
+    let [full, half_height, middle, bottom] =
+        Layout::vertical([Length(8), Length(4), Length(8), Length(6)]).areas(frame.size());
+    let [half_wide, quadrant] = Layout::horizontal([Length(32), Length(32)]).areas(middle);
+    let [third_height, sextant] = Layout::horizontal([Length(32), Length(32)]).areas(bottom);
+
+    frame.render_widget(full_size_text, full);
+    frame.render_widget(half_height_text, half_height);
+    frame.render_widget(half_wide_text, half_wide);
+    frame.render_widget(quadrant_text, quadrant);
+    frame.render_widget(third_text, third_height);
+    frame.render_widget(sextant_text, sextant);
 
     Ok(())
 }

@@ -2,7 +2,7 @@
 Output "target/pixel_size.gif"
 Set Theme "Aardvark Blue"
 Set Width 1020
-Set Height 660
+Set Height 810
 Hide
 Type@0 "cargo run --example pixel_size --quiet"
 Enter

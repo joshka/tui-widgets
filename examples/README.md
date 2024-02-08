@@ -6,7 +6,9 @@
 
 ## Pixel Size
 
-![Pixel Size](https://vhs.charm.sh/vhs-2vvU0ApVFgURdfAtsfnXsm.gif)
+![Pixel Size](https://vhs.charm.sh/vhs-2nLycKO16vHzqg3TxDNvq4.gif)
+
+Note: Sextant characters are often rendered poorly in most / all fonts.
 
 ## Stopwatch
 
