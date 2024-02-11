@@ -6,18 +6,21 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
     ExecutableCommand,
 };
-use ratatui::{
-    layout::Size,
-    prelude::*,
-    style::palette::tailwind,
-    widgets::{Gauge, Paragraph, StatefulWidget, Widget, Wrap},
-};
+use ratatui::{layout::Size, prelude::*, style::palette::tailwind, widgets::*};
 use tui_scrollview::{ScrollView, ScrollViewState};
+
+fn main() -> Result<()> {
+    init_error_hooks()?;
+    let terminal = init_terminal()?;
+    App::new().run(terminal)?;
+    restore_terminal()?;
+    Ok(())
+}
 
 #[derive(Debug, Default, Clone)]
 struct App {
-    text: String,
-    scroll: ScrollViewState,
+    text: [String; 3],
+    scroll_view_state: ScrollViewState,
     state: AppState,
 }
 
@@ -28,18 +31,14 @@ enum AppState {
     Quit,
 }
 
-fn main() -> Result<()> {
-    init_error_hooks()?;
-    let terminal = init_terminal()?;
-    App::new().run(terminal)?;
-    restore_terminal()?;
-    Ok(())
-}
-
 impl App {
     fn new() -> Self {
         Self {
-            text: lipsum::lipsum(10_000),
+            text: [
+                lipsum::lipsum(10_000),
+                lipsum::lipsum(10_000),
+                lipsum::lipsum(10_000),
+            ],
             ..Default::default()
         }
     }
@@ -67,10 +66,12 @@ impl App {
         match event::read()? {
             Event::Key(key) if key.kind == KeyEventKind::Press => match key.code {
                 Char('q') | Esc => self.quit(),
-                Char('j') | Down => self.scroll.scroll_down(),
-                Char('k') | Up => self.scroll.scroll_up(),
-                Char('g') | Home => self.scroll.scroll_to_top(),
-                Char('G') | End => self.scroll.scroll_to_bottom(),
+                Char('j') | Down => self.scroll_view_state.scroll_down(),
+                Char('k') | Up => self.scroll_view_state.scroll_up(),
+                Char('f') | PageDown => self.scroll_view_state.scroll_page_down(),
+                Char('b') | PageUp => self.scroll_view_state.scroll_page_up(),
+                Char('g') | Home => self.scroll_view_state.scroll_to_top(),
+                Char('G') | End => self.scroll_view_state.scroll_to_bottom(),
                 _ => (),
             },
             _ => {}
@@ -85,62 +86,100 @@ impl App {
 
 impl Widget for &mut App {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        let layout = Layout::vertical([Constraint::Length(1), Constraint::Min(0)]);
-        let [title, body] = area.split(&layout);
-        let size = Size::new(area.width, 100);
-        self.render_title(title, buf);
-        self.render_scrollview(body, buf, size);
+        let layout = Layout::vertical([Constraint::Length(1), Constraint::Fill(1)]);
+        let [title, body] = layout.areas(area);
+
+        self.title().render(title, buf);
+
+        let mut scroll_view = ScrollView::new(Size::new(area.width, 100));
+        self.render_widgets_into_scrollview(scroll_view.buf_mut());
+        scroll_view.render(body, buf, &mut self.scroll_view_state)
     }
 }
 
 impl App {
-    fn render_title(&self, title: Rect, buf: &mut Buffer) {
-        Paragraph::new("Tui-scrollview example. Esc: quit, ↓: down, ↑: up, Home: top, End: bottom")
-            .style((tailwind::SLATE.c900, tailwind::SLATE.c300))
-            .render(title, buf);
+    fn title(&self) -> impl Widget {
+        let palette = tailwind::SLATE;
+        let fg = palette.c900;
+        let bg = palette.c300;
+        let keys_fg = palette.c50;
+        let keys_bg = palette.c600;
+        Line::from(vec![
+            "Tui-scrollview  ".into(),
+            "  ↓ | ↑ | PageDown | PageUp | Home | End  "
+                .fg(keys_fg)
+                .bg(keys_bg),
+            "  Quit: ".into(),
+            " Esc ".fg(keys_fg).bg(keys_bg),
+        ])
+        .style((fg, bg))
     }
 
-    fn render_scrollview(&mut self, body: Rect, buf: &mut Buffer, size: Size) {
-        let mut scroll_view = ScrollView::new(size);
-        self.render_into_scrollview(&mut scroll_view, size);
-        scroll_view.render(body, buf, &mut self.scroll);
+    fn render_widgets_into_scrollview(&self, buf: &mut Buffer) {
+        use Constraint::*;
+        let area = buf.area;
+        // the scrollview (currently) allocates the full width of the buffer, but overwrites the
+        // last column with a scrollbar. This means that we need to account for this when laying
+        // out the widgets
+        let [numbers, widgets, _scrollbar] =
+            Layout::horizontal([Length(5), Fill(1), Length(1)]).areas(area);
+        let [bar_charts, text_0, text_1, text_2] =
+            Layout::vertical([Length(7), Fill(1), Fill(2), Fill(4)]).areas(widgets);
+        let [left_bar, right_bar] = Layout::horizontal([Length(20), Fill(1)]).areas(bar_charts);
+
+        self.line_numbers(area.height).render(numbers, buf);
+        self.vertical_bar_chart().render(left_bar, buf);
+        self.horizontal_bar_chart().render(right_bar, buf);
+        self.text(0).render(text_0, buf);
+        self.text(1).render(text_1, buf);
+        self.text(2).render(text_2, buf);
     }
 
-    fn render_into_scrollview(&self, scroll_view: &mut ScrollView, size: Size) {
-        let scroll_area = Rect::new(0, 0, size.width, size.height);
-        let [numbers_area, text_area] = scroll_area.split(&Layout::horizontal([
-            Constraint::Length(5),
-            Constraint::Min(0),
-        ]));
-        let gauge_area = Rect::new(20, 10, size.width - 40, 10);
-
-        self.render_line_numbers(numbers_area, scroll_view, size);
-        self.render_text(text_area, scroll_view);
-
-        self.render_gauge(gauge_area, scroll_view);
-    }
-
-    fn render_line_numbers(&self, area: Rect, scroll_view: &mut ScrollView, size: Size) {
-        let line_numbers = (1..=size.height)
+    fn line_numbers(&self, height: u16) -> impl Widget {
+        let line_numbers = (1..=height)
             .map(|n| format!("{n:>4} \n"))
             .collect::<String>();
-        scroll_view.render_widget(Paragraph::new(line_numbers).dim(), area);
+        Text::from(line_numbers).dim()
     }
 
-    fn render_text(&self, area: Rect, scroll_view: &mut ScrollView) {
-        scroll_view.render_widget(
-            Paragraph::new(self.text.clone()).wrap(Wrap { trim: false }),
-            area,
-        );
+    fn vertical_bar_chart(&self) -> impl Widget {
+        let block = Block::bordered().title("Vertical Bar Chart");
+        BarChart::default()
+            .direction(Direction::Vertical)
+            .block(block)
+            .bar_width(5)
+            .bar_gap(1)
+            .data(bars())
     }
 
-    fn render_gauge(&self, area: Rect, scroll_view: &mut ScrollView) {
-        let percent = (self.scroll.offset().y.saturating_mul(10)).min(100);
-        let gauge = Gauge::default()
-            .gauge_style(Style::new().blue().on_light_blue())
-            .percent(percent);
-        scroll_view.render_widget(gauge, area);
+    fn horizontal_bar_chart(&self) -> impl Widget {
+        let block = Block::bordered().title("Horizontal Bar Chart");
+        BarChart::default()
+            .direction(Direction::Horizontal)
+            .block(block)
+            .bar_width(1)
+            .bar_gap(1)
+            .data(bars())
     }
+
+    fn text(&self, index: usize) -> impl Widget {
+        let block = Block::bordered().title(format!("Text {}", index));
+        Paragraph::new(self.text[index].clone())
+            .wrap(Wrap { trim: false })
+            .block(block)
+    }
+}
+
+const CHART_DATA: [(&'static str, u64, Color); 3] = [
+    ("Red", 2, Color::Red),
+    ("Green", 7, Color::Green),
+    ("Blue", 11, Color::Blue),
+];
+
+fn bars() -> BarGroup<'static> {
+    let data = CHART_DATA
+        .map(|(label, value, color)| Bar::default().label(label.into()).value(value).style(color));
+    BarGroup::default().bars(&data)
 }
 
 fn init_error_hooks() -> Result<()> {

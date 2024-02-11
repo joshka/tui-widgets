@@ -10,7 +10,15 @@ Enter
 Sleep 2s
 Show
 Sleep 2s
-Down @0.5s 5
-Sleep 4s
-Up @0.5s 5
+Down @0.2s 10
+Sleep 2s
+PageDown
+Sleep 2s
+PageDown
+Sleep 2s
+PageUp
+Sleep 2s
+PageUp
+Sleep 2s
+Up @0.2s 10
 Sleep 2s

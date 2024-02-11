@@ -25,6 +25,22 @@ impl ScrollView {
         }
     }
 
+    pub fn size(&self) -> Size {
+        self.size
+    }
+
+    pub fn area(&self) -> Rect {
+        self.buf.area
+    }
+
+    pub fn buf(&self) -> &Buffer {
+        &self.buf
+    }
+
+    pub fn buf_mut(&mut self) -> &mut Buffer {
+        &mut self.buf
+    }
+
     /// Render a widget into the scroll buffer
     ///
     /// This should not be confused with the `render` method, which renders the visible area of the
@@ -43,6 +59,8 @@ impl StatefulWidget for ScrollView {
         x = x.min(self.buf.area.width.saturating_sub(1));
         y = y.min(self.buf.area.height.saturating_sub(1));
         state.offset = (x, y).into();
+        state.size = Some(self.size);
+        state.page_size = Some(area.into());
         let visible_area = Rect::new(x, y, area.width, area.height).intersection(self.buf.area);
         self.render_visible_area(area, buf, visible_area);
         // TODO work out whether to render the scrollbars or not
@@ -138,9 +156,7 @@ mod tests {
     fn move_down() {
         let (mut buf, scroll_buffer) = init();
 
-        let mut scroll_view_state = ScrollViewState {
-            offset: (0, 1).into(),
-        };
+        let mut scroll_view_state = ScrollViewState::with_offset((0, 1).into());
         scroll_buffer.render(Rect::new(2, 2, 5, 5), &mut buf, &mut scroll_view_state);
         assert_buffer_eq!(
             buf,

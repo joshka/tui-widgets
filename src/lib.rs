@@ -39,7 +39,7 @@
 //! one for the text. On top of this a Gauge widget is rendered to show that this can be used in
 //! combination with any other widget.
 //!
-//! ![Demo](https://vhs.charm.sh/vhs-hkWFxmfWuJInxosjYrSg9.gif)
+//! ![Demo](https://vhs.charm.sh/vhs-6PuT3pdwSTp4aTvKrCBx9F.gif)
 //!
 //! [scrollview.rs](https://github.com/joshka/tui-scrollview/tree/main/examples/scrollview.rs)
 //!
