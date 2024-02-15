@@ -93,10 +93,6 @@ fn layout(
     let width = 8_u16.div_ceil(step_x);
     let height = 8_u16.div_ceil(step_y);
 
-    if let PixelSize::Sextant = pixel_size {
-        println!("width: {},   height: {}", width, height);
-    }
-
     (area.top()..area.bottom())
         .step_by(height as usize)
         .map(move |y| {
