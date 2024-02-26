@@ -5,6 +5,7 @@ edition = "2021"
 description = "A simple Ratatui widget for displaying big text using the font8x8 crate in a TUI (Terminal UI)."
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/joshka/tui-big-text"
+documentation = "https://docs.rs/tui-big-text"
 authors = ["Joshka"]
 categories = ["command-line-interface", "gui"]
 keywords = ["cli", "console", "ratatui", "terminal", "tui"]
