@@ -5,7 +5,7 @@
 [tui-big-text] is a rust crate that renders large pixel text as a [Ratatui] widget using the
 glyphs from the [font8x8] crate.
 
-![Hello World example](https://vhs.charm.sh/vhs-2UxNc2SJgiNqHoowbsXAMW.gif)
+![Demo](https://vhs.charm.sh/vhs-35FZxQa32pCZdRW7pmpqf6.gif)
 
 [![Crate badge]][tui-big-text]
 [![Docs.rs Badge]][API Docs]

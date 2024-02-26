@@ -5,7 +5,10 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
     ExecutableCommand,
 };
-use ratatui::prelude::*;
+use ratatui::{
+    prelude::*,
+    widgets::{Block, BorderType},
+};
 use tui_big_text::BigText;
 
 fn main() -> Result<()> {
@@ -23,14 +26,19 @@ fn main() -> Result<()> {
 }
 
 fn render(frame: &mut Frame) -> Result<()> {
+    let block = Block::bordered()
+        .border_type(BorderType::Rounded)
+        .title("Tui-big-text Demo");
+    frame.render_widget(&block, frame.size());
+    let area = block.inner(frame.size());
     let big_text = BigText::builder()
         .style(Style::new().blue())
         .lines(vec![
-            "Hello".red().into(),
-            "World".white().into(),
-            "~~~~~".into(),
+            "Tui-".red().into(),
+            "big-".white().into(),
+            "text".into(),
         ])
         .build()?;
-    frame.render_widget(big_text, frame.size());
+    frame.render_widget(big_text, area);
     Ok(())
 }

@@ -1,8 +1,8 @@
 # Examples
 
-## Hello World
+## Demo
 
-![Hello World](https://vhs.charm.sh/vhs-2UxNc2SJgiNqHoowbsXAMW.gif)
+![Demo](https://vhs.charm.sh/vhs-35FZxQa32pCZdRW7pmpqf6.gif)
 
 ## Pixel Size
 
