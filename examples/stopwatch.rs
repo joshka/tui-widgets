@@ -139,7 +139,7 @@ impl StopwatchApp {
         };
         let duration = format_duration(self.elapsed());
         let lines = vec![duration.into()];
-        tui_big_text::BigTextBuilder::default()
+        BigText::builder()
             .lines(lines)
             .style(style)
             .build()

@@ -6,7 +6,7 @@ use crossterm::{
     ExecutableCommand,
 };
 use ratatui::prelude::*;
-use tui_big_text::BigTextBuilder;
+use tui_big_text::BigText;
 
 fn main() -> Result<()> {
     stdout().execute(EnterAlternateScreen)?;
@@ -23,7 +23,7 @@ fn main() -> Result<()> {
 }
 
 fn render(frame: &mut Frame) -> Result<()> {
-    let big_text = BigTextBuilder::default()
+    let big_text = BigText::builder()
         .style(Style::new().blue())
         .lines(vec![
             "Hello".red().into(),

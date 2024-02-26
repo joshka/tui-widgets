@@ -18,9 +18,9 @@ use crate::PixelSize;
 ///
 /// ```rust
 /// use ratatui::prelude::*;
-/// use tui_big_text::{BigTextBuilder, PixelSize};
+/// use tui_big_text::{BigText, PixelSize};
 ///
-/// BigTextBuilder::default()
+/// BigText::builder()
 ///     .pixel_size(PixelSize::Full)
 ///     .style(Style::new().white())
 ///     .lines(vec![
@@ -70,6 +70,13 @@ pub struct BigText<'a> {
     /// Defaults to `BigTextSize::default()` (=> BigTextSize::Full)
     #[builder(default)]
     pixel_size: PixelSize,
+}
+
+impl BigText<'static> {
+    /// Create a new [`BigTextBuilder`] to configure a [`BigText`] widget.
+    pub fn builder() -> BigTextBuilder<'static> {
+        BigTextBuilder::default()
+    }
 }
 
 impl Widget for BigText<'_> {
@@ -149,7 +156,7 @@ mod tests {
         let style = Style::new().green();
         let pixel_size = PixelSize::default();
         assert_eq!(
-            BigTextBuilder::default()
+            BigText::builder()
                 .lines(lines.clone())
                 .style(style)
                 .build()?,
@@ -164,7 +171,7 @@ mod tests {
 
     #[test]
     fn render_single_line() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .lines(vec![Line::from("SingleLine")])
             .build()?;
         let mut buf = Buffer::empty(Rect::new(0, 0, 80, 8));
@@ -185,7 +192,7 @@ mod tests {
 
     #[test]
     fn render_truncated() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .lines(vec![Line::from("Truncated")])
             .build()?;
         let mut buf = Buffer::empty(Rect::new(0, 0, 70, 6));
@@ -204,7 +211,7 @@ mod tests {
 
     #[test]
     fn render_multiple_lines() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .lines(vec![Line::from("Multi"), Line::from("Lines")])
             .build()?;
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 16));
@@ -233,7 +240,7 @@ mod tests {
 
     #[test]
     fn render_widget_style() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .lines(vec![Line::from("Styled")])
             .style(Style::new().bold())
             .build()?;
@@ -256,7 +263,7 @@ mod tests {
 
     #[test]
     fn render_line_style() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .lines(vec![
                 Line::from("Red".red()),
                 Line::from("Green".green()),
@@ -300,7 +307,7 @@ mod tests {
 
     #[test]
     fn render_half_height_single_line() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfHeight)
             .lines(vec![Line::from("SingleLine")])
             .build()?;
@@ -318,7 +325,7 @@ mod tests {
 
     #[test]
     fn render_half_height_truncated() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfHeight)
             .lines(vec![Line::from("Truncated")])
             .build()?;
@@ -335,7 +342,7 @@ mod tests {
 
     #[test]
     fn render_half_height_multiple_lines() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfHeight)
             .lines(vec![Line::from("Multi"), Line::from("Lines")])
             .build()?;
@@ -357,7 +364,7 @@ mod tests {
 
     #[test]
     fn render_half_height_widget_style() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfHeight)
             .lines(vec![Line::from("Styled")])
             .style(Style::new().bold())
@@ -377,7 +384,7 @@ mod tests {
 
     #[test]
     fn render_half_height_line_style() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfHeight)
             .lines(vec![
                 Line::from("Red".red()),
@@ -410,7 +417,7 @@ mod tests {
 
     #[test]
     fn render_half_width_single_line() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfWidth)
             .lines(vec![Line::from("SingleLine")])
             .build()?;
@@ -432,7 +439,7 @@ mod tests {
 
     #[test]
     fn render_half_width_truncated() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfWidth)
             .lines(vec![Line::from("Truncated")])
             .build()?;
@@ -452,7 +459,7 @@ mod tests {
 
     #[test]
     fn render_half_width_multiple_lines() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfWidth)
             .lines(vec![Line::from("Multi"), Line::from("Lines")])
             .build()?;
@@ -482,7 +489,7 @@ mod tests {
 
     #[test]
     fn render_half_width_widget_style() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfWidth)
             .lines(vec![Line::from("Styled")])
             .style(Style::new().bold())
@@ -506,7 +513,7 @@ mod tests {
 
     #[test]
     fn render_half_width_line_style() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfWidth)
             .lines(vec![
                 Line::from("Red".red()),
@@ -551,7 +558,7 @@ mod tests {
 
     #[test]
     fn render_quadrant_size_single_line() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::Quadrant)
             .lines(vec![Line::from("SingleLine")])
             .build()?;
@@ -569,7 +576,7 @@ mod tests {
 
     #[test]
     fn render_quadrant_size_truncated() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::Quadrant)
             .lines(vec![Line::from("Truncated")])
             .build()?;
@@ -586,7 +593,7 @@ mod tests {
 
     #[test]
     fn render_quadrant_size_multiple_lines() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::Quadrant)
             .lines(vec![Line::from("Multi"), Line::from("Lines")])
             .build()?;
@@ -608,7 +615,7 @@ mod tests {
 
     #[test]
     fn render_quadrant_size_widget_style() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::Quadrant)
             .lines(vec![Line::from("Styled")])
             .style(Style::new().bold())
@@ -628,7 +635,7 @@ mod tests {
 
     #[test]
     fn render_quadrant_size_line_style() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::Quadrant)
             .lines(vec![
                 Line::from("Red".red()),
@@ -661,7 +668,7 @@ mod tests {
 
     #[test]
     fn render_third_height_single_line() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::ThirdHeight)
             .lines(vec![Line::from("SingleLine")])
             .build()?;
@@ -678,7 +685,7 @@ mod tests {
 
     #[test]
     fn render_third_height_truncated() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::ThirdHeight)
             .lines(vec![Line::from("Truncated")])
             .build()?;
@@ -694,7 +701,7 @@ mod tests {
 
     #[test]
     fn render_third_height_multiple_lines() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::ThirdHeight)
             .lines(vec![Line::from("Multi"), Line::from("Lines")])
             .build()?;
@@ -714,7 +721,7 @@ mod tests {
 
     #[test]
     fn render_third_height_widget_style() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::ThirdHeight)
             .lines(vec![Line::from("Styled")])
             .style(Style::new().bold())
@@ -733,7 +740,7 @@ mod tests {
 
     #[test]
     fn render_third_height_line_style() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::ThirdHeight)
             .lines(vec![
                 Line::from("Red".red()),
@@ -763,7 +770,7 @@ mod tests {
 
     #[test]
     fn render_sextant_size_single_line() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::Sextant)
             .lines(vec![Line::from("SingleLine")])
             .build()?;
@@ -780,7 +787,7 @@ mod tests {
 
     #[test]
     fn render_sextant_size_truncated() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::Sextant)
             .lines(vec![Line::from("Truncated")])
             .build()?;
@@ -796,7 +803,7 @@ mod tests {
 
     #[test]
     fn render_sextant_size_multiple_lines() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::Sextant)
             .lines(vec![Line::from("Multi"), Line::from("Lines")])
             .build()?;
@@ -816,7 +823,7 @@ mod tests {
 
     #[test]
     fn render_sextant_size_widget_style() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::Sextant)
             .lines(vec![Line::from("Styled")])
             .style(Style::new().bold())
@@ -835,7 +842,7 @@ mod tests {
 
     #[test]
     fn render_sextant_size_line_style() -> Result<()> {
-        let big_text = BigTextBuilder::default()
+        let big_text = BigText::builder()
             .pixel_size(PixelSize::Sextant)
             .lines(vec![
                 Line::from("Red".red()),

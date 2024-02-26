@@ -69,6 +69,9 @@ command = [
     "always",
 ]
 
+[jobs.rdme]
+command = ["cargo", "rdme", "--force"]
+need_stdout = true
 
 # You may define here keybindings that would be specific to
 # a project, for example a shortcut to launch a specific job.
@@ -77,3 +80,4 @@ command = [
 [keybindings]
 # alt-m = "job:my-job"
 v = "job:coverage"
+shift-r = "job:rdme"

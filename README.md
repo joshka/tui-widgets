@@ -22,7 +22,7 @@ cargo add ratatui tui-big-text
 
 ## Usage
 
-Create a [`BigText`] widget using `BigTextBuilder` and pass it to [`Frame::render_widget`] to
+Create a [`BigText`] widget using [`BigText::builder`] and pass it to [`render_widget`] to
 render be rendered. The builder allows you to customize the [`Style`] of the widget and the
 [`PixelSize`] of the glyphs. The [`PixelSize`] can be used to control how many character cells
 are used to represent a single pixel of the 8x8 font.
@@ -32,10 +32,10 @@ are used to represent a single pixel of the 8x8 font.
 ```rust
 use anyhow::Result;
 use ratatui::prelude::*;
-use tui_big_text::{BigTextBuilder, PixelSize};
+use tui_big_text::{BigText, PixelSize};
 
 fn render(frame: &mut Frame) -> Result<()> {
-    let big_text = BigTextBuilder::default()
+    let big_text = BigText::builder()
         .pixel_size(PixelSize::Full)
         .style(Style::new().blue())
         .lines(vec![
@@ -52,10 +52,12 @@ fn render(frame: &mut Frame) -> Result<()> {
 [tui-big-text]: https://crates.io/crates/tui-big-text
 [Ratatui]: https://crates.io/crates/ratatui
 [font8x8]: https://crates.io/crates/font8x8
-[`BigText`]: https://docs.rs/tui-big-text/latest/tui_big_text/struct.BigText.html
-[`PixelSize`]: https://docs.rs/tui-big-text/latest/tui_big_text/enum.PixelSize.html
-[`Frame::render_widget`]: ratatui::Frame::render_widget
-[`Style`]: ratatui::style::Style
+<!-- Note that these links are sensitive to breaking with cargo-rdme -->
+[`BigText`]: https://docs.rs/tui-big-text/latest/tui_big_text/big_text/struct.BigText.html
+[`BigText::builder`]: https://docs.rs/tui-big-text/latest/tui_big_text/big_text/struct.BigText.html#method.builder
+[`PixelSize`]: https://docs.rs/tui-big-text/latest/tui_big_text/pixel_size/enum.PixelSize.html
+[`render_widget`]: https://docs.rs/ratatui/latest/ratatui/struct.Frame.html#method.render_widget
+[`Style`]: https://docs.rs/ratatui/latest/ratatui/style/struct.Style.html
 
 <!-- cargo-rdme end -->
 

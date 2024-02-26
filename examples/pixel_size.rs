@@ -6,7 +6,7 @@ use crossterm::{
     ExecutableCommand,
 };
 use ratatui::prelude::*;
-use tui_big_text::{BigTextBuilder, PixelSize};
+use tui_big_text::{BigText, PixelSize};
 
 fn main() -> Result<()> {
     stdout().execute(EnterAlternateScreen)?;
@@ -23,32 +23,32 @@ fn main() -> Result<()> {
 }
 
 fn render(frame: &mut Frame) -> Result<()> {
-    let full_size_text = BigTextBuilder::default()
+    let full_size_text = BigText::builder()
         .pixel_size(PixelSize::Full)
         .lines(vec!["FullSize".white().into()])
         .build()?;
 
-    let half_height_text = BigTextBuilder::default()
+    let half_height_text = BigText::builder()
         .pixel_size(PixelSize::HalfHeight)
         .lines(vec!["1/2 high".green().into()])
         .build()?;
 
-    let half_wide_text = BigTextBuilder::default()
+    let half_wide_text = BigText::builder()
         .pixel_size(PixelSize::HalfWidth)
         .lines(vec!["1/2 wide".red().into()])
         .build()?;
 
-    let quadrant_text = BigTextBuilder::default()
+    let quadrant_text = BigText::builder()
         .pixel_size(PixelSize::Quadrant)
         .lines(vec!["Quadrant".blue().into(), " 1/2*1/2".blue().into()])
         .build()?;
 
-    let third_text = BigTextBuilder::default()
+    let third_text = BigText::builder()
         .pixel_size(PixelSize::ThirdHeight)
         .lines(vec!["1/3".yellow().into(), "high".yellow().into()])
         .build()?;
 
-    let sextant_text = BigTextBuilder::default()
+    let sextant_text = BigText::builder()
         .pixel_size(PixelSize::Sextant)
         .lines(vec!["Sextant".cyan().into(), " 1/2*1/3".cyan().into()])
         .build()?;
