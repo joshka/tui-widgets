@@ -13,10 +13,9 @@
 //!
 //! Create a [`BigText`] widget using [`BigText::builder`] and pass it to [`render_widget`] to
 //! render be rendered. The builder allows you to customize the [`Style`] of the widget and the
-//! [`PixelSize`] of the glyphs. The [`PixelSize`] can be used to control how many character cells
-//! are used to represent a single pixel of the 8x8 font.
+//! [`PixelSize`] of the glyphs.
 //!
-//! # Example
+//! # Examples
 //!
 //! ```rust
 //! use anyhow::Result;
@@ -37,6 +36,22 @@
 //!     Ok(())
 //! }
 //! ```
+//!
+//! The [`PixelSize`] can be used to control how many character cells are used to represent a single
+//! pixel of the 8x8 font. It has six variants:
+//!
+//! - `Full` (default) - Each pixel is represented by a single character cell.
+//! - `HalfHeight` - Each pixel is represented by half the height of a character cell.
+//! - `HalfWidth` - Each pixel is represented by half the width of a character cell.
+//! - `Quadrant` - Each pixel is represented by a quarter of a character cell.
+//! - `ThirdHeight` - Each pixel is represented by a third of the height of a character cell.
+//! - `Sextant` - Each pixel is represented by a sixth of a character cell.
+//!
+//! <details><summary>Pixel Size Example</summary>
+//!
+//! ![Pixel Size](https://vhs.charm.sh/vhs-2nLycKO16vHzqg3TxDNvq4.gif)
+//!
+//! </details>
 //!
 //! [tui-big-text]: https://crates.io/crates/tui-big-text
 //! [Ratatui]: https://crates.io/crates/ratatui

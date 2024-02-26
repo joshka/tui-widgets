@@ -24,10 +24,9 @@ cargo add ratatui tui-big-text
 
 Create a [`BigText`] widget using [`BigText::builder`] and pass it to [`render_widget`] to
 render be rendered. The builder allows you to customize the [`Style`] of the widget and the
-[`PixelSize`] of the glyphs. The [`PixelSize`] can be used to control how many character cells
-are used to represent a single pixel of the 8x8 font.
+[`PixelSize`] of the glyphs.
 
-## Example
+## Examples
 
 ```rust
 use anyhow::Result;
@@ -49,6 +48,22 @@ fn render(frame: &mut Frame) -> Result<()> {
 }
 ```
 
+The [`PixelSize`] can be used to control how many character cells are used to represent a single
+pixel of the 8x8 font. It has six variants:
+
+- `Full` (default) - Each pixel is represented by a single character cell.
+- `HalfHeight` - Each pixel is represented by half the height of a character cell.
+- `HalfWidth` - Each pixel is represented by half the width of a character cell.
+- `Quadrant` - Each pixel is represented by a quarter of a character cell.
+- `ThirdHeight` - Each pixel is represented by a third of the height of a character cell.
+- `Sextant` - Each pixel is represented by a sixth of a character cell.
+
+<details><summary>Pixel Size Example</summary>
+
+![Pixel Size](https://vhs.charm.sh/vhs-2nLycKO16vHzqg3TxDNvq4.gif)
+
+</details>
+
 [tui-big-text]: https://crates.io/crates/tui-big-text
 [Ratatui]: https://crates.io/crates/ratatui
 [font8x8]: https://crates.io/crates/font8x8
@@ -67,9 +82,9 @@ Copyright (c) 2023 Josh McKinney
 
 This project is licensed under either of
 
-* Apache License, Version 2.0
+- Apache License, Version 2.0
    ([LICENSE-APACHE](LICENSE-APACHE) or <http://www.apache.org/licenses/LICENSE-2.0>)
-* MIT license
+- MIT license
    ([LICENSE-MIT](LICENSE-MIT) or <http://opensource.org/licenses/MIT>)
 
 at your option.

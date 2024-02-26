@@ -1,6 +1,8 @@
 no-inline-html:
   allowed_elements:
     - br
+    - details
+    - summary
 line-length:
   line_length: 100
   heading_line_length: 100
