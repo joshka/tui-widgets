@@ -1,0 +1,15 @@
+name: Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  check:
+    permissions:
+      checks: write
+    uses: joshka/github-workflows/.github/workflows/rust-check.yml@main
+    with:
+      msrv: 1.76.0 # this is optional defaults to 1.56.0
