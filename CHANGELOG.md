@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.3](https://github.com/joshka/tui-popup/compare/v0.2.2...v0.2.3) - 2024-03-12
+
+### Other
+- *(deps)* bump mio from 0.8.10 to 0.8.11 ([#9](https://github.com/joshka/tui-popup/pull/9))
+- use joshka/github-workflows ([#10](https://github.com/joshka/tui-popup/pull/10))
+- *(deps)* bump ratatui from 0.25.0 to 0.26.1 ([#8](https://github.com/joshka/tui-popup/pull/8))
+- Create dependabot.yml
+
 ## [0.2.2](https://github.com/joshka/tui-popup/compare/v0.2.1...v0.2.2) - 2024-01-02
 
 ### Added
