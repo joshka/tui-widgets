@@ -10,7 +10,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-indoc = "2.0.4"
+indoc = "2.0.5"
 ratatui = "0.26.1"
 
 [dev-dependencies]
