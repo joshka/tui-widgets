@@ -7,7 +7,43 @@ use crate::ScrollViewState;
 /// Allows you to render a widget into a buffer larger than the area it is rendered into, and then
 /// scroll the contents of that buffer around.
 ///
+/// Note that the origin of the buffer is always at (0, 0), and the buffer is always the size of the
+/// size passed to `new`. The `ScrollView` widget itself is responsible for rendering the visible
+/// area of the buffer into the main buffer.
+///
 /// # Examples
+///
+/// ```rust
+/// use ratatui::{prelude::*, layout::Size, widgets::*};
+/// use tui_scrollview::{ScrollView, ScrollViewState};
+///
+/// # fn render(buf: &mut Buffer) {
+/// let mut scroll_view = ScrollView::new(Size::new(20, 20));
+///
+/// // render a few widgets into the buffer at various positions
+/// scroll_view.render_widget(Paragraph::new("Hello, world!"), Rect::new(0, 0, 20, 1));
+/// scroll_view.render_widget(Paragraph::new("Hello, world!"), Rect::new(10, 10, 20, 1));
+/// scroll_view.render_widget(Paragraph::new("Hello, world!"), Rect::new(15, 15, 20, 1));
+///
+/// // You can also render widgets into the buffer programmatically
+/// Line::raw("Hello, world!").render(Rect::new(0, 0, 20, 1), scroll_view.buf_mut());
+///
+/// // usually you would store the state of the scroll view in a struct that implements
+/// // StatefulWidget (or in your app state if you're using an `App` struct)
+/// let mut state = ScrollViewState::default();
+///
+/// // you can also scroll the view programmatically
+/// state.scroll_down();
+///
+/// // render the scroll view into the main buffer at the given position within a widget
+/// let scroll_view_area = Rect::new(0, 0, 10, 10);
+/// scroll_view.render(scroll_view_area, buf, &mut state);
+/// # }
+/// // or if you're rendering in a terminal draw closure instead of from within another widget:
+/// # fn terminal_draw(frame: &mut Frame, scroll_view: ScrollView, state: &mut ScrollViewState) {
+/// frame.render_stateful_widget(scroll_view, frame.size(), state);
+/// # }
+/// ```
 #[derive(Debug, Default, Clone, Eq, PartialEq, Hash)]
 pub struct ScrollView {
     buf: Buffer,
@@ -16,6 +52,8 @@ pub struct ScrollView {
 
 impl ScrollView {
     /// Create a new scroll view with a buffer of the given size
+    ///
+    /// The buffer will be empty, with coordinates ranging from (0, 0) to (size.width, size.height).
     pub fn new(size: Size) -> Self {
         // TODO: this is replaced with Rect::from(size) in the next version of ratatui
         let area = Rect::new(0, 0, size.width, size.height);
@@ -25,23 +63,43 @@ impl ScrollView {
         }
     }
 
+    /// The content size of the scroll view
     pub fn size(&self) -> Size {
         self.size
     }
 
+    /// The area of the buffer that is available to be scrolled
     pub fn area(&self) -> Rect {
         self.buf.area
     }
 
+    /// The buffer containing the contents of the scroll view
     pub fn buf(&self) -> &Buffer {
         &self.buf
     }
 
+    /// The mutable buffer containing the contents of the scroll view
+    ///
+    /// This can be used to render widgets into the buffer programmatically
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// # use ratatui::{prelude::*, layout::Size, widgets::*};
+    /// # use tui_scrollview::ScrollView;
+    ///
+    /// let mut scroll_view = ScrollView::new(Size::new(20, 20));
+    /// Line::raw("Hello, world!").render(Rect::new(0, 0, 20, 1), scroll_view.buf_mut());
+    /// ```
     pub fn buf_mut(&mut self) -> &mut Buffer {
         &mut self.buf
     }
 
     /// Render a widget into the scroll buffer
+    ///
+    /// This is the equivalent of `Frame::render_widget`, but renders the widget into the scroll
+    /// buffer rather than the main buffer. The widget will be rendered into the area of the buffer
+    /// specified by the `area` parameter.
     ///
     /// This should not be confused with the `render` method, which renders the visible area of the
     /// ScrollView into the main buffer.

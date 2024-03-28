@@ -21,21 +21,35 @@ use std::iter;
 use tui_scrollview::{ScrollView, ScrollViewState};
 use ratatui::{layout::Size, prelude::*, widgets::*};
 
-fn render(frame: &mut Frame) {
-    let size = Size::new(10, 100);
-    let mut scroll_view = ScrollView::new(size);
-    let some_long_string =
-        iter::repeat("Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n")
-           .take(100)
-           .collect::<String>();
-    let area = Rect::new(0, 0, 10, 100);
-    scroll_view.render_widget(Paragraph::new(some_long_string), area);
-    let mut state = ScrollViewState::default();
-    frame.render_stateful_widget(scroll_view, area, &mut state);
+struct MyScrollableWidget;
+
+impl StatefulWidget for MyScrollableWidget {
+    type State = ScrollViewState;
+
+    fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
+        // 100 lines of text
+        let line_numbers = (1..=100).map(|i| format!("{:>3} ", i)).collect::<String>();
+        let content =
+            iter::repeat("Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n")
+                .take(100)
+                .collect::<String>();
+
+        let content_size = Size::new(100, 30);
+        let mut scroll_view = ScrollView::new(content_size);
+
+        // the layout doesn't have to be hardcoded like this, this is just an example
+        scroll_view.render_widget(Paragraph::new(line_numbers), Rect::new(0, 0, 5, 100));
+        scroll_view.render_widget(Paragraph::new(content), Rect::new(5, 0, 95, 100));
+
+        scroll_view.render(buf.area, buf, state);
+    }
 }
 ```
 
-## Example
+## Full Example
+
+A full example can be found in the [examples] directory.
+[scrollview.rs](https://github.com/joshka/tui-scrollview/tree/main/examples/scrollview.rs)
 
 This example shows a scrollable view with two paragraphs of text, one for the line numbers and
 one for the text. On top of this a Gauge widget is rendered to show that this can be used in
@@ -43,7 +57,8 @@ combination with any other widget.
 
 ![Demo](https://vhs.charm.sh/vhs-6PuT3pdwSTp4aTvKrCBx9F.gif)
 
-[scrollview.rs](https://github.com/joshka/tui-scrollview/tree/main/examples/scrollview.rs)
+(Note: a github bug stops the example gif above being displayed, but you can view it at:
+<https://vhs.charm.sh/vhs-6PuT3pdwSTp4aTvKrCBx9F.gif>)
 
 [Crates.io Badge]: https://img.shields.io/crates/v/tui-scrollview?logo=rust&style=for-the-badge
 [License Badge]: https://img.shields.io/crates/l/tui-scrollview?style=for-the-badge
