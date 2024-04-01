@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.4](https://github.com/joshka/tui-popup/compare/v0.2.3...v0.2.4) - 2024-03-19
+
+### Other
+- *(deps)* bump lipsum from 0.9.0 to 0.9.1 ([#12](https://github.com/joshka/tui-popup/pull/12))
+
 ## [0.2.3](https://github.com/joshka/tui-popup/compare/v0.2.2...v0.2.3) - 2024-03-12
 
 ### Other
