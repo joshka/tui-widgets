@@ -80,6 +80,6 @@ impl ScrollViewState {
         let bottom = self
             .size
             .map_or(u16::MAX, |size| size.height.saturating_sub(1));
-        self.offset.x = bottom;
+        self.offset.y = bottom;
     }
 }
