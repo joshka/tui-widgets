@@ -56,11 +56,26 @@
 //! - `ThirdHeight` - Each pixel is represented by a third of the height of a character cell.
 //! - `Sextant` - Each pixel is represented by a sixth of a character cell.
 //!
-//! <details><summary>Pixel Size Example</summary>
+//! ```rust
+//! # use tui_big_text::*;
+//! BigText::builder().pixel_size(PixelSize::Full);
+//! BigText::builder().pixel_size(PixelSize::HalfHeight);
+//! BigText::builder().pixel_size(PixelSize::Quadrant);
+//! ```
 //!
 //! ![Pixel Size](https://vhs.charm.sh/vhs-2nLycKO16vHzqg3TxDNvq4.gif)
 //!
-//! </details>
+//! Text can be aligned to the Left / Right / Center using the `alignment` method.
+//!
+//! ```rust
+//! use ratatui::layout::Alignment;
+//! # use tui_big_text::*;
+//! BigText::builder().alignment(Alignment::Left);
+//! BigText::builder().alignment(Alignment::Right);
+//! BigText::builder().alignment(Alignment::Center);
+//! ```
+//!
+//! ![Alignment Example](https://vhs.charm.sh/vhs-1Yyr7BJ5vfmOmjYNywCNH3.gif)
 //!
 //! [tui-big-text]: https://crates.io/crates/tui-big-text
 //! [Ratatui]: https://crates.io/crates/ratatui
