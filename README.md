@@ -22,13 +22,13 @@ use tui_popup::Popup;
 fn render_popup(frame: &mut Frame) {
     let popup = Popup::new("tui-popup demo", "Press any key to exit")
        .style(Style::new().white().on_blue());
-    frame.render_widget(popup.to_widget(), frame.size());
+    frame.render_widget(&popup, frame.size());
 }
 ```
 
-<!-- cargo-rdme end -->
+![demo](https://vhs.charm.sh/vhs-q5Kz0QP3zmrBlQ6dofjMh.gif)
 
-![demo](./examples/demo.png)
+<!-- cargo-rdme end -->
 
 ## State
 
@@ -42,7 +42,7 @@ use tui_popup::Popup;
 fn render_stateful_popup(frame: &mut Frame, popup_state: &mut PopupState) {
     let popup = Popup::new("tui-popup demo", "Press any key to exit")
        .style(Style::new().white().on_blue());
-    frame.render_stateful_widget(popup.to_widget(), frame.size(), popup_state);
+    frame.render_stateful_widget_ref(popup, frame.size(), popup_state);
 }
 
 fn move_up(popup_state: &mut PopupState) {
@@ -74,7 +74,27 @@ match event.read()? {
 }
 ```
 
-![state demo](./examples/state.gif)
+![state demo](https://vhs.charm.sh/vhs-73faTQbCkAHOv7dt0MQJAd.gif)
+
+The popup also supports rendering arbitrary widgets by implementing SizedWidgetRef (or wrapping them
+with the provided SizedWrapper). This makes it possible to support wrapping and scrolling in using a
+`Paragraph` widget, or scrolling any amount of widgets using
+[tui-scrollview](https://github.com/joshka/tui-scrollview/).
+
+```rust
+let lines: Text = (0..10).map(|i| Span::raw(format!("Line {}", i))).collect();
+let paragraph = Paragraph::new(lines).scroll((scroll, 0));
+let sized_paragraph = SizedWrapper {
+    inner: paragraph,
+    width: 21,
+    height: 5,
+};
+let popup = Popup::new("scroll: ↑/↓ quit: Esc", sized_paragraph)
+    .style(Style::new().white().on_blue());
+frame.render_widget_ref(popup, area);
+```
+
+![paragraph example](https://vhs.charm.sh/vhs-A3mwcn9IngIc0hpl2AsXM.gif)
 
 ## Features
 

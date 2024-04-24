@@ -1,5 +1,5 @@
 # A VHS tape. See https://github.com/charmbracelet/vhs
-Output "state.gif"
+Output "target/state.gif"
 Set Theme "Aardvark Blue"
 Set Width 800
 Set Height 600

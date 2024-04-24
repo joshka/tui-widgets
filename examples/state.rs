@@ -50,7 +50,7 @@ fn render(frame: &mut Frame<'_>, popup_state: &mut PopupState) {
         "l: move right".into(),
     ]);
     let popup = Popup::new("Popup", body).style(Style::new().white().on_blue());
-    frame.render_stateful_widget(popup.to_widget(), background_area, popup_state);
+    frame.render_stateful_widget_ref(popup, background_area, popup_state);
     let text = format!("{area:?}", area = popup_state.area());
     let status = Paragraph::new(text).style(Style::new().white().on_black());
     frame.render_widget(status, status_area);

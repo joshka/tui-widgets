@@ -1,7 +1,7 @@
-use derive_setters::Setters;
-use ratatui::prelude::*;
+use std::fmt::Debug;
 
-use crate::PopupWidget;
+use derive_setters::Setters;
+use ratatui::{prelude::*, widgets::WidgetRef};
 
 /// Configuration for a popup.
 ///
@@ -18,22 +18,33 @@ use crate::PopupWidget;
 /// fn render_popup(frame: &mut Frame) {
 ///     let popup = Popup::new("tui-popup demo", "Press any key to exit")
 ///         .style(Style::new().white().on_blue());
-///     frame.render_widget(popup.to_widget(), frame.size());
+///     frame.render_widget(&popup, frame.size());
 /// }
 /// ```
-#[derive(Clone, Debug, Default, Setters)]
+#[derive(Debug, Setters)]
 #[setters(into)]
 #[non_exhaustive]
-pub struct Popup<'content> {
+pub struct Popup<'content, W: SizedWidgetRef> {
+    /// The body of the popup.
+    pub body: W,
     /// The title of the popup.
     pub title: Line<'content>,
-    /// The body of the popup.
-    pub body: Text<'content>,
     /// The style to apply to the entire popup.
     pub style: Style,
 }
 
-impl<'content> Popup<'content> {
+/// A trait for widgets that have a fixed size.
+///
+/// This trait allows the popup to automatically size itself based on the size of the body widget.
+/// Implementing this trait for a widget allows it to be used as the body of a popup. You can also
+/// wrap existing widgets in a newtype and implement this trait for the newtype to use them as the
+/// body of a popup.
+pub trait SizedWidgetRef: WidgetRef + Debug {
+    fn width(&self) -> usize;
+    fn height(&self) -> usize;
+}
+
+impl<'content, W: SizedWidgetRef> Popup<'content, W> {
     /// Create a new popup with the given title and body.
     ///
     /// # Parameters
@@ -50,21 +61,57 @@ impl<'content> Popup<'content> {
     ///
     /// let popup = Popup::new("tui-popup demo", "Press any key to exit");
     /// ```
-    pub fn new<L, T>(title: L, body: T) -> Self
+    pub fn new<L>(title: L, body: W) -> Self
     where
         L: Into<Line<'content>>,
-        T: Into<Text<'content>>,
     {
         Self {
+            body,
             title: title.into(),
-            body: body.into(),
-            ..Default::default()
+            style: Style::default(),
         }
     }
+}
 
-    /// Convert the popup into a Ratatui widget.
-    #[must_use]
-    pub const fn to_widget(&'content self) -> PopupWidget<'content> {
-        PopupWidget { popup: self }
+impl SizedWidgetRef for Text<'_> {
+    fn width(&self) -> usize {
+        self.width()
+    }
+
+    fn height(&self) -> usize {
+        self.height()
+    }
+}
+
+impl SizedWidgetRef for &str {
+    fn width(&self) -> usize {
+        Text::from(*self).width()
+    }
+
+    fn height(&self) -> usize {
+        Text::from(*self).height()
+    }
+}
+
+#[derive(Debug)]
+pub struct SizedWrapper<W: Debug> {
+    pub inner: W,
+    pub width: usize,
+    pub height: usize,
+}
+
+impl<W: WidgetRef + Debug> WidgetRef for SizedWrapper<W> {
+    fn render_ref(&self, area: Rect, buf: &mut Buffer) {
+        self.inner.render_ref(area, buf);
+    }
+}
+
+impl<W: WidgetRef + Debug> SizedWidgetRef for SizedWrapper<W> {
+    fn width(&self) -> usize {
+        self.width
+    }
+
+    fn height(&self) -> usize {
+        self.height
     }
 }

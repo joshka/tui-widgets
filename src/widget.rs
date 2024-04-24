@@ -2,30 +2,22 @@ use std::cmp::min;
 
 use ratatui::{
     prelude::*,
-    widgets::{Block, Borders, Clear, Paragraph, StatefulWidget, Widget},
+    widgets::{Block, Borders, Clear, StatefulWidgetRef, Widget, WidgetRef},
 };
 
-use crate::{Popup, PopupState};
+use crate::{popup::SizedWidgetRef, Popup, PopupState};
 
-/// A Ratatui widget that renders a popup.
-#[derive(Clone, Debug)]
-pub struct PopupWidget<'content> {
-    pub popup: &'content Popup<'content>,
-}
-
-impl Widget for PopupWidget<'_> {
-    fn render(self, area: Rect, buf: &mut Buffer) {
+impl<W: SizedWidgetRef> WidgetRef for Popup<'_, W> {
+    fn render_ref(&self, area: Rect, buf: &mut Buffer) {
         let mut state = PopupState::default();
-        StatefulWidget::render(self, area, buf, &mut state);
+        StatefulWidgetRef::render_ref(self, area, buf, &mut state);
     }
 }
 
-impl StatefulWidget for PopupWidget<'_> {
+impl<W: SizedWidgetRef> StatefulWidgetRef for Popup<'_, W> {
     type State = PopupState;
 
-    fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
-        let popup = self.popup;
-
+    fn render_ref(&self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
         let area = if let Some(next) = state.area.take() {
             // ensure that the popup remains on screen
             let width = min(next.width, area.width);
@@ -35,13 +27,13 @@ impl StatefulWidget for PopupWidget<'_> {
 
             Rect::new(x, y, width, height)
         } else {
-            let height = popup
+            let height = self
                 .body
                 .height()
                 .saturating_add(2)
                 .try_into()
                 .unwrap_or(area.height);
-            let width = popup
+            let width = self
                 .body
                 .width()
                 .saturating_add(2)
@@ -55,11 +47,10 @@ impl StatefulWidget for PopupWidget<'_> {
         Clear.render(area, buf);
         let block = Block::default()
             .borders(Borders::ALL)
-            .title(self.popup.title.clone());
-        Paragraph::new(self.popup.body.clone())
-            .block(block)
-            .style(popup.style)
-            .render(area, buf);
+            .title(self.title.clone())
+            .style(self.style);
+        block.render_ref(area, buf);
+        self.body.render_ref(block.inner(area), buf);
     }
 }
 

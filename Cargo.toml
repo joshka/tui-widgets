@@ -13,7 +13,7 @@ edition = "2021"
 [dependencies]
 derive-getters = "0.3.0"
 derive_setters = "0.1.6"
-ratatui = "0.26.1"
+ratatui = { version = "0.26.2", features = ["unstable-widget-ref"] }
 
 [dev-dependencies]
 color-eyre = "0.6.3"

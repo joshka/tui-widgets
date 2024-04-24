@@ -27,7 +27,7 @@ fn main() -> color_eyre::Result<()> {
 
         let popup = Popup::new("tui-popup demo", "Press any key to exit")
             .style(Style::new().white().on_blue());
-        frame.render_widget(popup.to_widget(), area);
+        frame.render_widget_ref(popup, area);
     })?;
     while !matches!(event::read()?, Event::Key(_)) {}
     restore_terminal()?;

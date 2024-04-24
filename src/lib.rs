@@ -12,14 +12,15 @@
 //! fn render_popup(frame: &mut Frame) {
 //!     let popup = Popup::new("tui-popup demo", "Press any key to exit")
 //!        .style(Style::new().white().on_blue());
-//!     frame.render_widget(popup.to_widget(), frame.size());
+//!     frame.render_widget(&popup, frame.size());
 //! }
 //! ```
+//!
+//! ![demo](https://vhs.charm.sh/vhs-q5Kz0QP3zmrBlQ6dofjMh.gif)
 
 mod popup;
 mod state;
 mod widget;
 
-pub use popup::Popup;
-pub use state::PopupState;
-pub use widget::PopupWidget;
+pub use popup::*;
+pub use state::*;
