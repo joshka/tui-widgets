@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0](https://github.com/joshka/tui-popup/compare/v0.2.4...v0.3.0) - 2024-04-24
+
+### Added
+- [**breaking**] make popup accept any widget as the body ([#18](https://github.com/joshka/tui-popup/pull/18))
+
+### Other
+- group dependabot updates
+- *(deps)* bump eyre from 0.6.11 to 0.6.12 ([#14](https://github.com/joshka/tui-popup/pull/14))
+
 ## [0.2.4](https://github.com/joshka/tui-popup/compare/v0.2.3...v0.2.4) - 2024-03-19
 
 ### Other
