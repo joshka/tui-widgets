@@ -84,14 +84,20 @@ impl App {
     }
 }
 
+const SCROLLVIEW_HEIGHT: u16 = 100;
+
 impl Widget for &mut App {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let layout = Layout::vertical([Constraint::Length(1), Constraint::Fill(1)]);
         let [title, body] = layout.areas(area);
 
         self.title().render(title, buf);
-
-        let mut scroll_view = ScrollView::new(Size::new(area.width, 100));
+        let width = if buf.area.height < SCROLLVIEW_HEIGHT {
+            buf.area.width - 1
+        } else {
+            buf.area.width
+        };
+        let mut scroll_view = ScrollView::new(Size::new(width, SCROLLVIEW_HEIGHT));
         self.render_widgets_into_scrollview(scroll_view.buf_mut());
         scroll_view.render(body, buf, &mut self.scroll_view_state)
     }
@@ -118,11 +124,7 @@ impl App {
     fn render_widgets_into_scrollview(&self, buf: &mut Buffer) {
         use Constraint::*;
         let area = buf.area;
-        // The scrollview (currently) allocates the full width of the buffer, but last row and
-        // column might be used by scrollbars. This means that we need to account for this when
-        // laying out the widgets.
-        let [numbers, widgets, _scrollbar] =
-            Layout::horizontal([Length(5), Fill(1), Length(1)]).areas(area);
+        let [numbers, widgets] = Layout::horizontal([Length(5), Fill(1)]).areas(area);
         let [bar_charts, text_0, text_1, text_2] =
             Layout::vertical([Length(7), Fill(1), Fill(2), Fill(4)]).areas(widgets);
         let [left_bar, right_bar] = Layout::horizontal([Length(20), Fill(1)]).areas(bar_charts);
