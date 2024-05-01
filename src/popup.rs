@@ -1,7 +1,10 @@
 use std::fmt::Debug;
 
 use derive_setters::Setters;
-use ratatui::{prelude::*, widgets::WidgetRef};
+use ratatui::{
+    prelude::*,
+    widgets::{Borders, WidgetRef},
+};
 
 /// Configuration for a popup.
 ///
@@ -31,6 +34,8 @@ pub struct Popup<'content, W: SizedWidgetRef> {
     pub title: Line<'content>,
     /// The style to apply to the entire popup.
     pub style: Style,
+    /// The borders of the popup.
+    pub borders: Borders,
 }
 
 /// A trait for widgets that have a fixed size.
@@ -45,7 +50,7 @@ pub trait SizedWidgetRef: WidgetRef + Debug {
 }
 
 impl<'content, W: SizedWidgetRef> Popup<'content, W> {
-    /// Create a new popup with the given title and body.
+    /// Create a new popup with the given title and body with all the borders.
     ///
     /// # Parameters
     ///
@@ -69,6 +74,7 @@ impl<'content, W: SizedWidgetRef> Popup<'content, W> {
             body,
             title: title.into(),
             style: Style::default(),
+            borders: Borders::ALL,
         }
     }
 }

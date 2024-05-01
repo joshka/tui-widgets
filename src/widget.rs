@@ -27,16 +27,21 @@ impl<W: SizedWidgetRef> StatefulWidgetRef for Popup<'_, W> {
 
             Rect::new(x, y, width, height)
         } else {
+            let border_height = self.borders.intersects(Borders::TOP) as usize
+                + self.borders.intersects(Borders::BOTTOM) as usize;
+            let border_width = self.borders.intersects(Borders::LEFT) as usize
+                + self.borders.intersects(Borders::RIGHT) as usize;
+
             let height = self
                 .body
                 .height()
-                .saturating_add(2)
+                .saturating_add(border_height)
                 .try_into()
                 .unwrap_or(area.height);
             let width = self
                 .body
                 .width()
-                .saturating_add(2)
+                .saturating_add(border_width)
                 .try_into()
                 .unwrap_or(area.width);
             centered_rect(width, height, area)
@@ -46,7 +51,7 @@ impl<W: SizedWidgetRef> StatefulWidgetRef for Popup<'_, W> {
 
         Clear.render(area, buf);
         let block = Block::default()
-            .borders(Borders::ALL)
+            .borders(self.borders)
             .title(self.title.clone())
             .style(self.style);
         block.render_ref(area, buf);
