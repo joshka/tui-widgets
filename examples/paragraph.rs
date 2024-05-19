@@ -2,7 +2,7 @@
 use std::io::stdout;
 
 use crossterm::{
-    event::{self, Event},
+    event::{self, Event, KeyCode},
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen},
     ExecutableCommand,
 };
@@ -27,7 +27,7 @@ fn main() -> color_eyre::Result<()> {
                 .wrap(Wrap { trim: false })
                 .dark_gray();
             frame.render_widget(background, area);
-            let lines: Text = (0..10).map(|i| Span::raw(format!("Line {}", i))).collect();
+            let lines: Text = (0..10).map(|i| Span::raw(format!("Line {i}"))).collect();
             let paragraph = Paragraph::new(lines).scroll((scroll, 0));
             let sized_paragraph = SizedWrapper {
                 inner: paragraph,
@@ -38,15 +38,13 @@ fn main() -> color_eyre::Result<()> {
                 .style(Style::new().white().on_blue());
             frame.render_widget_ref(popup, area);
         })?;
-        use crossterm::event::KeyCode::*;
-        match event::read()? {
-            Event::Key(key) => match key.code {
-                Char('q') | Esc => break,
-                Char('j') | Down => scroll = scroll.saturating_add(1),
-                Char('k') | Up => scroll = scroll.saturating_sub(1),
+        if let Event::Key(key) = event::read()? {
+            match key.code {
+                KeyCode::Char('q') | KeyCode::Esc => break,
+                KeyCode::Char('j') | KeyCode::Down => scroll = scroll.saturating_add(1),
+                KeyCode::Char('k') | KeyCode::Up => scroll = scroll.saturating_sub(1),
                 _ => {}
-            },
-            _ => {}
+            }
         }
     }
     restore_terminal()?;

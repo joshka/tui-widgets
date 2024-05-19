@@ -21,7 +21,7 @@ crossterm = "0.27.0"
 lipsum = "0.9.1"
 
 [lints.clippy]
-pedantic = "warn"
-nursery = "warn"
+pedantic = { level = "warn", priority = -1 }
+nursery = { level = "warn", priority = -1 }
 unwrap_used = "warn"
 expect_used = "warn"

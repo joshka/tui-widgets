@@ -27,10 +27,10 @@ impl<W: SizedWidgetRef> StatefulWidgetRef for Popup<'_, W> {
 
             Rect::new(x, y, width, height)
         } else {
-            let border_height = self.borders.intersects(Borders::TOP) as usize
-                + self.borders.intersects(Borders::BOTTOM) as usize;
-            let border_width = self.borders.intersects(Borders::LEFT) as usize
-                + self.borders.intersects(Borders::RIGHT) as usize;
+            let border_height = usize::from(self.borders.intersects(Borders::TOP))
+                + usize::from(self.borders.intersects(Borders::BOTTOM));
+            let border_width = usize::from(self.borders.intersects(Borders::LEFT))
+                + usize::from(self.borders.intersects(Borders::RIGHT));
 
             let height = self
                 .body
