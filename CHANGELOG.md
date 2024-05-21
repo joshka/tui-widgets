@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.2](https://github.com/joshka/tui-popup/compare/v0.3.1...v0.3.2) - 2024-05-21
+
+### Other
+- --- ([#24](https://github.com/joshka/tui-popup/pull/24))
+- *(deps)* bump derive-getters in the all-dependencies group ([#22](https://github.com/joshka/tui-popup/pull/22))
+- cleanup clippy lints
+
 ## [0.3.1](https://github.com/joshka/tui-popup/compare/v0.3.0...v0.3.1) - 2024-05-01
 
 ### Added
