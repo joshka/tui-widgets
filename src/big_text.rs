@@ -168,8 +168,6 @@ fn render_glyph(glyph: [u8; 8], area: Rect, buf: &mut Buffer, pixel_size: &Pixel
 
 #[cfg(test)]
 mod tests {
-    use ratatui::assert_buffer_eq;
-
     use super::*;
 
     type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
@@ -213,7 +211,7 @@ mod tests {
             " ████    ████   ██  ██      ██   ████    ████   ███████  ████   ██  ██   ████   ",
             "                        █████                                                   ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -232,7 +230,7 @@ mod tests {
             "  ██     ██  ██ ██  ██  ██  ██  ██       █████    ██    ██████  ██  ██",
             "  ██     ██     ██  ██  ██  ██  ██  ██  ██  ██    ██ █  ██      ██  ██",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -261,7 +259,7 @@ mod tests {
             "███████  ████   ██  ██   ████   █████   ",
             "                                        ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -284,7 +282,7 @@ mod tests {
             "                █████                           ",
         ]);
         expected.set_style(Rect::new(0, 0, 48, 8), Style::new().bold());
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -328,7 +326,7 @@ mod tests {
         expected.set_style(Rect::new(0, 0, 24, 8), Style::new().red());
         expected.set_style(Rect::new(0, 8, 40, 8), Style::new().green());
         expected.set_style(Rect::new(0, 16, 32, 8), Style::new().blue());
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -346,7 +344,7 @@ mod tests {
             "▄▄ ▀██    ██    ██  ██  ▀█▄▄██    ██    ██▀▀▀▀   ██  ▄█   ██    ██  ██  ██▀▀▀▀  ",
             " ▀▀▀▀    ▀▀▀▀   ▀▀  ▀▀  ▄▄▄▄█▀   ▀▀▀▀    ▀▀▀▀   ▀▀▀▀▀▀▀  ▀▀▀▀   ▀▀  ▀▀   ▀▀▀▀   ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -363,7 +361,7 @@ mod tests {
             "  ██    ▀█▄█▀█▄ ██  ██  ██▀▀█▄  ▄█▀▀█▄   ▀▀▀█▄   ▀██▀▀  ▄█▀▀█▄   ▄▄▄██",
             "  ██     ██  ▀▀ ██  ██  ██  ██  ██  ▄▄  ▄█▀▀██    ██ ▄  ██▀▀▀▀  ██  ██",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -385,7 +383,7 @@ mod tests {
             " ██  ▄█   ██    ██  ██  ██▀▀▀▀   ▀▀▀█▄  ",
             "▀▀▀▀▀▀▀  ▀▀▀▀   ▀▀  ▀▀   ▀▀▀▀   ▀▀▀▀▀   ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -405,7 +403,7 @@ mod tests {
             " ▀▀▀▀      ▀▀   ▄▄▄▄█▀   ▀▀▀▀    ▀▀▀▀    ▀▀▀ ▀▀ ",
         ]);
         expected.set_style(Rect::new(0, 0, 48, 4), Style::new().bold());
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -438,7 +436,7 @@ mod tests {
         expected.set_style(Rect::new(0, 0, 24, 4), Style::new().red());
         expected.set_style(Rect::new(0, 4, 40, 4), Style::new().green());
         expected.set_style(Rect::new(0, 8, 32, 4), Style::new().blue());
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -460,7 +458,7 @@ mod tests {
             "▐█▌ ▐█▌ █ █   █ ▐█▌ ▐█▌ ███▌▐█▌ █ █ ▐█▌ ",
             "            ██▌                         ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -480,7 +478,7 @@ mod tests {
             " █  ▐▌▐▌█ █ █ █ █   ▐██  █  ███ █ █",
             " █  ▐▌  █ █ █ █ █ █ █ █  █▐ █   █ █",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -510,7 +508,7 @@ mod tests {
             "███▌▐█▌ █ █ ▐█▌ ██▌ ",
             "                    ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -534,7 +532,7 @@ mod tests {
             "        ██▌             ",
         ]);
         expected.set_style(Rect::new(0, 0, 24, 8), Style::new().bold());
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -579,7 +577,7 @@ mod tests {
         expected.set_style(Rect::new(0, 0, 12, 8), Style::new().red());
         expected.set_style(Rect::new(0, 8, 20, 8), Style::new().green());
         expected.set_style(Rect::new(0, 16, 16, 8), Style::new().blue());
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -597,7 +595,7 @@ mod tests {
             "▄▝█  █  █ █ ▜▄█  █  █▀▀ ▐▌▗▌ █  █ █ █▀▀ ",
             "▝▀▘ ▝▀▘ ▀ ▀ ▄▄▛ ▝▀▘ ▝▀▘ ▀▀▀▘▝▀▘ ▀ ▀ ▝▀▘ ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -614,7 +612,7 @@ mod tests {
             " █  ▜▟▜▖█ █ █▀▙ ▟▀▙ ▝▀▙ ▝█▀ ▟▀▙ ▗▄█",
             " █  ▐▌▝▘█ █ █ █ █ ▄ ▟▀█  █▗ █▀▀ █ █",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -636,7 +634,7 @@ mod tests {
             "▐▌▗▌ █  █ █ █▀▀ ▝▀▙ ",
             "▀▀▀▘▝▀▘ ▀ ▀ ▝▀▘ ▀▀▘ ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -656,7 +654,7 @@ mod tests {
             "▝▀▘  ▝▘ ▄▄▛ ▝▀▘ ▝▀▘ ▝▀▝▘",
         ]);
         expected.set_style(Rect::new(0, 0, 24, 4), Style::new().bold());
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -689,7 +687,7 @@ mod tests {
         expected.set_style(Rect::new(0, 0, 12, 4), Style::new().red());
         expected.set_style(Rect::new(0, 4, 20, 4), Style::new().green());
         expected.set_style(Rect::new(0, 8, 16, 4), Style::new().blue());
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -706,7 +704,7 @@ mod tests {
             "🬭🬰🬂🬎🬹🬹    ██    ██  ██  🬎█🬭🬭██    ██    ██🬋🬋🬎🬎   ██  🬭🬹   ██    ██  ██  ██🬋🬋🬎🬎  ",
             " 🬂🬂🬂🬂    🬂🬂🬂🬂   🬂🬂  🬂🬂  🬋🬋🬋🬋🬎🬂   🬂🬂🬂🬂    🬂🬂🬂🬂   🬂🬂🬂🬂🬂🬂🬂  🬂🬂🬂🬂   🬂🬂  🬂🬂   🬂🬂🬂🬂   ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -722,7 +720,7 @@ mod tests {
             "🬎🬂██🬂🬎  🬭🬭 🬭🬭🬭  🬭🬭  🬭🬭  🬭🬭🬭🬭🬭    🬭🬭🬭🬭    🬭🬭🬭🬭    🬭🬹█🬭🬭   🬭🬭🬭🬭      🬂██",
             "  ██     ██🬂 🬎🬎 ██  ██  ██  ██  ██  🬰🬰  🬭🬹🬋🬋██    ██ 🬭  ██🬋🬋🬎🬎  🬹█🬂🬂██",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -742,7 +740,7 @@ mod tests {
             " ██  🬭🬹   ██    ██  ██  ██🬋🬋🬎🬎  🬂🬎🬋🬋🬹🬭  ",
             "🬂🬂🬂🬂🬂🬂🬂  🬂🬂🬂🬂   🬂🬂  🬂🬂   🬂🬂🬂🬂   🬂🬂🬂🬂🬂   ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -761,7 +759,7 @@ mod tests {
             " 🬂🬂🬂🬂      🬂🬂   🬋🬋🬋🬋🬎🬂   🬂🬂🬂🬂    🬂🬂🬂🬂    🬂🬂🬂 🬂🬂 ",
         ]);
         expected.set_style(Rect::new(0, 0, 48, 3), Style::new().bold());
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -791,7 +789,7 @@ mod tests {
         expected.set_style(Rect::new(0, 0, 24, 3), Style::new().red());
         expected.set_style(Rect::new(0, 3, 40, 3), Style::new().green());
         expected.set_style(Rect::new(0, 6, 32, 3), Style::new().blue());
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -808,7 +806,7 @@ mod tests {
             "🬯🬊🬹  █  █ █ 🬬🬭█  █  █🬋🬎 ▐▌🬞🬓 █  █ █ █🬋🬎 ",
             "🬁🬂🬀 🬁🬂🬀 🬂 🬂 🬋🬋🬆 🬁🬂🬀 🬁🬂🬀 🬂🬂🬂🬀🬁🬂🬀 🬂 🬂 🬁🬂🬀 ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -824,7 +822,7 @@ mod tests {
             "🬆█🬊 🬭🬞🬭 🬭 🬭 🬭🬭🬏 🬞🬭🬏 🬞🬭🬏 🬞🬻🬭 🬞🬭🬏  🬁█",
             " █  ▐🬕🬉🬄█ █ █ █ █ 🬰 🬵🬋█  █🬞 █🬋🬎 🬻🬂█",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -844,7 +842,7 @@ mod tests {
             "▐▌🬞🬓 █  █ █ █🬋🬎 🬊🬋🬱 ",
             "🬂🬂🬂🬀🬁🬂🬀 🬂 🬂 🬁🬂🬀 🬂🬂🬀 ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -863,7 +861,7 @@ mod tests {
             "🬁🬂🬀  🬁🬀 🬋🬋🬆 🬁🬂🬀 🬁🬂🬀 🬁🬂🬁🬀",
         ]);
         expected.set_style(Rect::new(0, 0, 24, 3), Style::new().bold());
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -893,7 +891,7 @@ mod tests {
         expected.set_style(Rect::new(0, 0, 12, 3), Style::new().red());
         expected.set_style(Rect::new(0, 3, 20, 3), Style::new().green());
         expected.set_style(Rect::new(0, 6, 16, 3), Style::new().blue());
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -912,7 +910,7 @@ mod tests {
             "▐▌▗▌█▀▀ ▐▌   █▗                         ",
             "▀▀▀▘▝▀▘ ▀▀   ▝▘                         ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -931,7 +929,7 @@ mod tests {
             "                    ▐▌▜▖ █  ▜▄█ ▐▌▐▌ █▗ ",
             "                    ▀▘▝▘▝▀▘ ▄▄▛ ▀▘▝▘ ▝▘ ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 
@@ -954,7 +952,7 @@ mod tests {
             "          ▐▌▗▌ █  █ █ █▀▀ ▝▀▙           ",
             "          ▀▀▀▘▝▀▘ ▀ ▀ ▝▀▘ ▀▀▘           ",
         ]);
-        assert_buffer_eq!(buf, expected);
+        assert_eq!(buf, expected);
         Ok(())
     }
 }
