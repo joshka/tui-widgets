@@ -12,7 +12,7 @@ edition = "2021"
 [dependencies]
 indoc = "2.0.5"
 ratatui = "0.26.3"
-rstest = "0.19.0"
+rstest = "0.21.0"
 
 [dev-dependencies]
 color-eyre = "0.6.3"
