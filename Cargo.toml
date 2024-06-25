@@ -11,7 +11,7 @@ edition = "2021"
 
 [dependencies]
 indoc = "2.0.5"
-ratatui = "0.26.3"
+ratatui = "0.27.0"
 rstest = "0.21.0"
 
 [dev-dependencies]
