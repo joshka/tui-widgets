@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.3](https://github.com/joshka/tui-popup/compare/v0.3.2...v0.3.3) - 2024-06-25
+
+### Other
+- *(deps)* bump ratatui in the all-dependencies group ([#25](https://github.com/joshka/tui-popup/pull/25))
+
 ## [0.3.2](https://github.com/joshka/tui-popup/compare/v0.3.1...v0.3.2) - 2024-05-21
 
 ### Other
