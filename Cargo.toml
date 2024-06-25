@@ -9,6 +9,7 @@ documentation = "https://docs.rs/tui-big-text"
 authors = ["Joshka"]
 categories = ["command-line-interface", "gui"]
 keywords = ["cli", "console", "ratatui", "terminal", "tui"]
+rust-version = "1.74.0"
 
 [dependencies]
 derive_builder = "0.20.0"
