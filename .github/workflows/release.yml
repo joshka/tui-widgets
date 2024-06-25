@@ -1,0 +1,17 @@
+permissions:
+  pull-requests: write
+  contents: write
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  release-plz:
+    uses: joshka/github-workflows/.github/workflows/rust-release-plz.yml@main
+    permissions:
+      pull-requests: write
+      contents: write
+    secrets:
+      CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
