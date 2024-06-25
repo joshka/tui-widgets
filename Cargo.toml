@@ -14,7 +14,7 @@ keywords = ["cli", "console", "ratatui", "terminal", "tui"]
 derive_builder = "0.20.0"
 font8x8 = "0.3.1"
 itertools = "0.13.0"
-ratatui = "0.26.3"
+ratatui = "0.27.0"
 
 [dev-dependencies]
 anyhow = "1.0.44"
