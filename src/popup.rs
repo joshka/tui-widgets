@@ -1,10 +1,12 @@
 use std::fmt::Debug;
 
+use crate::PopupState;
 use derive_setters::Setters;
 use ratatui::{
-    prelude::*,
-    widgets::{Borders, WidgetRef},
+    prelude::{Buffer, Line, Rect, Style, Text},
+    widgets::{Block, Borders, Clear, StatefulWidgetRef, Widget, WidgetRef},
 };
+use std::cmp::min;
 
 /// Configuration for a popup.
 ///
@@ -18,7 +20,8 @@ use ratatui::{
 /// use tui_popup::Popup;
 ///
 /// fn render_popup(frame: &mut Frame) {
-///     let popup = Popup::new("tui-popup demo", "Press any key to exit")
+///     let popup = Popup::new("Press any key to exit")
+///         .title("tui-popup demo")
 ///         .style(Style::new().white().on_blue());
 ///     frame.render_widget(&popup, frame.size());
 /// }
@@ -28,6 +31,7 @@ use ratatui::{
 #[non_exhaustive]
 pub struct Popup<'content, W: SizedWidgetRef> {
     /// The body of the popup.
+    #[setters(skip)]
     pub body: W,
     /// The title of the popup.
     pub title: Line<'content>,
@@ -53,8 +57,6 @@ impl<'content, W: SizedWidgetRef> Popup<'content, W> {
     ///
     /// # Parameters
     ///
-    /// - `title` - The title of the popup. This can be any type that can be converted into a
-    ///   [`Line`].
     /// - `body` - The body of the popup. This can be any type that can be converted into a
     ///   [`Text`].
     ///
@@ -63,17 +65,14 @@ impl<'content, W: SizedWidgetRef> Popup<'content, W> {
     /// ```rust
     /// use tui_popup::Popup;
     ///
-    /// let popup = Popup::new("tui-popup demo", "Press any key to exit");
+    /// let popup = Popup::new("Press any key to exit").title("tui-popup demo");
     /// ```
-    pub fn new<L>(title: L, body: W) -> Self
-    where
-        L: Into<Line<'content>>,
-    {
+    pub fn new(body: W) -> Self {
         Self {
             body,
-            title: title.into(),
-            style: Style::default(),
             borders: Borders::ALL,
+            title: Line::default(),
+            style: Style::default(),
         }
     }
 }
@@ -118,5 +117,67 @@ impl<W: WidgetRef + Debug> SizedWidgetRef for SizedWrapper<W> {
 
     fn height(&self) -> usize {
         self.height
+    }
+}
+
+impl<W: SizedWidgetRef> WidgetRef for Popup<'_, W> {
+    fn render_ref(&self, area: Rect, buf: &mut Buffer) {
+        let mut state = PopupState::default();
+        StatefulWidgetRef::render_ref(self, area, buf, &mut state);
+    }
+}
+
+impl<W: SizedWidgetRef> StatefulWidgetRef for Popup<'_, W> {
+    type State = PopupState;
+
+    fn render_ref(&self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
+        let area = if let Some(next) = state.area.take() {
+            // ensure that the popup remains on screen
+            let width = min(next.width, area.width);
+            let height = min(next.height, area.height);
+            let x = next.x.clamp(buf.area.x, area.right() - width);
+            let y = next.y.clamp(buf.area.y, area.bottom() - height);
+
+            Rect::new(x, y, width, height)
+        } else {
+            let border_height = usize::from(self.borders.intersects(Borders::TOP))
+                + usize::from(self.borders.intersects(Borders::BOTTOM));
+            let border_width = usize::from(self.borders.intersects(Borders::LEFT))
+                + usize::from(self.borders.intersects(Borders::RIGHT));
+
+            let height = self
+                .body
+                .height()
+                .saturating_add(border_height)
+                .try_into()
+                .unwrap_or(area.height);
+            let width = self
+                .body
+                .width()
+                .saturating_add(border_width)
+                .try_into()
+                .unwrap_or(area.width);
+            centered_rect(width, height, area)
+        };
+
+        state.area.replace(area);
+
+        Clear.render(area, buf);
+        let block = Block::default()
+            .borders(self.borders)
+            .title(self.title.clone())
+            .style(self.style);
+        block.render_ref(area, buf);
+        self.body.render_ref(block.inner(area), buf);
+    }
+}
+
+/// Create a rectangle centered in the given area.
+fn centered_rect(width: u16, height: u16, area: Rect) -> Rect {
+    Rect {
+        x: area.width.saturating_sub(width) / 2,
+        y: area.height.saturating_sub(height) / 2,
+        width: min(width, area.width),
+        height: min(height, area.height),
     }
 }

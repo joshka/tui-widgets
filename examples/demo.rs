@@ -25,8 +25,9 @@ fn main() -> Result<()> {
 fn render(frame: &mut Frame) {
     let area = frame.size();
     let background = background(area);
-    let popup =
-        Popup::new("tui-popup demo", "Press any key to exit").style(Style::new().white().on_blue());
+    let popup = Popup::new("Press any key to exit")
+        .title("tui-popup demo")
+        .style(Style::new().white().on_blue());
     frame.render_widget(background, area);
     frame.render_widget(&popup, area);
 }

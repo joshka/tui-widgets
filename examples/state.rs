@@ -50,17 +50,15 @@ impl App {
     }
 
     fn popup_widget() -> Popup<'static, Text<'static>> {
-        Popup::new(
-            "Popup",
-            Text::from_iter([
-                "q: exit",
-                "r: reset",
-                "j: move down",
-                "k: move up",
-                "h: move left",
-                "l: move right",
-            ]),
-        )
+        Popup::new(Text::from_iter([
+            "q: exit",
+            "r: reset",
+            "j: move down",
+            "k: move up",
+            "h: move left",
+            "l: move right",
+        ]))
+        .title("Popup")
         .style(Style::new().white().on_blue())
     }
 

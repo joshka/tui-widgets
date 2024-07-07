@@ -33,8 +33,9 @@ impl App {
         let background = background(area);
 
         let paragraph = paragraph(self.scroll);
-        let popup =
-            Popup::new("scroll: ↑/↓ quit: Esc", paragraph).style(Style::new().white().on_blue());
+        let popup = Popup::new(paragraph)
+            .title("scroll: ↑/↓ quit: Esc")
+            .style(Style::new().white().on_blue());
 
         frame.render_widget(background, area);
         frame.render_widget(&popup, area);

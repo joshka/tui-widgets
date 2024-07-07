@@ -10,7 +10,8 @@
 //! use tui_popup::Popup;
 //!
 //! fn render_popup(frame: &mut Frame) {
-//!     let popup = Popup::new("tui-popup demo", "Press any key to exit")
+//!     let popup = Popup::new("Press any key to exit")
+//!         .title("tui-popup demo")
 //!        .style(Style::new().white().on_blue());
 //!     frame.render_widget(&popup, frame.size());
 //! }
@@ -23,7 +24,6 @@
 
 mod popup;
 mod state;
-mod widget;
 
 pub use popup::*;
 pub use state::*;
