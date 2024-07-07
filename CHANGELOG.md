@@ -1,91 +1,240 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [unreleased]
 
-## [Unreleased]
+- [3433aec](https://github.com/joshka/tui-popup/commit/3433aec13d3ef3179b5bdf2267d9dd6e59407f95) chore(examples): simplify examples ([#27](https://github.com/joshka/tui-popup/issues/27))
+  >
+  > - Move terminal setup / restore and error handling to module
+  > - Smaller more focused methods
+  > - Extract App struct for state example
 
-## [0.3.3](https://github.com/joshka/tui-popup/compare/v0.3.2...v0.3.3) - 2024-06-25
+- [3a7fd10](https://github.com/joshka/tui-popup/commit/3a7fd10034ffef21a48b0cef9c3a0bbfaf65c8de) feat(mouse): add PopupState::handle_mouse_event() ([#29](https://github.com/joshka/tui-popup/issues/29))
+  >
+  > Converts a crossterm mouse event into mouse movement. Requires the
+  > `crossterm` feature to be enabled.
+  >
+  > ```rust
+  > if let Event::Mouse(event) = event::read()? {
+  >     popup_state.handle_mouse_event(event);
+  > }
+  > ```
 
-### Other
-- *(deps)* bump ratatui in the all-dependencies group ([#25](https://github.com/joshka/tui-popup/pull/25))
+- [c89b142](https://github.com/joshka/tui-popup/commit/c89b14292a17f0184cd3a2c6109c2d952a42b0a3) chore: create git cliff config ([#30](https://github.com/joshka/tui-popup/issues/30))
+  >
 
-## [0.3.2](https://github.com/joshka/tui-popup/compare/v0.3.1...v0.3.2) - 2024-05-21
+## [0.3.3] - 2024-06-25
 
-### Other
-- --- ([#24](https://github.com/joshka/tui-popup/pull/24))
-- *(deps)* bump derive-getters in the all-dependencies group ([#22](https://github.com/joshka/tui-popup/pull/22))
-- cleanup clippy lints
+- [4cd3786](https://github.com/joshka/tui-popup/commit/4cd3786d195f315974d1ad3fbfb3f8c8211c7748) chore(deps): bump ratatui in the all-dependencies group ([#25](https://github.com/joshka/tui-popup/issues/25))
+  >
+  > Bumps the all-dependencies group with 1 update: [ratatui](https://github.com/ratatui-org/ratatui).
+  >
+  >
+  > Updates `ratatui` from 0.26.3 to 0.27.0
+  > - [Release notes](https://github.com/ratatui-org/ratatui/releases)
+  > - [Changelog](https://github.com/ratatui-org/ratatui/blob/main/CHANGELOG.md)
+  > - [Commits](https://github.com/ratatui-org/ratatui/compare/v0.26.3...v0.27.0)
+  >
+  > ---
+  > updated-dependencies:
+  > - dependency-name: ratatui
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-minor
+  >   dependency-group: all-dependencies
+  > ...
+  >
+  > Signed-off-by: dependabot[bot] <support@github.com>
+  > Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
 
-## [0.3.1](https://github.com/joshka/tui-popup/compare/v0.3.0...v0.3.1) - 2024-05-01
+## [0.3.2] - 2024-05-21
 
-### Added
-- allow setting borders ([#19](https://github.com/joshka/tui-popup/pull/19))
+- [7fffe3f](https://github.com/joshka/tui-popup/commit/7fffe3f7f6419ea3b1d9b75d0b84761e888ce9a5) chore: cleanup clippy lints
 
-## [0.3.0](https://github.com/joshka/tui-popup/compare/v0.2.4...v0.3.0) - 2024-04-24
+- [8ea131f](https://github.com/joshka/tui-popup/commit/8ea131f9e9754edd1e656f0fcd65e3bbafbff5b4) chore(deps): bump derive-getters in the all-dependencies group ([#22](https://github.com/joshka/tui-popup/issues/22))
+  >
+  > Bumps the all-dependencies group with 1 update: derive-getters.
+  >
+  >
+  > Updates `derive-getters` from 0.3.0 to 0.4.0
+  >
+  > ---
+  > updated-dependencies:
+  > - dependency-name: derive-getters
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-minor
+  >   dependency-group: all-dependencies
+  > ...
+  >
+  > Signed-off-by: dependabot[bot] <support@github.com>
+  > Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
 
-### Added
-- [**breaking**] make popup accept any widget as the body ([#18](https://github.com/joshka/tui-popup/pull/18))
+- [dd658c0](https://github.com/joshka/tui-popup/commit/dd658c0c4c7f058d9fa3ffbde07765015810d0ab) --- ([#24](https://github.com/joshka/tui-popup/issues/24))
+  >
+  > updated-dependencies:
+  > - dependency-name: ratatui
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  >   dependency-group: all-dependencies
+  > ...
+  >
+  > Signed-off-by: dependabot[bot] <support@github.com>
+  > Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
 
-### Other
-- group dependabot updates
-- *(deps)* bump eyre from 0.6.11 to 0.6.12 ([#14](https://github.com/joshka/tui-popup/pull/14))
+## [0.3.1] - 2024-05-01
 
-## [0.2.4](https://github.com/joshka/tui-popup/compare/v0.2.3...v0.2.4) - 2024-03-19
+- [3eb0953](https://github.com/joshka/tui-popup/commit/3eb095357f6a4ea624e6cb2f95056d0d27bda3fd) feat: allow setting borders ([#19](https://github.com/joshka/tui-popup/issues/19))
+  >
 
-### Other
-- *(deps)* bump lipsum from 0.9.0 to 0.9.1 ([#12](https://github.com/joshka/tui-popup/pull/12))
+## [0.3.0] - 2024-04-24
 
-## [0.2.3](https://github.com/joshka/tui-popup/compare/v0.2.2...v0.2.3) - 2024-03-12
+- [a9744d4](https://github.com/joshka/tui-popup/commit/a9744d49905f5727311bb33870d02ad6f2b78ba8) chore(deps): bump eyre from 0.6.11 to 0.6.12 ([#14](https://github.com/joshka/tui-popup/issues/14))
+  >
+  > Bumps [eyre](https://github.com/eyre-rs/eyre) from 0.6.11 to 0.6.12.
+  > - [Commits](https://github.com/eyre-rs/eyre/commits)
+  >
+  > ---
+  > updated-dependencies:
+  > - dependency-name: eyre
+  >   dependency-type: indirect
+  > ...
+  >
+  > Signed-off-by: dependabot[bot] <support@github.com>
+  > Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
 
-### Other
-- *(deps)* bump mio from 0.8.10 to 0.8.11 ([#9](https://github.com/joshka/tui-popup/pull/9))
-- use joshka/github-workflows ([#10](https://github.com/joshka/tui-popup/pull/10))
-- *(deps)* bump ratatui from 0.25.0 to 0.26.1 ([#8](https://github.com/joshka/tui-popup/pull/8))
-- Create dependabot.yml
+- [1be3247](https://github.com/joshka/tui-popup/commit/1be3247bc66493cccaf752738544344b9b4996d1) ci: group dependabot updates
 
-## [0.2.2](https://github.com/joshka/tui-popup/compare/v0.2.1...v0.2.2) - 2024-01-02
+- [2e5bc7a](https://github.com/joshka/tui-popup/commit/2e5bc7ab054e11f19e825dd06f8b4aafaba56ff8) feat!: make popup accept any widget as the body ([#18](https://github.com/joshka/tui-popup/issues/18))
+  >
+  > Popup is now a generic over the body widget, allowing for more complex
+  > widgets to be used as the body of the popup. This change also allows for
+  > the popup to be rendered multiple times without needing to clone it.
+  >
+  > Fixes: https://github.com/joshka/tui-popup/issues/16
+  >
+  > BREAKING CHANGE: The Popup widget now accepts any widget as the body
+  > instead of just a Text. This allows for more complex widgets to be used
+  > as the body of the popup, such as Paragraph or ScrollView.
+  >
+  > Additionally the Popup widget now implements `WidgetRef` and
+  > `StatefulWidgetRef` instead of having a separate PopupWidget type. This
+  > allows for saving a reference to the popup and rendering it multiple
+  > times without needing to clone it. To update your code, replace
+  > `frame.render_widget(popup.to_widget(), area)` with
+  > `frame.render_widget(&popup, area)` and replace
+  > `frame.render_stateful_widget(popup.to_widget(), area, state)`
+  > with `frame.render_stateful_widget_ref(&popup, area, state)`.
 
-### Added
-- add move_to() method to allow manual positioning
-- respond to mouse drag
+## [0.2.4] - 2024-04-01
 
-### Other
-- update readme todos
-- add mouse info to readme
-- extract each type to submodule
+- [684429d](https://github.com/joshka/tui-popup/commit/684429df40903af880a664b1951ab2031d833747) chore(deps): bump lipsum from 0.9.0 to 0.9.1 ([#12](https://github.com/joshka/tui-popup/issues/12))
+  >
+  > Bumps [lipsum](https://github.com/mgeisler/lipsum) from 0.9.0 to 0.9.1.
+  > - [Release notes](https://github.com/mgeisler/lipsum/releases)
+  > - [Commits](https://github.com/mgeisler/lipsum/compare/0.9.0...0.9.1)
+  >
+  > ---
+  > updated-dependencies:
+  > - dependency-name: lipsum
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+  >
+  > Signed-off-by: dependabot[bot] <support@github.com>
+  > Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
 
-## [0.2.1](https://github.com/joshka/tui-popup/compare/v0.2.0...v0.2.1) - 2023-12-31
+- [92097b4](https://github.com/joshka/tui-popup/commit/92097b4c87f6a162e41162e2ec72add9e65bc63e) chore(deps): bump color-eyre from 0.6.2 to 0.6.3 ([#11](https://github.com/joshka/tui-popup/issues/11))
+  >
+  > Bumps [color-eyre](https://github.com/eyre-rs/eyre) from 0.6.2 to 0.6.3.
+  > - [Commits](https://github.com/eyre-rs/eyre/compare/v0.6.2...color-eyre-v0.6.3)
+  >
+  > ---
+  > updated-dependencies:
+  > - dependency-name: color-eyre
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+  >
+  > Signed-off-by: dependabot[bot] <support@github.com>
+  > Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
 
-### Added
-- add PopupState and state example
+## [0.2.3] - 2024-03-12
 
-## [0.2.0](https://github.com/joshka/tui-popup/compare/v0.1.1...v0.2.0) - 2023-12-31
+- [c36f77f](https://github.com/joshka/tui-popup/commit/c36f77f1a281adcf98b2ea55ba8da235aaf6310d) chore: Create dependabot.yml
 
-### Added
-- add popup style
+- [67d210f](https://github.com/joshka/tui-popup/commit/67d210f8db41575b61492cf8061ffd3c8e74a319) chore(deps): bump ratatui from 0.25.0 to 0.26.1 ([#8](https://github.com/joshka/tui-popup/issues/8))
+  >
 
-### Fixed
-- mark Popup as non_exhaustive
+- [7273147](https://github.com/joshka/tui-popup/commit/727314715cfbfbc4b57a5251b2e9223455e3acdb) ci: use joshka/github-workflows ([#10](https://github.com/joshka/tui-popup/issues/10))
+  >
+  > https://github.com/joshka/github-workflows
 
-### Other
-- setup clippy lints
-- update readme
-- add doc comments
-- add style to readme example
+- [e0d7ba4](https://github.com/joshka/tui-popup/commit/e0d7ba4d24f96738ba345ed998923be266b88135) chore(deps): bump mio from 0.8.10 to 0.8.11 ([#9](https://github.com/joshka/tui-popup/issues/9))
+  >
+  > Bumps [mio](https://github.com/tokio-rs/mio) from 0.8.10 to 0.8.11.
+  > - [Release notes](https://github.com/tokio-rs/mio/releases)
+  > - [Changelog](https://github.com/tokio-rs/mio/blob/master/CHANGELOG.md)
+  > - [Commits](https://github.com/tokio-rs/mio/compare/v0.8.10...v0.8.11)
+  >
+  > ---
+  > updated-dependencies:
+  > - dependency-name: mio
+  >   dependency-type: indirect
+  > ...
+  >
+  > Signed-off-by: dependabot[bot] <support@github.com>
+  > Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
 
-## [0.1.1](https://github.com/joshka/tui-popup/compare/v0.1.0...v0.1.1) - 2023-12-31
+## [0.2.2] - 2024-01-02
 
-### Other
-- add badges and license
-- release
+- [88c89a0](https://github.com/joshka/tui-popup/commit/88c89a089a40cb85e23033072df4e10d840b6f66) feat: respond to mouse drag
 
-## [0.1.0](https://github.com/joshka/tui-popup/releases/tag/v0.1.0) - 2023-12-31
+- [427592d](https://github.com/joshka/tui-popup/commit/427592dd8fc4996b9e75ad961555ca49ed7e5f50) refactor: extract each type to submodule
 
-### Added
-- initial implementation
+- [7f96b7e](https://github.com/joshka/tui-popup/commit/7f96b7ee5732977eb7a8e70ef765a246e2111254) docs: add mouse info to readme
 
-### Other
-- add release-plz and CI
-- update readme and demo
+- [33a8d33](https://github.com/joshka/tui-popup/commit/33a8d337e144eef70c7f7a9b9c418dde4568044a) feat: add move_to() method to allow manual positioning
+
+- [973f2de](https://github.com/joshka/tui-popup/commit/973f2de3728f911daad3f763b81bc3a3faa7513a) docs: update readme todos
+
+## [0.2.1] - 2023-12-31
+
+- [9b8736f](https://github.com/joshka/tui-popup/commit/9b8736f0a298b86bf04cccee220d122507bdcdcd) feat: add PopupState and state example
+
+## [0.2.0] - 2023-12-31
+
+- [74e6263](https://github.com/joshka/tui-popup/commit/74e62631eb486aac5173988372c4faac3471df09) feat: add popup style
+
+- [4935003](https://github.com/joshka/tui-popup/commit/4935003aaf8878078a8f6fbe75d313cf67c5e21e) docs: add style to readme example
+
+- [78cd3ae](https://github.com/joshka/tui-popup/commit/78cd3ae1e1bd7a0ad8190025ceeb77202756cf45) docs: add doc comments
+
+- [336398b](https://github.com/joshka/tui-popup/commit/336398b119a21cd505dae87daf2506a64b3fc61d) docs: update readme
+
+- [8159e19](https://github.com/joshka/tui-popup/commit/8159e190de559e9ec334638bc058c8856f589f71) fix: mark Popup as non_exhaustive
+  >
+  > ensures that new fields can be added without breaking compat
+
+- [6b96794](https://github.com/joshka/tui-popup/commit/6b9679424a507a496edd165750b80b1ce3e2b4b9) core: setup clippy lints
+
+## [0.1.1] - 2023-12-31
+
+- [ff8f530](https://github.com/joshka/tui-popup/commit/ff8f53041f129e4f262a3a8756f1dc2f3628a55a) Merge pull request [#1](https://github.com/joshka/tui-popup/issues/1) from joshka/release-plz-2023-12-31T02-22-23Z
+  >
+  > chore: release v0.1.0
+
+- [b87fd77](https://github.com/joshka/tui-popup/commit/b87fd77d0f3cd2d1d0e7efa96c4d6ee5093a0fcb) docs: add badges and license
+
+- [30d9579](https://github.com/joshka/tui-popup/commit/30d9579579c3668fffd07595a806756346e0ab34) Merge pull request [#2](https://github.com/joshka/tui-popup/issues/2) from joshka/release-plz-2023-12-31T02-30-22Z
+  >
+  > chore: release v0.1.1
+
+## [0.1.0] - 2023-12-31
+
+- [5803e9b](https://github.com/joshka/tui-popup/commit/5803e9b46592096da4c1d139940aba57d81cc8e4) feat: initial implementation
+
+- [d4322d8](https://github.com/joshka/tui-popup/commit/d4322d8b35298c27b5b26d614a64dd3e814fe4f1) docs: update readme and demo
+
+- [aad723f](https://github.com/joshka/tui-popup/commit/aad723f835ade62a4f76da43917e504f230799e8) ci: add release-plz and CI
+
+<!-- generated by git-cliff -->
