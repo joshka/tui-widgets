@@ -6,14 +6,16 @@ use ratatui::crossterm::event::{MouseButton, MouseEvent, MouseEventKind};
 
 #[derive(Clone, Debug, Default, Getters)]
 pub struct PopupState {
-    pub area: Option<Rect>,
-    pub mouse_state: MouseState,
+    /// The last rendered area of the popup
+    pub(crate) area: Option<Rect>,
+    /// A state indicating whether the popup is being dragged or not
+    pub(crate) drag_state: DragState,
 }
 
 #[derive(Clone, Debug, Default)]
-pub enum MouseState {
+pub enum DragState {
     #[default]
-    None,
+    NotDragging,
     Dragging {
         col_offset: u16,
         row_offset: u16,
@@ -49,7 +51,7 @@ impl PopupState {
     pub fn mouse_down(&mut self, col: u16, row: u16) {
         if let Some(area) = self.area {
             if area.contains((col, row).into()) {
-                self.mouse_state = MouseState::Dragging {
+                self.drag_state = DragState::Dragging {
                     col_offset: col.saturating_sub(area.x),
                     row_offset: row.saturating_sub(area.y),
                 };
@@ -59,15 +61,15 @@ impl PopupState {
 
     /// Set the state to not dragging
     pub fn mouse_up(&mut self, _col: u16, _row: u16) {
-        self.mouse_state = MouseState::None;
+        self.drag_state = DragState::NotDragging;
     }
 
     /// Move the popup if the state is dragging
     pub fn mouse_drag(&mut self, col: u16, row: u16) {
-        if let MouseState::Dragging {
+        if let DragState::Dragging {
             col_offset,
             row_offset,
-        } = self.mouse_state
+        } = self.drag_state
         {
             if let Some(area) = self.area {
                 let x = col.saturating_sub(col_offset);

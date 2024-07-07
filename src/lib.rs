@@ -1,4 +1,3 @@
-#![allow(clippy::module_name_repetitions)]
 //! A popup widget for [Ratatui](https://ratatui.rs)
 //!
 //! The popup widget is a simple widget that renders a popup in the center of the screen.
@@ -23,7 +22,7 @@
 #![doc = document_features::document_features!()]
 
 mod popup;
-mod state;
+mod popup_state;
 
-pub use popup::*;
-pub use state::*;
+pub use popup::{Popup, SizedWidgetRef, SizedWrapper};
+pub use popup_state::{DragState, PopupState};
