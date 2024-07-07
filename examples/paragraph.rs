@@ -1,65 +1,79 @@
-/// Demonstrates how to use the `Popup` widget with a `Paragraph` as the body.
-use std::io::stdout;
-
-use crossterm::{
-    event::{self, Event, KeyCode},
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen},
-    ExecutableCommand,
-};
+use color_eyre::Result;
 use lipsum::lipsum;
 use ratatui::{
-    prelude::*,
+    crossterm::event::{self, Event, KeyCode},
+    prelude::{Rect, Span, Style, Stylize, Text},
     widgets::{Paragraph, Wrap},
+    Frame,
 };
 use tui_popup::{Popup, SizedWrapper};
 
-fn main() -> color_eyre::Result<()> {
-    color_eyre::install()?;
-    let mut terminal = init_terminal()?;
+mod terminal;
 
-    let mut scroll = 0;
-    loop {
-        terminal.draw(|frame| {
-            let area = frame.size();
+fn main() -> Result<()> {
+    let mut terminal = terminal::init()?;
+    let mut app = App::default();
+    while !app.should_exit {
+        terminal.draw(|frame| app.render(frame))?;
+        app.handle_events()?;
+    }
+    terminal::restore()?;
+    Ok(())
+}
 
-            let lorem_ipsum = lipsum(area.area() as usize / 5);
-            let background = Paragraph::new(lorem_ipsum)
-                .wrap(Wrap { trim: false })
-                .dark_gray();
-            frame.render_widget(background, area);
-            let lines: Text = (0..10).map(|i| Span::raw(format!("Line {i}"))).collect();
-            let paragraph = Paragraph::new(lines).scroll((scroll, 0));
-            let sized_paragraph = SizedWrapper {
-                inner: paragraph,
-                width: 21,
-                height: 5,
-            };
-            let popup = Popup::new("scroll: ↑/↓ quit: Esc", sized_paragraph)
-                .style(Style::new().white().on_blue());
-            frame.render_widget_ref(popup, area);
-        })?;
+#[derive(Default)]
+struct App {
+    should_exit: bool,
+    scroll: u16,
+}
+
+impl App {
+    fn render(&self, frame: &mut Frame) {
+        let area = frame.size();
+        let background = background(area);
+
+        let paragraph = paragraph(self.scroll);
+        let popup =
+            Popup::new("scroll: ↑/↓ quit: Esc", paragraph).style(Style::new().white().on_blue());
+
+        frame.render_widget(background, area);
+        frame.render_widget(&popup, area);
+    }
+
+    fn handle_events(&mut self) -> Result<()> {
         if let Event::Key(key) = event::read()? {
             match key.code {
-                KeyCode::Char('q') | KeyCode::Esc => break,
-                KeyCode::Char('j') | KeyCode::Down => scroll = scroll.saturating_add(1),
-                KeyCode::Char('k') | KeyCode::Up => scroll = scroll.saturating_sub(1),
+                KeyCode::Char('q') | KeyCode::Esc => self.should_exit = true,
+                KeyCode::Char('j') | KeyCode::Down => self.scroll_down(),
+                KeyCode::Char('k') | KeyCode::Up => self.scroll_up(),
                 _ => {}
             }
         }
+        Ok(())
     }
-    restore_terminal()?;
-    Ok(())
+
+    fn scroll_up(&mut self) {
+        self.scroll = self.scroll.saturating_sub(1);
+    }
+
+    fn scroll_down(&mut self) {
+        self.scroll = self.scroll.saturating_add(1);
+    }
 }
 
-fn init_terminal() -> Result<Terminal<CrosstermBackend<std::io::Stdout>>, color_eyre::eyre::Error> {
-    stdout().execute(EnterAlternateScreen)?;
-    let terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
-    enable_raw_mode()?;
-    Ok(terminal)
+fn paragraph(scroll: u16) -> SizedWrapper<Paragraph<'static>> {
+    let lines: Text = (0..10).map(|i| Span::raw(format!("Line {i}"))).collect();
+    let paragraph = Paragraph::new(lines).scroll((scroll, 0));
+    SizedWrapper {
+        inner: paragraph,
+        width: 21,
+        height: 5,
+    }
 }
 
-fn restore_terminal() -> Result<(), color_eyre::eyre::Error> {
-    disable_raw_mode()?;
-    stdout().execute(crossterm::terminal::LeaveAlternateScreen)?;
-    Ok(())
+fn background(area: Rect) -> Paragraph<'static> {
+    let lorem_ipsum = lipsum(area.area() as usize / 5);
+    Paragraph::new(lorem_ipsum)
+        .wrap(Wrap { trim: false })
+        .dark_gray()
 }

@@ -690,7 +690,6 @@ name = "tui-popup"
 version = "0.3.3"
 dependencies = [
  "color-eyre",
- "crossterm",
  "derive-getters",
  "derive_setters",
  "lipsum",

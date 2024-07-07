@@ -1,48 +1,44 @@
-use std::io::stdout;
-
-use crossterm::{
-    event::{self, Event},
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen},
-    ExecutableCommand,
-};
+use color_eyre::Result;
 use lipsum::lipsum;
 use ratatui::{
-    prelude::*,
+    crossterm::event::{self, Event},
+    prelude::{Rect, Style, Stylize},
     widgets::{Paragraph, Wrap},
+    Frame,
 };
 use tui_popup::Popup;
 
-fn main() -> color_eyre::Result<()> {
-    color_eyre::install()?;
-    let mut terminal = init_terminal()?;
+mod terminal;
 
-    terminal.draw(|frame| {
-        let area = frame.size();
-
-        let lorem_ipsum = lipsum(area.area() as usize / 5);
-        let background = Paragraph::new(lorem_ipsum)
-            .wrap(Wrap { trim: false })
-            .dark_gray();
-        frame.render_widget(background, area);
-
-        let popup = Popup::new("tui-popup demo", "Press any key to exit")
-            .style(Style::new().white().on_blue());
-        frame.render_widget_ref(popup, area);
-    })?;
-    while !matches!(event::read()?, Event::Key(_)) {}
-    restore_terminal()?;
+fn main() -> Result<()> {
+    let mut terminal = terminal::init()?;
+    loop {
+        terminal.draw(render)?;
+        if read_any_key()? {
+            break;
+        }
+    }
+    terminal::restore()?;
     Ok(())
 }
 
-fn init_terminal() -> Result<Terminal<CrosstermBackend<std::io::Stdout>>, color_eyre::eyre::Error> {
-    stdout().execute(EnterAlternateScreen)?;
-    let terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
-    enable_raw_mode()?;
-    Ok(terminal)
+fn render(frame: &mut Frame) {
+    let area = frame.size();
+    let background = background(area);
+    let popup =
+        Popup::new("tui-popup demo", "Press any key to exit").style(Style::new().white().on_blue());
+    frame.render_widget(background, area);
+    frame.render_widget(&popup, area);
 }
 
-fn restore_terminal() -> Result<(), color_eyre::eyre::Error> {
-    disable_raw_mode()?;
-    stdout().execute(crossterm::terminal::LeaveAlternateScreen)?;
-    Ok(())
+fn read_any_key() -> Result<bool> {
+    let event = event::read()?;
+    Ok(matches!(event, Event::Key(_)))
+}
+
+fn background(area: Rect) -> Paragraph<'static> {
+    let lorem_ipsum = lipsum(area.area() as usize / 5);
+    Paragraph::new(lorem_ipsum)
+        .wrap(Wrap { trim: false })
+        .dark_gray()
 }
