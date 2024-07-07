@@ -1,5 +1,8 @@
 use derive_getters::Getters;
-use ratatui::prelude::*;
+use ratatui::prelude::Rect;
+
+#[cfg(feature = "crossterm")]
+use ratatui::crossterm::event::{MouseButton, MouseEvent, MouseEventKind};
 
 #[derive(Clone, Debug, Default, Getters)]
 pub struct PopupState {
@@ -45,7 +48,7 @@ impl PopupState {
     /// Set the state to dragging if the mouse click is in the popup title
     pub fn mouse_down(&mut self, col: u16, row: u16) {
         if let Some(area) = self.area {
-            if area.y == row && area.x <= col && col <= area.right() {
+            if area.contains((col, row).into()) {
                 self.mouse_state = MouseState::Dragging {
                     col_offset: col.saturating_sub(area.x),
                     row_offset: row.saturating_sub(area.y),
@@ -71,6 +74,16 @@ impl PopupState {
                 let y = row.saturating_sub(row_offset);
                 self.area.replace(Rect { x, y, ..area });
             }
+        }
+    }
+
+    #[cfg(feature = "crossterm")]
+    pub fn handle_mouse_event(&mut self, event: MouseEvent) {
+        match event.kind {
+            MouseEventKind::Down(MouseButton::Left) => self.mouse_down(event.column, event.row),
+            MouseEventKind::Up(MouseButton::Left) => self.mouse_up(event.column, event.row),
+            MouseEventKind::Drag(MouseButton::Left) => self.mouse_drag(event.column, event.row),
+            _ => {}
         }
     }
 }

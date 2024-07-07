@@ -17,6 +17,9 @@
 //! ```
 //!
 //! ![demo](https://vhs.charm.sh/vhs-q5Kz0QP3zmrBlQ6dofjMh.gif)
+//!
+//! # Feature flags
+#![doc = document_features::document_features!()]
 
 mod popup;
 mod state;

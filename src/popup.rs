@@ -8,9 +8,8 @@ use ratatui::{
 
 /// Configuration for a popup.
 ///
-/// This struct is used to configure a [`PopupWidget`]. It can be created using
-/// [`Popup::new`](Popup::new). Convert it into a Ratatui widget using
-/// [`Popup::to_widget`](Popup::to_widget).
+/// This struct is used to configure a [`Popup`]. It can be created using
+/// [`Popup::new`](Popup::new).
 ///
 /// # Example
 ///

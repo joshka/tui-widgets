@@ -1,9 +1,7 @@
 use color_eyre::Result;
 use lipsum::lipsum;
 use ratatui::{
-    crossterm::event::{
-        self, Event, KeyCode, KeyEvent, KeyEventKind, MouseButton, MouseEvent, MouseEventKind,
-    },
+    crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind},
     prelude::{Constraint, Frame, Layout, Rect, Style, Stylize, Text},
     widgets::{Paragraph, Wrap},
 };
@@ -78,7 +76,7 @@ impl App {
     fn handle_events(&mut self) -> Result<()> {
         match event::read()? {
             Event::Key(event) => self.handle_key_event(event),
-            Event::Mouse(event) => self.handle_mouse_event(event),
+            Event::Mouse(event) => self.popup.handle_mouse_event(event),
             _ => (),
         };
         Ok(())
@@ -98,16 +96,5 @@ impl App {
             KeyCode::Char('l') | KeyCode::Right => self.popup.move_by(1, 0),
             _ => {}
         }
-    }
-
-    fn handle_mouse_event(&mut self, event: MouseEvent) {
-        let popup = &mut self.popup;
-        // TODO: move mouse event handling to PopupState
-        match event.kind {
-            MouseEventKind::Down(MouseButton::Left) => popup.mouse_down(event.column, event.row),
-            MouseEventKind::Up(MouseButton::Left) => popup.mouse_up(event.column, event.row),
-            MouseEventKind::Drag(MouseButton::Left) => popup.mouse_drag(event.column, event.row),
-            _ => {}
-        };
     }
 }
