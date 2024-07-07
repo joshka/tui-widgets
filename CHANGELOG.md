@@ -24,6 +24,10 @@ All notable changes to this project will be documented in this file.
 - [c89b142](https://github.com/joshka/tui-popup/commit/c89b14292a17f0184cd3a2c6109c2d952a42b0a3) chore: create git cliff config ([#30](https://github.com/joshka/tui-popup/issues/30))
   >
 
+- [29008c4](https://github.com/joshka/tui-popup/commit/29008c4695e8fd38ea6398ae7cfee3d0fa1bcb03) chore: update changelog
+
+- [81dcd7f](https://github.com/joshka/tui-popup/commit/81dcd7f89339fc99e8807c8aaade4a0c29c16a89) chore: use cliff.toml in release.plz
+
 ## [0.3.3] - 2024-06-25
 
 - [4cd3786](https://github.com/joshka/tui-popup/commit/4cd3786d195f315974d1ad3fbfb3f8c8211c7748) chore(deps): bump ratatui in the all-dependencies group ([#25](https://github.com/joshka/tui-popup/issues/25))
@@ -219,13 +223,13 @@ All notable changes to this project will be documented in this file.
 
 ## [0.1.1] - 2023-12-31
 
-- [ff8f530](https://github.com/joshka/tui-popup/commit/ff8f53041f129e4f262a3a8756f1dc2f3628a55a) Merge pull request [#1](https://github.com/joshka/tui-popup/issues/1) from joshka/release-plz-2023-12-31T02-22-23Z
+- [ff8f530](https://github.com/joshka/tui-popup/commit/ff8f53041f129e4f262a3a8756f1dc2f3628a55a) Merge pull request #1 from joshka/release-plz-2023-12-31T02-22-23Z
   >
   > chore: release v0.1.0
 
 - [b87fd77](https://github.com/joshka/tui-popup/commit/b87fd77d0f3cd2d1d0e7efa96c4d6ee5093a0fcb) docs: add badges and license
 
-- [30d9579](https://github.com/joshka/tui-popup/commit/30d9579579c3668fffd07595a806756346e0ab34) Merge pull request [#2](https://github.com/joshka/tui-popup/issues/2) from joshka/release-plz-2023-12-31T02-30-22Z
+- [30d9579](https://github.com/joshka/tui-popup/commit/30d9579579c3668fffd07595a806756346e0ab34) Merge pull request #2 from joshka/release-plz-2023-12-31T02-30-22Z
   >
   > chore: release v0.1.1
 

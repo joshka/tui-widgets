@@ -33,7 +33,6 @@ footer = """
 trim = true
 # postprocessors
 postprocessors = [
-  { pattern = '#(\d+)', replace = "[#$1](<REPO>/issues/$1)" },
   { pattern = ' > \n', replace = " >\n" },
   { pattern = '<REPO>', replace = "https://github.com/joshka/tui-popup" }, # replace repository URL
 ]
@@ -48,7 +47,7 @@ split_commits = false
 # regex for preprocessing the commit messages
 commit_preprocessors = [
   # Replace issue numbers
-  #{ pattern = '\((\w+\s)?#([0-9]+)\)', replace = "([#${2}](<REPO>/issues/${2}))"},
+  { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "([#${2}](<REPO>/issues/${2}))" },
   # Check spelling of the commit with https://github.com/crate-ci/typos
   # If the spelling is incorrect, it will be automatically fixed.
   #{ pattern = '.*', replace_command = 'typos --write-changes -' },
