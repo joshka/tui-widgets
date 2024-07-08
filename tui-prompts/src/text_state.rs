@@ -95,23 +95,80 @@ mod tests {
 
     #[test]
     fn insert_multibyte_start() {
-        let mut test = TextState::new().with_value("ää");
+        let mut test = TextState::new().with_value("äë");
         test.move_start();
-        test.push('Ö');
-        assert_eq!(test.value(), "Öää");
+        test.push('Ï');
+        assert_eq!(test.value(), "Ïäë");
+        assert_eq!(test.position(), 1);
     }
     #[test]
     fn insert_multibyte_middle() {
-        let mut test = TextState::new().with_value("ää");
+        let mut test = TextState::new().with_value("äë");
         test.move_right();
-        test.push('Ö');
-        assert_eq!(test.value(), "äÖä");
+        test.push('Ï');
+        assert_eq!(test.value(), "äÏë");
+        assert_eq!(test.position(), 2);
     }
     #[test]
     fn insert_multibyte_end() {
-        let mut test = TextState::new().with_value("ää");
+        let mut test = TextState::new().with_value("äë");
         test.move_end();
-        test.push('Ö');
-        assert_eq!(test.value(), "ääÖ");
+        test.push('Ï');
+        assert_eq!(test.value(), "äëÏ");
+        assert_eq!(test.position(), 3);
+    }
+
+    #[test]
+    fn delete_multibyte_start() {
+        let mut test = TextState::new().with_value("äë");
+        test.move_start();
+        test.delete();
+        assert_eq!(test.value(), "ë");
+        assert_eq!(test.position(), 0);
+    }
+
+    #[test]
+    fn delete_multibyte_middle() {
+        let mut test = TextState::new().with_value("äë");
+        test.move_right();
+        test.delete();
+        assert_eq!(test.value(), "ä");
+        assert_eq!(test.position(), 1);
+    }
+
+    #[test]
+    fn delete_multibyte_end() {
+        let mut test = TextState::new().with_value("äë");
+        test.move_end();
+        test.delete();
+        assert_eq!(test.value(), "äë");
+        assert_eq!(test.position(), 2);
+    }
+
+    #[test]
+    fn backspace_multibyte_start() {
+        let mut test = TextState::new().with_value("äë");
+        test.move_start();
+        test.backspace();
+        assert_eq!(test.value(), "äë");
+        assert_eq!(test.position(), 0);
+    }
+
+    #[test]
+    fn backspace_multibyte_middle() {
+        let mut test = TextState::new().with_value("äë");
+        test.move_right();
+        test.backspace();
+        assert_eq!(test.value(), "ë");
+        assert_eq!(test.position(), 0);
+    }
+
+    #[test]
+    fn backspace_multibyte_end() {
+        let mut test = TextState::new().with_value("äë");
+        test.move_end();
+        test.backspace();
+        assert_eq!(test.value(), "ä");
+        assert_eq!(test.position(), 1);
     }
 }

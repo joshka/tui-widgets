@@ -131,16 +131,24 @@ pub trait State {
         if position == self.len() {
             return;
         }
-        self.value_mut().remove(position);
+        *self.value_mut() = chain!(
+            self.value().chars().take(position),
+            self.value().chars().skip(position + 1)
+        )
+        .collect();
     }
 
     fn backspace(&mut self) {
-        let position = self.position().saturating_sub(1);
-        if position == self.len() {
+        let position = self.position();
+        if position == 0 {
             return;
         }
-        *self.position_mut() = position;
-        self.value_mut().remove(position);
+        *self.value_mut() = chain!(
+            self.value().chars().take(position.saturating_sub(1)),
+            self.value().chars().skip(position)
+        )
+        .collect();
+        *self.position_mut() = position.saturating_sub(1);
     }
 
     fn move_right(&mut self) {
