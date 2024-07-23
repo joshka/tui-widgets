@@ -4,6 +4,7 @@ use crate::PopupState;
 use derive_setters::Setters;
 use ratatui::{
     prelude::{Buffer, Line, Rect, Style, Text},
+    symbols::border::Set,
     widgets::{Block, Borders, Clear, StatefulWidgetRef, Widget, WidgetRef},
 };
 use std::cmp::min;
@@ -16,13 +17,15 @@ use std::cmp::min;
 /// # Example
 ///
 /// ```rust
-/// use ratatui::prelude::*;
+/// use ratatui::{prelude::*, symbols::border};
 /// use tui_popup::Popup;
 ///
 /// fn render_popup(frame: &mut Frame) {
 ///     let popup = Popup::new("Press any key to exit")
 ///         .title("tui-popup demo")
-///         .style(Style::new().white().on_blue());
+///         .style(Style::new().white().on_blue())
+///         .border_set(border::ROUNDED)
+///         .border_style(Style::new().bold());
 ///     frame.render_widget(&popup, frame.size());
 /// }
 /// ```
@@ -39,6 +42,10 @@ pub struct Popup<'content, W: SizedWidgetRef> {
     pub style: Style,
     /// The borders of the popup.
     pub borders: Borders,
+    /// The symbols used to render the border.
+    pub border_set: Set,
+    /// Border style
+    pub border_style: Style,
 }
 
 /// A trait for widgets that have a fixed size.
@@ -71,6 +78,8 @@ impl<'content, W: SizedWidgetRef> Popup<'content, W> {
         Self {
             body,
             borders: Borders::ALL,
+            border_set: Set::default(),
+            border_style: Style::default(),
             title: Line::default(),
             style: Style::default(),
         }
@@ -165,6 +174,8 @@ impl<W: SizedWidgetRef> StatefulWidgetRef for Popup<'_, W> {
         Clear.render(area, buf);
         let block = Block::default()
             .borders(self.borders)
+            .border_set(self.border_set)
+            .border_style(self.border_style)
             .title(self.title.clone())
             .style(self.style);
         block.render_ref(area, buf);
