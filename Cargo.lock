@@ -1163,7 +1163,6 @@ name = "tui-scrollview"
 version = "0.3.7"
 dependencies = [
  "color-eyre",
- "crossterm",
  "indoc",
  "lipsum",
  "ratatui",

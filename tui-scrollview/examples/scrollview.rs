@@ -1,12 +1,17 @@
 use std::io::{self, stdout};
 
 use color_eyre::{config::HookBuilder, Result};
-use crossterm::{
-    event::{self, Event, KeyCode, KeyEventKind},
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
-    ExecutableCommand,
+use ratatui::{
+    crossterm::{
+        event::{self, Event, KeyCode, KeyEventKind},
+        terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+        ExecutableCommand,
+    },
+    layout::Size,
+    prelude::*,
+    style::palette::tailwind,
+    widgets::*,
 };
-use ratatui::{layout::Size, prelude::*, style::palette::tailwind, widgets::*};
 use tui_scrollview::{ScrollView, ScrollViewState};
 
 fn main() -> Result<()> {

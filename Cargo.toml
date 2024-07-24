@@ -12,8 +12,19 @@ categories = ["command-line-interface", "gui"]
 keywords = ["cli", "console", "ratatui", "terminal", "tui"]
 
 [workspace.dependencies]
-ratatui = { version = "0.27.0", default-features = false }
+anyhow = "1.0.86"
+clap = { version = "4.5.8", features = ["derive"] }
+color-eyre = "0.6.3"
 crossterm = { version = "0.27.0" }
+derive_builder = "0.20.0"
+futures = "0.3"
+itertools = "0.13.0"
+indoc = "2.0.5"
+ratatui = { version = "0.27.0", default-features = false }
+ratatui-macros = "0.4.2"
+rstest = "0.21.0"
+strum = { version = "0.26.1", features = ["derive"] }
+tokio = { version = "1.16" }
 
 [package]
 name = "tui-widgets"
