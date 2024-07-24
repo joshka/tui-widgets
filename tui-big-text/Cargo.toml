@@ -1,0 +1,26 @@
+[package]
+name = "tui-big-text"
+version = "0.4.5"
+edition = "2021"
+description = "A simple Ratatui widget for displaying big text using the font8x8 crate in a TUI (Terminal UI)."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/joshka/tui-big-text"
+documentation = "https://docs.rs/tui-big-text"
+authors = ["Joshka"]
+categories = ["command-line-interface", "gui"]
+keywords = ["cli", "console", "ratatui", "terminal", "tui"]
+rust-version = "1.74.0"
+
+[dependencies]
+derive_builder = "0.20.0"
+font8x8 = "0.3.1"
+itertools = "0.13.0"
+ratatui = "0.27.0"
+
+[dev-dependencies]
+anyhow = "1.0.44"
+crossterm = { version = "0.27.0", features = ["event-stream"] }
+futures = "0.3"
+indoc = "2.0.3"
+strum = { version = "0.26.1", features = ["derive"] }
+tokio = { version = "1.16", features = ["full"] }
