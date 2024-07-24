@@ -1,0 +1,25 @@
+[package]
+name = "tui-scrollview"
+version = "0.3.7"
+authors = ["Joshka"]
+description = "A simple scrollable view for Ratatui"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/joshka/tui-scrollview"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+indoc = "2.0.5"
+ratatui = "0.27.0"
+rstest = "0.21.0"
+
+[dev-dependencies]
+color-eyre = "0.6.3"
+crossterm = "0.27.0"
+lipsum = "0.9.1"
+
+
+[[example]]
+name = "tabs"
+required-features = ["ratatui/unstable-widget-ref"]
