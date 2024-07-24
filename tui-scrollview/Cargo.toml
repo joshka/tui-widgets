@@ -1,13 +1,15 @@
 [package]
 name = "tui-scrollview"
 version = "0.3.8"
-authors = ["Joshka"]
 description = "A simple scrollable view for Ratatui"
-license = "MIT OR Apache-2.0"
-repository = "https://github.com/joshka/tui-scrollview"
-edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors.workspace = true
+categories.workspace = true
+edition.workspace = true
+keywords.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 indoc.workspace = true
