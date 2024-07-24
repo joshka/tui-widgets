@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.8](https://github.com/joshka/tui-widgets/compare/tui-scrollview-v0.3.7...tui-scrollview-v0.3.8) - 2024-07-24
+
+### Other
+- use workspace properties in Cargo.toml
+- move tui-scrollview to its own directory
+
 ## [0.3.7] - 2024-06-25
 
 ### ⚙️ Miscellaneous Tasks
