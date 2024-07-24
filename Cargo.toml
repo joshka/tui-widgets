@@ -8,16 +8,26 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/joshka/tui-widgets"
 edition = "2021"
 rust-version = "1.63.0"
+categories = ["command-line-interface", "gui"]
+keywords = ["cli", "console", "ratatui", "terminal", "tui"]
 
 [workspace.dependencies]
 ratatui = { version = "0.27.0", default-features = false }
+crossterm = { version = "0.27.0" }
 
 [package]
 name = "tui-widgets"
 description = "A collection of useful widgets for building terminal user interfaces using Ratatui"
-version = "0.1.1"
+version = "0.1.2"
+documentation = "https://docs.rs/tui-widgets"
+
+authors.workspace = true
+categories.workspace = true
 edition.workspace = true
+keywords.workspace = true
 license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
 
 [features]
 default = ["full"]
