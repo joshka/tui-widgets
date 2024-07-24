@@ -1,0 +1,20 @@
+[workspace]
+resolver = "2"
+
+[workspace.package]
+authors = ["Joshka"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/joshka/tui-widgets"
+edition = "2021"
+rust-version = "1.63.0"
+
+[workspace.dependencies]
+ratatui = { version = "0.27.0", default-features = false }
+
+[package]
+name = "tui-widgets"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ratatui = { workspace = true }
