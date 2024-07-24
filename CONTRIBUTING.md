@@ -1,6 +1,6 @@
 # Contribution guidelines
 
-First off, thank you for considering contributing to tui-big-text.
+First off, thank you for considering contributing to tui-widgets.
 
 If your contribution is not straightforward, please first discuss the change you
 wish to make by creating a new issue before making the change.
@@ -8,7 +8,7 @@ wish to make by creating a new issue before making the change.
 ## Reporting issues
 
 Before reporting an issue on the
-[issue tracker](https://github.com/joshka/tui-big-text/issues),
+[issue tracker](https://github.com/joshka/tui-widgets/issues),
 please check that it has not already been reported by searching for some related
 keywords.
 
@@ -55,8 +55,8 @@ A specification for adding human and machine readable meaning to commit messages
 This is no different than other Rust projects.
 
 ```shell
-git clone https://github.com/joshka/tui-big-text
-cd tui-big-text
+git clone https://github.com/joshka/tui-widgets
+cd tui-widgets
 cargo test
 ```
 

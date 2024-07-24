@@ -55,8 +55,6 @@ impl<'a> TextPrompt<'a> {
     }
 
     #[must_use]
-    // const causes: error[E0493]: destructor of `std::option::Option<ratatui::widgets::Block<'_>>` cannot be evaluated at compile-time
-    #[allow(clippy::missing_const_for_fn)]
     pub fn with_block(mut self, block: Block<'a>) -> Self {
         self.block = Some(block);
         self
@@ -107,11 +105,7 @@ impl<'a> StatefulWidget for TextPrompt<'a> {
         let position = (state.position() + prompt_length).min(area.area() as usize - 1);
         let row = position / width;
         let column = position % width;
-        // sizes are already constrained to the u16 range
-        #[allow(clippy::cast_possible_truncation)]
-        {
-            *state.cursor_mut() = (area.x + column as u16, area.y + row as u16);
-        }
+        *state.cursor_mut() = (area.x + column as u16, area.y + row as u16);
         Paragraph::new(lines).render(area, buf);
     }
 }
@@ -168,7 +162,6 @@ fn line_split_at(line: Line, mid: usize) -> (Line, Line) {
 ///
 /// TODO: move this into the `Span` type.
 /// TODO: fix this so that it operates on multi-width characters.
-#[allow(clippy::needless_pass_by_value)]
 fn span_split_at(span: Span, mid: usize) -> (Span, Span) {
     let (first, second) = span.content.split_at(mid);
     let first = Span {

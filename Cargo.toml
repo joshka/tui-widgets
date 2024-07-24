@@ -7,7 +7,7 @@ authors = ["Joshka"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/joshka/tui-widgets"
 edition = "2021"
-rust-version = "1.63.0"
+rust-version = "1.74.0"
 categories = ["command-line-interface", "gui"]
 keywords = ["cli", "console", "ratatui", "terminal", "tui"]
 
@@ -25,6 +25,15 @@ ratatui-macros = "0.4.2"
 rstest = "0.21.0"
 strum = { version = "0.26.1", features = ["derive"] }
 tokio = { version = "1.39" }
+
+[lints.rust]
+unused = "warn"
+
+[lints.clippy]
+# cargo = "warn"    # currently fails because crossterm 0.27.0 uses multiple windows crate versions
+pedantic = "warn"
+nursery = "warn"
+
 
 [package]
 name = "tui-widgets"
