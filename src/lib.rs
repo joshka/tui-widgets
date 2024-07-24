@@ -13,3 +13,6 @@ pub use tui_big_text as big_text;
 
 #[doc(inline)]
 pub use tui_scrollview as scrollview;
+
+#[doc(inline)]
+pub use tui_prompts as prompts;

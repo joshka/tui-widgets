@@ -22,9 +22,11 @@ license.workspace = true
 [features]
 default = ["full"]
 ## All widgets
-full = ["big-text", "scrollview"]
+full = ["big-text", "prompts", "scrollview"]
 ## Enables the [`big_text`] widget
 big-text = ["tui-big-text"]
+## Enables the [`prompts`] widget
+prompts = ["tui-prompts"]
 ## Enables the [`scrollview`] widget
 scrollview = ["tui-scrollview"]
 
@@ -33,3 +35,4 @@ document-features = "0.2.10"
 ratatui = { workspace = true }
 tui-big-text = { version = "0.4.5", path = "tui-big-text", optional = true }
 tui-scrollview = { version = "0.3.7", path = "tui-scrollview", optional = true }
+tui-prompts = { version = "0.3.14", path = "tui-prompts", optional = true }
