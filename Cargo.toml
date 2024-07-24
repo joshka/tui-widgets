@@ -26,6 +26,15 @@ rstest = "0.21.0"
 strum = { version = "0.26.1", features = ["derive"] }
 tokio = { version = "1.39" }
 
+[lints.rust]
+unused = "warn"
+
+[lints.clippy]
+# cargo = "warn"    # currently fails because crossterm 0.27.0 uses multiple windows crate versions
+pedantic = "warn"
+nursery = "warn"
+
+
 [package]
 name = "tui-widgets"
 description = "A collection of useful widgets for building terminal user interfaces using Ratatui"

@@ -141,19 +141,19 @@ impl ScrollView {
             (0, 0) => {
                 // area is taller and wider than the scroll_view
                 state.offset = Position::default();
-                return Rect::new(state.offset.x, state.offset.y, area.width, area.height);
+                Rect::new(state.offset.x, state.offset.y, area.width, area.height)
             }
             (_, 0) if area.height > size.height => {
                 // area is taller and narrower than the scroll_view
                 state.offset.y = 0;
                 self.render_horizontal_scrollbar(area, buf, state);
-                return Rect::new(state.offset.x, 0, area.width, area.height - 1);
+                Rect::new(state.offset.x, 0, area.width, area.height - 1)
             }
             (0, _) if area.width > size.width => {
                 // area is wider and shorter than the scroll_view
                 state.offset.x = 0;
                 self.render_vertical_scrollbar(area, buf, state);
-                return Rect::new(0, state.offset.y, area.width - 1, area.height);
+                Rect::new(0, state.offset.y, area.width - 1, area.height)
             }
             (_, _) => {
                 // scroll_view is both wider and taller than the area
@@ -167,12 +167,12 @@ impl ScrollView {
                 };
                 self.render_vertical_scrollbar(vertical_area, buf, state);
                 self.render_horizontal_scrollbar(horizontal_area, buf, state);
-                return Rect::new(
+                Rect::new(
                     state.offset.x,
                     state.offset.y,
                     area.width - 1,
                     area.height - 1,
-                );
+                )
             }
         }
     }

@@ -143,9 +143,11 @@ impl App {
     }
 
     fn line_numbers(&self, height: u16) -> impl Widget {
-        let line_numbers = (1..=height)
-            .map(|n| format!("{n:>4} \n"))
-            .collect::<String>();
+        use std::fmt::Write;
+        let line_numbers = (1..=height).fold(String::new(), |mut output, n| {
+            let _ = writeln!(output, "{n:>4} ");
+            output
+        });
         Text::from(line_numbers).dim()
     }
 
@@ -177,7 +179,7 @@ impl App {
     }
 }
 
-const CHART_DATA: [(&'static str, u64, Color); 3] = [
+const CHART_DATA: [(&str, u64, Color); 3] = [
     ("Red", 2, Color::Red),
     ("Green", 7, Color::Green),
     ("Blue", 11, Color::Blue),

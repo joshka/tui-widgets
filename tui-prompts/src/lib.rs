@@ -1,5 +1,3 @@
-#![warn(clippy::pedantic, clippy::nursery, clippy::cargo, unused)]
-
 mod prompt;
 mod status;
 

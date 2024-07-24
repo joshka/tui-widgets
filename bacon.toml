@@ -27,6 +27,7 @@ command = [
     "cargo",
     "clippy",
     "--workspace",
+    "--all-features",
     "--all-targets",
     "--color",
     "always",
