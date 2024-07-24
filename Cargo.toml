@@ -1,5 +1,6 @@
 [workspace]
 resolver = "2"
+members = ["tui-big-text"]
 
 [workspace.package]
 authors = ["Joshka"]
@@ -13,8 +14,19 @@ ratatui = { version = "0.27.0", default-features = false }
 
 [package]
 name = "tui-widgets"
+description = "A collection of useful widgets for building terminal user interfaces using Ratatui"
 version = "0.1.0"
-edition = "2021"
+edition.workspace = true
+license.workspace = true
+
+[features]
+default = ["full"]
+## All widgets
+full = ["tui-big-text"]
+## Enables the [`big_text`] widget
+big-text = ["tui-big-text"]
 
 [dependencies]
+document-features = "0.2.10"
 ratatui = { workspace = true }
+tui-big-text = { version = "0.4.5", path = "tui-big-text", optional = true }
