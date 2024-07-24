@@ -7,7 +7,7 @@ authors = ["Joshka"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/joshka/tui-widgets"
 edition = "2021"
-rust-version = "1.63.0"
+rust-version = "1.74.0"
 categories = ["command-line-interface", "gui"]
 keywords = ["cli", "console", "ratatui", "terminal", "tui"]
 
