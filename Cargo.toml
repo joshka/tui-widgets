@@ -29,7 +29,7 @@ tokio = { version = "1.39" }
 [package]
 name = "tui-widgets"
 description = "A collection of useful widgets for building terminal user interfaces using Ratatui"
-version = "0.1.2"
+version = "0.1.3"
 documentation = "https://docs.rs/tui-widgets"
 
 authors.workspace = true
@@ -54,6 +54,6 @@ scrollview = ["tui-scrollview"]
 [dependencies]
 document-features = "0.2.10"
 ratatui = { workspace = true }
-tui-big-text = { version = "0.4.5", path = "tui-big-text", optional = true }
-tui-scrollview = { version = "0.3.7", path = "tui-scrollview", optional = true }
+tui-big-text = { version = "0.4.6", path = "tui-big-text", optional = true }
+tui-scrollview = { version = "0.3.8", path = "tui-scrollview", optional = true }
 tui-prompts = { version = "0.3.14", path = "tui-prompts", optional = true }
