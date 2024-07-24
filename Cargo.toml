@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["tui-big-text"]
+members = ["tui-*"]
 
 [workspace.package]
 authors = ["Joshka"]
@@ -22,11 +22,14 @@ license.workspace = true
 [features]
 default = ["full"]
 ## All widgets
-full = ["tui-big-text"]
+full = ["big-text", "scrollview"]
 ## Enables the [`big_text`] widget
 big-text = ["tui-big-text"]
+## Enables the [`scrollview`] widget
+scrollview = ["tui-scrollview"]
 
 [dependencies]
 document-features = "0.2.10"
 ratatui = { workspace = true }
 tui-big-text = { version = "0.4.5", path = "tui-big-text", optional = true }
+tui-scrollview = { version = "0.3.7", path = "tui-scrollview", optional = true }
