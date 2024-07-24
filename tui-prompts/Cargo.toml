@@ -2,22 +2,24 @@
 name = "tui-prompts"
 version = "0.3.14"
 description = "A library for building interactive prompts for ratatui."
-repository = "https://github.com/joshka/tui-prompts"
-authors = ["Joshka"]
-license = "MIT OR Apache-2.0"
-categories = ["command-line-interface", "gui"]
-keywords = ["cli", "console", "ratatui", "terminal", "tui"]
-edition = "2021"
+
+authors.workspace = true
+categories.workspace = true
+edition.workspace = true
+keywords.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-itertools = "0.13.0"
-ratatui = "0.27.0"
-ratatui-macros = { version = "0.4.2" }
-rstest = "0.21.0"
+itertools.workspace = true
+ratatui.workspace = true
+ratatui-macros.workspace = true
+rstest.workspace = true
 
 [dev-dependencies]
-clap = { version = "4.5.8", features = ["derive"] }
-color-eyre = "0.6.3"
-indoc = "2.0.5"
+clap.workspace = true
+color-eyre.workspace = true
+indoc.workspace = true
