@@ -14,7 +14,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn render(frame: &mut Frame) -> Result<()> {
+fn render(frame: &mut Frame) {
     let title = Line::from("tui-big-text alignment demo. Press 'q' to quit")
         .cyan()
         .centered();
@@ -23,19 +23,19 @@ fn render(frame: &mut Frame) -> Result<()> {
         .pixel_size(PixelSize::Quadrant)
         .left_aligned()
         .lines(vec!["Left".white().into()])
-        .build()?;
+        .build();
 
     let right = BigText::builder()
         .pixel_size(PixelSize::Quadrant)
         .right_aligned()
         .lines(vec!["Right".green().into()])
-        .build()?;
+        .build();
 
     let centered = BigText::builder()
         .pixel_size(PixelSize::Quadrant)
         .centered()
         .lines(vec!["Centered".red().into()])
-        .build()?;
+        .build();
 
     let area = frame.size();
     frame.render_widget(title, area);
@@ -44,6 +44,4 @@ fn render(frame: &mut Frame) -> Result<()> {
     frame.render_widget(left, area);
     frame.render_widget(right, area);
     frame.render_widget(centered, area);
-
-    Ok(())
 }

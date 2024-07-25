@@ -10,7 +10,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn render(frame: &mut Frame) -> Result<()> {
+fn render(frame: &mut Frame) {
     let title = Line::from("tui-big-text pixel size demo. Press 'q' to quit")
         .centered()
         .cyan();
@@ -18,32 +18,32 @@ fn render(frame: &mut Frame) -> Result<()> {
     let full_size_text = BigText::builder()
         .pixel_size(PixelSize::Full)
         .lines(vec!["FullSize".white().into()])
-        .build()?;
+        .build();
 
     let half_height_text = BigText::builder()
         .pixel_size(PixelSize::HalfHeight)
         .lines(vec!["1/2 high".green().into()])
-        .build()?;
+        .build();
 
     let half_wide_text = BigText::builder()
         .pixel_size(PixelSize::HalfWidth)
         .lines(vec!["1/2 wide".red().into()])
-        .build()?;
+        .build();
 
     let quadrant_text = BigText::builder()
         .pixel_size(PixelSize::Quadrant)
         .lines(vec!["Quadrant".blue().into(), " 1/2*1/2".blue().into()])
-        .build()?;
+        .build();
 
     let third_text = BigText::builder()
         .pixel_size(PixelSize::ThirdHeight)
         .lines(vec!["1/3".yellow().into(), "high".yellow().into()])
-        .build()?;
+        .build();
 
     let sextant_text = BigText::builder()
         .pixel_size(PixelSize::Sextant)
         .lines(vec!["Sextant".cyan().into(), " 1/2*1/3".cyan().into()])
-        .build()?;
+        .build();
 
     // Setup layout for the title and 6 blocks
     use Constraint::*;
@@ -60,6 +60,4 @@ fn render(frame: &mut Frame) -> Result<()> {
     frame.render_widget(quadrant_text, quadrant);
     frame.render_widget(third_text, third_height);
     frame.render_widget(sextant_text, sextant);
-
-    Ok(())
 }

@@ -54,28 +54,30 @@ use crate::PixelSize;
 /// ██ ███  ██ ███  ██ ███  ██ ███  ██ ███
 /// ```
 #[derive(Debug, Builder, Clone, PartialEq, Eq, Hash)]
+#[builder(build_fn(skip))]
+#[non_exhaustive]
 pub struct BigText<'a> {
     /// The text to display
-    #[builder(setter(into))]
-    lines: Vec<Line<'a>>,
+    #[builder(default, setter(into))]
+    pub lines: Vec<Line<'a>>,
 
     /// The style of the widget
     ///
     /// Defaults to `Style::default()`
     #[builder(default, setter(into))]
-    style: Style,
+    pub style: Style,
 
     /// The size of single glyphs
     ///
     /// Defaults to `BigTextSize::default()` (=> BigTextSize::Full)
     #[builder(default)]
-    pixel_size: PixelSize,
+    pub pixel_size: PixelSize,
 
     /// The horizontal alignmnet of the text
     ///
     /// Defaults to `Alignment::default()` (=> Alignment::Left)
     #[builder(default)]
-    alignment: Alignment,
+    pub alignment: Alignment,
 }
 
 impl BigText<'static> {
@@ -99,6 +101,24 @@ impl BigTextBuilder<'_> {
     /// Set the alignment of the text.
     pub fn centered(&mut self) -> &mut Self {
         self.alignment(Alignment::Center)
+    }
+}
+
+impl<'a> BigTextBuilder<'a> {
+    /// Build the [`BigText`] widget.
+    pub fn build(&self) -> BigText<'a> {
+        BigText {
+            lines: match &self.lines {
+                Some(lines) => lines.clone(),
+                None => Vec::new(),
+            },
+            style: match &self.style {
+                Some(style) => *style,
+                None => Style::default(),
+            },
+            pixel_size: self.pixel_size.unwrap_or_default(),
+            alignment: self.alignment.unwrap_or_default(),
+        }
     }
 }
 
@@ -187,10 +207,8 @@ fn render_glyph(glyph: [u8; 8], area: Rect, buf: &mut Buffer, pixel_size: &Pixel
 mod tests {
     use super::*;
 
-    type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
-
     #[test]
-    fn build() -> Result<()> {
+    fn build() {
         let lines = vec![Line::from(vec!["Hello".red(), "World".blue()])];
         let style = Style::new().green();
         let pixel_size = PixelSize::default();
@@ -200,7 +218,7 @@ mod tests {
                 .lines(lines.clone())
                 .style(style)
                 .alignment(Alignment::Center)
-                .build()?,
+                .build(),
             BigText {
                 lines,
                 style,
@@ -208,14 +226,13 @@ mod tests {
                 alignment,
             }
         );
-        Ok(())
     }
 
     #[test]
-    fn render_single_line() -> Result<()> {
+    fn render_single_line() {
         let big_text = BigText::builder()
             .lines(vec![Line::from("SingleLine")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 80, 8));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -229,14 +246,13 @@ mod tests {
             "                        █████                                                   ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_truncated() -> Result<()> {
+    fn render_truncated() {
         let big_text = BigText::builder()
             .lines(vec![Line::from("Truncated")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 70, 6));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -248,14 +264,13 @@ mod tests {
             "  ██     ██     ██  ██  ██  ██  ██  ██  ██  ██    ██ █  ██      ██  ██",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_multiple_lines() -> Result<()> {
+    fn render_multiple_lines() {
         let big_text = BigText::builder()
             .lines(vec![Line::from("Multi"), Line::from("Lines")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 16));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -277,15 +292,14 @@ mod tests {
             "                                        ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_widget_style() -> Result<()> {
+    fn render_widget_style() {
         let big_text = BigText::builder()
             .lines(vec![Line::from("Styled")])
             .style(Style::new().bold())
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 48, 8));
         big_text.render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec![
@@ -300,18 +314,17 @@ mod tests {
         ]);
         expected.set_style(Rect::new(0, 0, 48, 8), Style::new().bold());
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_line_style() -> Result<()> {
+    fn render_line_style() {
         let big_text = BigText::builder()
             .lines(vec![
                 Line::from("Red".red()),
                 Line::from("Green".green()),
                 Line::from("Blue".blue()),
             ])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 24));
         big_text.render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec![
@@ -344,15 +357,14 @@ mod tests {
         expected.set_style(Rect::new(0, 8, 40, 8), Style::new().green());
         expected.set_style(Rect::new(0, 16, 32, 8), Style::new().blue());
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_half_height_single_line() -> Result<()> {
+    fn render_half_height_single_line() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfHeight)
             .lines(vec![Line::from("SingleLine")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 80, 4));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -362,15 +374,14 @@ mod tests {
             " ▀▀▀▀    ▀▀▀▀   ▀▀  ▀▀  ▄▄▄▄█▀   ▀▀▀▀    ▀▀▀▀   ▀▀▀▀▀▀▀  ▀▀▀▀   ▀▀  ▀▀   ▀▀▀▀   ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_half_height_truncated() -> Result<()> {
+    fn render_half_height_truncated() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfHeight)
             .lines(vec![Line::from("Truncated")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 70, 3));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -379,15 +390,14 @@ mod tests {
             "  ██     ██  ▀▀ ██  ██  ██  ██  ██  ▄▄  ▄█▀▀██    ██ ▄  ██▀▀▀▀  ██  ██",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_half_height_multiple_lines() -> Result<()> {
+    fn render_half_height_multiple_lines() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfHeight)
             .lines(vec![Line::from("Multi"), Line::from("Lines")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 8));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -401,16 +411,15 @@ mod tests {
             "▀▀▀▀▀▀▀  ▀▀▀▀   ▀▀  ▀▀   ▀▀▀▀   ▀▀▀▀▀   ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_half_height_widget_style() -> Result<()> {
+    fn render_half_height_widget_style() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfHeight)
             .lines(vec![Line::from("Styled")])
             .style(Style::new().bold())
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 48, 4));
         big_text.render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec![
@@ -421,11 +430,10 @@ mod tests {
         ]);
         expected.set_style(Rect::new(0, 0, 48, 4), Style::new().bold());
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_half_height_line_style() -> Result<()> {
+    fn render_half_height_line_style() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfHeight)
             .lines(vec![
@@ -433,7 +441,7 @@ mod tests {
                 Line::from("Green".green()),
                 Line::from("Blue".blue()),
             ])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 12));
         big_text.render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec![
@@ -454,15 +462,14 @@ mod tests {
         expected.set_style(Rect::new(0, 4, 40, 4), Style::new().green());
         expected.set_style(Rect::new(0, 8, 32, 4), Style::new().blue());
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_half_width_single_line() -> Result<()> {
+    fn render_half_width_single_line() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfWidth)
             .lines(vec![Line::from("SingleLine")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 8));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -476,15 +483,14 @@ mod tests {
             "            ██▌                         ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_half_width_truncated() -> Result<()> {
+    fn render_half_width_truncated() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfWidth)
             .lines(vec![Line::from("Truncated")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 35, 6));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -496,15 +502,14 @@ mod tests {
             " █  ▐▌  █ █ █ █ █ █ █ █  █▐ █   █ █",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_half_width_multiple_lines() -> Result<()> {
+    fn render_half_width_multiple_lines() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfWidth)
             .lines(vec![Line::from("Multi"), Line::from("Lines")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 20, 16));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -526,16 +531,15 @@ mod tests {
             "                    ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_half_width_widget_style() -> Result<()> {
+    fn render_half_width_widget_style() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfWidth)
             .lines(vec![Line::from("Styled")])
             .style(Style::new().bold())
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 24, 8));
         big_text.render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec![
@@ -550,11 +554,10 @@ mod tests {
         ]);
         expected.set_style(Rect::new(0, 0, 24, 8), Style::new().bold());
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_half_width_line_style() -> Result<()> {
+    fn render_half_width_line_style() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::HalfWidth)
             .lines(vec![
@@ -562,7 +565,7 @@ mod tests {
                 Line::from("Green".green()),
                 Line::from("Blue".blue()),
             ])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 20, 24));
         big_text.render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec![
@@ -595,15 +598,14 @@ mod tests {
         expected.set_style(Rect::new(0, 8, 20, 8), Style::new().green());
         expected.set_style(Rect::new(0, 16, 16, 8), Style::new().blue());
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_quadrant_size_single_line() -> Result<()> {
+    fn render_quadrant_size_single_line() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::Quadrant)
             .lines(vec![Line::from("SingleLine")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 4));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -613,15 +615,14 @@ mod tests {
             "▝▀▘ ▝▀▘ ▀ ▀ ▄▄▛ ▝▀▘ ▝▀▘ ▀▀▀▘▝▀▘ ▀ ▀ ▝▀▘ ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_quadrant_size_truncated() -> Result<()> {
+    fn render_quadrant_size_truncated() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::Quadrant)
             .lines(vec![Line::from("Truncated")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 35, 3));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -630,15 +631,14 @@ mod tests {
             " █  ▐▌▝▘█ █ █ █ █ ▄ ▟▀█  █▗ █▀▀ █ █",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_quadrant_size_multiple_lines() -> Result<()> {
+    fn render_quadrant_size_multiple_lines() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::Quadrant)
             .lines(vec![Line::from("Multi"), Line::from("Lines")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 20, 8));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -652,16 +652,15 @@ mod tests {
             "▀▀▀▘▝▀▘ ▀ ▀ ▝▀▘ ▀▀▘ ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_quadrant_size_widget_style() -> Result<()> {
+    fn render_quadrant_size_widget_style() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::Quadrant)
             .lines(vec![Line::from("Styled")])
             .style(Style::new().bold())
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 24, 4));
         big_text.render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec![
@@ -672,11 +671,10 @@ mod tests {
         ]);
         expected.set_style(Rect::new(0, 0, 24, 4), Style::new().bold());
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_quadrant_size_line_style() -> Result<()> {
+    fn render_quadrant_size_line_style() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::Quadrant)
             .lines(vec![
@@ -684,7 +682,7 @@ mod tests {
                 Line::from("Green".green()),
                 Line::from("Blue".blue()),
             ])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 20, 12));
         big_text.render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec![
@@ -705,15 +703,14 @@ mod tests {
         expected.set_style(Rect::new(0, 4, 20, 4), Style::new().green());
         expected.set_style(Rect::new(0, 8, 16, 4), Style::new().blue());
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_third_height_single_line() -> Result<()> {
+    fn render_third_height_single_line() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::ThirdHeight)
             .lines(vec![Line::from("SingleLine")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 80, 3));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -722,15 +719,14 @@ mod tests {
             " 🬂🬂🬂🬂    🬂🬂🬂🬂   🬂🬂  🬂🬂  🬋🬋🬋🬋🬎🬂   🬂🬂🬂🬂    🬂🬂🬂🬂   🬂🬂🬂🬂🬂🬂🬂  🬂🬂🬂🬂   🬂🬂  🬂🬂   🬂🬂🬂🬂   ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_third_height_truncated() -> Result<()> {
+    fn render_third_height_truncated() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::ThirdHeight)
             .lines(vec![Line::from("Truncated")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 70, 2));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -738,15 +734,14 @@ mod tests {
             "  ██     ██🬂 🬎🬎 ██  ██  ██  ██  ██  🬰🬰  🬭🬹🬋🬋██    ██ 🬭  ██🬋🬋🬎🬎  🬹█🬂🬂██",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_third_height_multiple_lines() -> Result<()> {
+    fn render_third_height_multiple_lines() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::ThirdHeight)
             .lines(vec![Line::from("Multi"), Line::from("Lines")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 6));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -758,16 +753,15 @@ mod tests {
             "🬂🬂🬂🬂🬂🬂🬂  🬂🬂🬂🬂   🬂🬂  🬂🬂   🬂🬂🬂🬂   🬂🬂🬂🬂🬂   ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_third_height_widget_style() -> Result<()> {
+    fn render_third_height_widget_style() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::ThirdHeight)
             .lines(vec![Line::from("Styled")])
             .style(Style::new().bold())
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 48, 3));
         big_text.render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec![
@@ -777,11 +771,10 @@ mod tests {
         ]);
         expected.set_style(Rect::new(0, 0, 48, 3), Style::new().bold());
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_third_height_line_style() -> Result<()> {
+    fn render_third_height_line_style() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::ThirdHeight)
             .lines(vec![
@@ -789,7 +782,7 @@ mod tests {
                 Line::from("Green".green()),
                 Line::from("Blue".blue()),
             ])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 9));
         big_text.render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec![
@@ -807,15 +800,14 @@ mod tests {
         expected.set_style(Rect::new(0, 3, 40, 3), Style::new().green());
         expected.set_style(Rect::new(0, 6, 32, 3), Style::new().blue());
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_sextant_size_single_line() -> Result<()> {
+    fn render_sextant_size_single_line() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::Sextant)
             .lines(vec![Line::from("SingleLine")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 3));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -824,15 +816,14 @@ mod tests {
             "🬁🬂🬀 🬁🬂🬀 🬂 🬂 🬋🬋🬆 🬁🬂🬀 🬁🬂🬀 🬂🬂🬂🬀🬁🬂🬀 🬂 🬂 🬁🬂🬀 ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_sextant_size_truncated() -> Result<()> {
+    fn render_sextant_size_truncated() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::Sextant)
             .lines(vec![Line::from("Truncated")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 35, 2));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -840,15 +831,14 @@ mod tests {
             " █  ▐🬕🬉🬄█ █ █ █ █ 🬰 🬵🬋█  █🬞 █🬋🬎 🬻🬂█",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_sextant_size_multiple_lines() -> Result<()> {
+    fn render_sextant_size_multiple_lines() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::Sextant)
             .lines(vec![Line::from("Multi"), Line::from("Lines")])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 20, 6));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -860,16 +850,15 @@ mod tests {
             "🬂🬂🬂🬀🬁🬂🬀 🬂 🬂 🬁🬂🬀 🬂🬂🬀 ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_sextant_size_widget_style() -> Result<()> {
+    fn render_sextant_size_widget_style() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::Sextant)
             .lines(vec![Line::from("Styled")])
             .style(Style::new().bold())
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 24, 3));
         big_text.render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec![
@@ -879,11 +868,10 @@ mod tests {
         ]);
         expected.set_style(Rect::new(0, 0, 24, 3), Style::new().bold());
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_sextant_size_line_style() -> Result<()> {
+    fn render_sextant_size_line_style() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::Sextant)
             .lines(vec![
@@ -891,7 +879,7 @@ mod tests {
                 Line::from("Green".green()),
                 Line::from("Blue".blue()),
             ])
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 20, 9));
         big_text.render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec![
@@ -909,16 +897,15 @@ mod tests {
         expected.set_style(Rect::new(0, 3, 20, 3), Style::new().green());
         expected.set_style(Rect::new(0, 6, 16, 3), Style::new().blue());
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_alignment_left() -> Result<()> {
+    fn render_alignment_left() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::Quadrant)
             .lines(vec![Line::from("Left")])
             .alignment(Alignment::Left)
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 4));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -928,16 +915,15 @@ mod tests {
             "▀▀▀▘▝▀▘ ▀▀   ▝▘                         ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_alignment_right() -> Result<()> {
+    fn render_alignment_right() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::Quadrant)
             .lines(vec![Line::from("Right")])
             .alignment(Alignment::Right)
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 4));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -947,16 +933,15 @@ mod tests {
             "                    ▀▘▝▘▝▀▘ ▄▄▛ ▀▘▝▘ ▝▘ ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 
     #[test]
-    fn render_alignment_center() -> Result<()> {
+    fn render_alignment_center() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::Quadrant)
             .lines(vec![Line::from("Centered"), Line::from("Lines")])
             .alignment(Alignment::Center)
-            .build()?;
+            .build();
         let mut buf = Buffer::empty(Rect::new(0, 0, 40, 8));
         big_text.render(buf.area, &mut buf);
         let expected = Buffer::with_lines(vec![
@@ -970,6 +955,5 @@ mod tests {
             "          ▀▀▀▘▝▀▘ ▀ ▀ ▝▀▘ ▀▀▘           ",
         ]);
         assert_eq!(buf, expected);
-        Ok(())
     }
 }

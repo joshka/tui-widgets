@@ -142,11 +142,7 @@ impl StopwatchApp {
         };
         let duration = format_duration(self.elapsed());
         let lines = vec![duration.into()];
-        BigText::builder()
-            .lines(lines)
-            .style(style)
-            .build()
-            .unwrap()
+        BigText::builder().lines(lines).style(style).build()
     }
 
     /// Renders the splits as a list of lines.
