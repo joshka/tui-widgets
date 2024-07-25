@@ -1,0 +1,44 @@
+[package]
+name = "tui-popup"
+authors = ["Joshka"]
+version = "0.4.2"
+description = "A simple popup for ratatui"
+license = "MIT"
+repository = "https://github.com/joshka/tui-popup"
+documentation = "https://docs.rs/tui-popup"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[package.metadata.docs.rs]
+all-features = true
+# see https://doc.rust-lang.org/nightly/rustdoc/scraped-examples.html
+cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]
+rustdoc-args = ["--cfg", "docsrs"]
+
+[features]
+default = []
+
+## Enables processing crossterm mouse events using [`PopupState::handle_mouse_event`]
+crossterm = ["ratatui/crossterm"]
+
+[dependencies]
+document-features = "0.2.10"
+derive-getters = "0.4.0"
+derive_setters = "0.1.6"
+ratatui = { version = "0.27.0", features = ["unstable-widget-ref"] }
+
+[dev-dependencies]
+color-eyre = "0.6.3"
+lipsum = "0.9.1"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+nursery = { level = "warn", priority = -1 }
+unwrap_used = "warn"
+expect_used = "warn"
+
+[[example]]
+name = "state"
+required-features = ["crossterm"]
+doc-scrape-examples = true        # applies to all examples, not just this one
