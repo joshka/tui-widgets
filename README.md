@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> This repo has been consolidated into <https://github.com/tui-widgets>. All future work will happen
+> there. The crate will remain available as tui-big-text, but this repo is now archived.
+
 # tui-popup
 
 [![Crates.io badge]][tui-popup crate]
