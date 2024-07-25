@@ -1,7 +1,7 @@
 use color_eyre::Result;
 use ratatui::{
     layout::Offset,
-    prelude::{Alignment, Frame, Stylize},
+    prelude::{Frame, Stylize},
     text::Line,
 };
 use tui_big_text::{BigText, PixelSize};
@@ -21,19 +21,19 @@ fn render(frame: &mut Frame) -> Result<()> {
 
     let left = BigText::builder()
         .pixel_size(PixelSize::Quadrant)
-        .alignment(Alignment::Left)
+        .left_aligned()
         .lines(vec!["Left".white().into()])
         .build()?;
 
     let right = BigText::builder()
         .pixel_size(PixelSize::Quadrant)
-        .alignment(Alignment::Right)
+        .right_aligned()
         .lines(vec!["Right".green().into()])
         .build()?;
 
     let centered = BigText::builder()
         .pixel_size(PixelSize::Quadrant)
-        .alignment(Alignment::Center)
+        .centered()
         .lines(vec!["Centered".red().into()])
         .build()?;
 

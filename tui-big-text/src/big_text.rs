@@ -85,6 +85,23 @@ impl BigText<'static> {
     }
 }
 
+impl BigTextBuilder<'_> {
+    /// Set the alignment of the text.
+    pub fn left_aligned(&mut self) -> &mut Self {
+        self.alignment(Alignment::Left)
+    }
+
+    /// Set the alignment of the text.
+    pub fn right_aligned(&mut self) -> &mut Self {
+        self.alignment(Alignment::Right)
+    }
+
+    /// Set the alignment of the text.
+    pub fn centered(&mut self) -> &mut Self {
+        self.alignment(Alignment::Center)
+    }
+}
+
 impl Widget for BigText<'_> {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let layout = layout(area, &self.pixel_size, self.alignment, &self.lines);
