@@ -110,6 +110,28 @@ frame.render_widget_ref(popup, area);
 - [ ] add nicer styling of header etc.
 - [ ] configure text wrapping in body to conform to a specific size
 
+## License
+
+Copyright (c) Josh McKinney
+
+This project is licensed under either of:
+
+- Apache License, Version 2.0 ([LICENSE-APACHE] or <http://www.apache.org/licenses/LICENSE-2.0>)
+- MIT license ([LICENSE-MIT] or <http://opensource.org/licenses/MIT>)
+
+at your option.
+
+[LICENSE-APACHE]: /LICENSE-APACHE
+[LICENSE-MIT]: /LICENSE-MIT
+
+## Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the
+work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any
+additional terms or conditions.
+
+See [CONTRIBUTING.md](/CONTRIBUTING.md).
+
 [Crates.io badge]: https://img.shields.io/crates/v/tui-popup?logo=rust&style=for-the-badge
 [tui-popup crate]: https://crates.io/crates/tui-popup
 [License badge]: https://img.shields.io/crates/l/tui-popup?style=for-the-badge

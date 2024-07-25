@@ -1,4 +1,7 @@
-<h1><img src="https://user-images.githubusercontent.com/381361/252977280-49b9ff66-f78d-4e16-b5ed-29d771bfcab2.png"></h1>
+<h1>
+<img src="https://user-images.githubusercontent.com/381361/252977280-49b9ff66-f78d-4e16-b5ed-29d771bfcab2.png"
+    alt="logo">
+</h1>
 
 # tui-prompts
 
@@ -116,4 +119,22 @@ Or add the following to your `Cargo.toml` file:
 
 ## License
 
-Dual-licensed under [Apache 2.0](./LICENSE-APACHE) or [MIT](./LICENSE-MIT).
+Copyright (c) Josh McKinney
+
+This project is licensed under either of:
+
+- Apache License, Version 2.0 ([LICENSE-APACHE] or <http://www.apache.org/licenses/LICENSE-2.0>)
+- MIT license ([LICENSE-MIT] or <http://opensource.org/licenses/MIT>)
+
+at your option.
+
+[LICENSE-APACHE]: /LICENSE-APACHE
+[LICENSE-MIT]: /LICENSE-MIT
+
+## Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the
+work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any
+additional terms or conditions.
+
+See [CONTRIBUTING.md](/CONTRIBUTING.md).

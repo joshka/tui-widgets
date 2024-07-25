@@ -31,8 +31,7 @@ render be rendered. The builder allows you to customize the [`Style`] of the wid
 ## Examples
 
 ```rust
-use anyhow::Result;
-use ratatui::prelude::*;
+use ratatui::prelude::{Frame, Style, Stylize};
 use tui_big_text::{BigText, PixelSize};
 
 fn render(frame: &mut Frame) {
@@ -110,21 +109,22 @@ BigText::builder().alignment(Alignment::Center);
 
 ## License
 
-Copyright (c) 2023 Josh McKinney
+Copyright (c) Josh McKinney
 
-This project is licensed under either of
+This project is licensed under either of:
 
-- Apache License, Version 2.0
-   ([LICENSE-APACHE](LICENSE-APACHE) or <http://www.apache.org/licenses/LICENSE-2.0>)
-- MIT license
-   ([LICENSE-MIT](LICENSE-MIT) or <http://opensource.org/licenses/MIT>)
+- Apache License, Version 2.0 ([LICENSE-APACHE] or <http://www.apache.org/licenses/LICENSE-2.0>)
+- MIT license ([LICENSE-MIT] or <http://opensource.org/licenses/MIT>)
 
 at your option.
 
+[LICENSE-APACHE]: /LICENSE-APACHE
+[LICENSE-MIT]: /LICENSE-MIT
+
 ## Contribution
 
-Unless you explicitly state otherwise, any contribution intentionally submitted
-for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
-dual licensed as above, without any additional terms or conditions.
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the
+work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any
+additional terms or conditions.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](/CONTRIBUTING.md).
