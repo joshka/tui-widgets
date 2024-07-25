@@ -48,15 +48,36 @@ command = [
 need_stdout = true
 
 [jobs.doc]
-command = ["cargo", "doc", "--color", "always", "--no-deps"]
+command = [
+    "cargo",
+    "+nightly",
+    "doc",
+    "-Zunstable-options",
+    "-Zrustdoc-scrape-examples",
+    "--all-features",
+    "--color",
+    "always",
+    "--no-deps",
+]
 need_stdout = false
 
 # If the doc compiles, then it opens in your browser and bacon switches
 # to the previous job
 [jobs.doc-open]
-command = ["cargo", "doc", "--color", "always", "--no-deps", "--open"]
+command = [
+    "cargo",
+    "+nightly",
+    "doc",
+    "-Zunstable-options",
+    "-Zrustdoc-scrape-examples",
+    "--all-features",
+    "--color",
+    "always",
+    "--no-deps",
+    "--open",
+]
 need_stdout = false
-on_success = "job:doc"                                                 # so that we don't open the browser at each change
+on_success = "job:doc" # so that we don't open the browser at each change
 
 # You can run your application and have the result displayed in bacon,
 # *if* it makes sense for this crate. You can run an example the same

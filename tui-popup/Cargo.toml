@@ -1,14 +1,16 @@
 [package]
 name = "tui-popup"
-authors = ["Joshka"]
 version = "0.4.2"
 description = "A simple popup for ratatui"
-license = "MIT"
-repository = "https://github.com/joshka/tui-popup"
 documentation = "https://docs.rs/tui-popup"
-edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors.workspace = true
+categories.workspace = true
+edition.workspace = true
+keywords.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
 
 [package.metadata.docs.rs]
 all-features = true
@@ -23,14 +25,14 @@ default = []
 crossterm = ["ratatui/crossterm"]
 
 [dependencies]
-document-features = "0.2.10"
-derive-getters = "0.4.0"
-derive_setters = "0.1.6"
-ratatui = { version = "0.27.0", features = ["unstable-widget-ref"] }
+document-features.workspace = true
+derive-getters.workspace = true
+derive_setters.workspace = true
+ratatui = { workspace = true, features = ["unstable-widget-ref"] }
 
 [dev-dependencies]
-color-eyre = "0.6.3"
-lipsum = "0.9.1"
+color-eyre.workspace = true
+lipsum.workspace = true
 
 [lints.clippy]
 pedantic = { level = "warn", priority = -1 }

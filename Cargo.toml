@@ -17,9 +17,13 @@ clap = { version = "4.5.8", features = ["derive"] }
 color-eyre = "0.6.3"
 crossterm = { version = "0.27.0" }
 derive_builder = "0.20.0"
+derive-getters = "0.4.0"
+derive_setters = "0.1.6"
+document-features = "0.2.10"
 futures = "0.3.21"
 itertools = "0.13.0"
 indoc = "2.0.5"
+lipsum = "0.9.1"
 ratatui = { version = "0.27.0", default-features = false }
 ratatui-macros = "0.4.2"
 rstest = "0.21.0"
@@ -50,19 +54,22 @@ repository.workspace = true
 rust-version.workspace = true
 
 [features]
-default = ["full"]
-## All widgets
-full = ["big-text", "prompts", "scrollview"]
+#! # features
+## By default, all the widgets are enabled.
+default = ["big-text", "popup", "prompts", "scrollview"]
 ## Enables the [`big_text`] widget
 big-text = ["tui-big-text"]
+## Enables the [`popup`] widget
+popup = ["tui-popup"]
 ## Enables the [`prompts`] widget
 prompts = ["tui-prompts"]
 ## Enables the [`scrollview`] widget
 scrollview = ["tui-scrollview"]
 
 [dependencies]
-document-features = "0.2.10"
+document-features.workspace = true
 ratatui = { workspace = true }
 tui-big-text = { version = "0.4.7", path = "tui-big-text", optional = true }
-tui-scrollview = { version = "0.3.9", path = "tui-scrollview", optional = true }
+tui-popup = { version = "0.4.2", path = "tui-popup", optional = true }
 tui-prompts = { version = "0.3.18", path = "tui-prompts", optional = true }
+tui-scrollview = { version = "0.3.9", path = "tui-scrollview", optional = true }
