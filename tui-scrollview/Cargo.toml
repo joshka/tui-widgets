@@ -1,6 +1,6 @@
 [package]
 name = "tui-scrollview"
-version = "0.3.9"
+version = "0.3.10"
 description = "A simple scrollable view for Ratatui"
 
 authors.workspace = true
