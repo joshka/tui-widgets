@@ -8,10 +8,10 @@
 use std::{collections::HashMap, fmt::Debug, io};
 
 use color_eyre::Result;
-use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use lipsum::lipsum;
 use ratatui::{
     buffer::Buffer,
+    crossterm::event::{self, Event, KeyCode, KeyEventKind},
     layout::{Constraint, Layout, Rect, Size},
     style::{palette::tailwind, Stylize},
     text::Line,
@@ -285,11 +285,16 @@ mod tui {
     };
 
     use color_eyre::{config::HookBuilder, eyre, Result};
-    use crossterm::{
-        terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
-        ExecutableCommand,
+    use ratatui::{
+        backend::CrosstermBackend,
+        crossterm::{
+            terminal::{
+                disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen,
+            },
+            ExecutableCommand,
+        },
+        Terminal,
     };
-    use ratatui::{backend::CrosstermBackend, Terminal};
 
     // a type alias to simplify the use of the crossterm backend
     pub type Tui = Terminal<CrosstermBackend<Stdout>>;
