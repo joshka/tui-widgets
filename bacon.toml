@@ -108,10 +108,12 @@ command = [
 
 [jobs.format]
 command = ["cargo", "+nightly", "fmt", "--", "--check"]
+on_success = "back"
 
 [jobs.rdme]
 command = ["cargo", "rdme", "--force"]
 need_stdout = true
+on_success = "back"
 
 [jobs.vhs]
 command = ["vhs", "tui-prompts/examples/text.tape"]
