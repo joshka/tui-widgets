@@ -27,8 +27,7 @@
 //! # Examples
 //!
 //! ```rust
-//! use anyhow::Result;
-//! use ratatui::prelude::*;
+//! use ratatui::prelude::{Frame, Style, Stylize};
 //! use tui_big_text::{BigText, PixelSize};
 //!
 //! fn render(frame: &mut Frame) {
