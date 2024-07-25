@@ -1,6 +1,6 @@
 use color_eyre::Result;
 use ratatui::{
-    layout::Offset,
+    layout::{Constraint, Layout, Offset},
     prelude::{Frame, Stylize},
     text::Line,
 };
@@ -15,7 +15,7 @@ fn main() -> Result<()> {
 }
 
 fn render(frame: &mut Frame) {
-    let title = Line::from("tui-big-text alignment demo. Press 'q' to quit")
+    let title = Line::from("tui-big-text alignment demo. <q> quit")
         .cyan()
         .centered();
 
@@ -41,7 +41,8 @@ fn render(frame: &mut Frame) {
     frame.render_widget(title, area);
 
     let area = area.offset(Offset { x: 0, y: 2 }).intersection(area);
-    frame.render_widget(left, area);
-    frame.render_widget(right, area);
-    frame.render_widget(centered, area);
+    let [top, middle, bottom] = Layout::vertical([Constraint::Length(4); 3]).areas(area);
+    frame.render_widget(left, top);
+    frame.render_widget(centered, middle);
+    frame.render_widget(right, bottom);
 }

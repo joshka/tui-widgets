@@ -4,7 +4,7 @@ Set Theme "Aardvark Blue"
 Set Width 600
 Set Height 800
 Hide
-Type@0 "cargo run --example big_text --quiet"
+Type@0 "cargo run -p tui-big-text --example big_text --quiet"
 Enter
 Sleep 2s
 Show

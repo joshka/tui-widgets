@@ -11,7 +11,7 @@ fn main() -> Result<()> {
 }
 
 fn render(frame: &mut Frame) {
-    let title = Line::from("tui-big-text pixel size demo. Press 'q' to quit")
+    let title = Line::from("tui-big-text pixel size demo. <q> quit")
         .centered()
         .cyan();
 

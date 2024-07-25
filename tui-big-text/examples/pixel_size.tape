@@ -2,9 +2,9 @@
 Output "target/pixel_size.gif"
 Set Theme "Aardvark Blue"
 Set Width 1020
-Set Height 810
+Set Height 860
 Hide
-Type@0 "cargo run --example pixel_size --quiet"
+Type@0 "cargo run -p tui-big-text --example pixel_size --quiet"
 Enter
 Sleep 2s
 Show

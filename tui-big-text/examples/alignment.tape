@@ -2,9 +2,9 @@
 Output "target/alignment.gif"
 Set Theme "Aardvark Blue"
 Set Width 800
-Set Height 430
+Set Height 480
 Hide
-Type@0 "cargo run --example alignment --quiet"
+Type@0 "cargo run -p tui-big-text --example alignment --quiet"
 Enter
 Sleep 2s
 Show

@@ -1,7 +1,7 @@
 //! [tui-big-text] is a rust crate that renders large pixel text as a [Ratatui] widget using the
 //! glyphs from the [font8x8] crate.
 //!
-//! ![Demo](https://vhs.charm.sh/vhs-35FZxQa32pCZdRW7pmpqf6.gif)
+//! ![Demo](https://vhs.charm.sh/vhs-7DFJFGwBEnUjjLCFSqwEm9.gif)
 //!
 //! [![Crate badge]][tui-big-text]
 //! [![Docs.rs Badge]][API Docs]
@@ -61,19 +61,18 @@
 //! BigText::builder().pixel_size(PixelSize::Quadrant);
 //! ```
 //!
-//! ![Pixel Size](https://vhs.charm.sh/vhs-2nLycKO16vHzqg3TxDNvq4.gif)
+//! ![Pixel Size](https://vhs.charm.sh/vhs-2E84yH6UJuX1pF7mXYUXxs.gif)
 //!
-//! Text can be aligned to the Left / Right / Center using the `alignment` method.
+//! Text can be aligned to the Left / Right / Center using the `alignment` methods.
 //!
 //! ```rust
-//! use ratatui::layout::Alignment;
 //! # use tui_big_text::*;
-//! BigText::builder().alignment(Alignment::Left);
-//! BigText::builder().alignment(Alignment::Right);
-//! BigText::builder().alignment(Alignment::Center);
+//! BigText::builder().left_aligned();
+//! BigText::builder().centered();
+//! BigText::builder().right_aligned();
 //! ```
 //!
-//! ![Alignment Example](https://vhs.charm.sh/vhs-1Yyr7BJ5vfmOmjYNywCNH3.gif)
+//! ![Alignment Example](https://vhs.charm.sh/vhs-2GdJCPpXfnOCTsykSPr7AW.gif)
 //!
 //! [tui-big-text]: https://crates.io/crates/tui-big-text
 //! [Ratatui]: https://crates.io/crates/ratatui

@@ -15,7 +15,7 @@ fn main() -> Result<()> {
 }
 
 fn render(frame: &mut Frame) {
-    let title = Line::from("tui-big-text Demo. Press 'q' to quit").cyan();
+    let title = Line::from("tui-big-text demo. <q> quit").cyan();
 
     let big_text = BigText::builder()
         .style(Style::new().blue())
