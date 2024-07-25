@@ -10,3 +10,5 @@ Sleep 2s
 Show
 Screenshot "target/pixel_size.png"
 Sleep 1s
+Hide
+Escape

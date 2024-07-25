@@ -1,28 +1,20 @@
-use std::{io::stdout, thread::sleep, time::Duration};
-
-use anyhow::Result;
-use crossterm::{
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
-    ExecutableCommand,
-};
+use color_eyre::Result;
 use ratatui::prelude::*;
 use tui_big_text::{BigText, PixelSize};
 
+mod common;
+
 fn main() -> Result<()> {
-    stdout().execute(EnterAlternateScreen)?;
-    enable_raw_mode()?;
-    let backend = CrosstermBackend::new(stdout());
-    let mut terminal = Terminal::new(backend)?;
-    terminal.clear()?;
-    terminal.draw(|frame| render(frame).expect("failed to render"))?;
-    sleep(Duration::from_secs(5));
-    terminal.clear()?;
-    stdout().execute(LeaveAlternateScreen)?;
-    disable_raw_mode()?;
+    color_eyre::install()?;
+    common::run(render)?;
     Ok(())
 }
 
 fn render(frame: &mut Frame) -> Result<()> {
+    let title = Line::from("tui-big-text pixel size demo. Press 'q' to quit")
+        .centered()
+        .cyan();
+
     let full_size_text = BigText::builder()
         .pixel_size(PixelSize::Full)
         .lines(vec!["FullSize".white().into()])
@@ -53,13 +45,15 @@ fn render(frame: &mut Frame) -> Result<()> {
         .lines(vec!["Sextant".cyan().into(), " 1/2*1/3".cyan().into()])
         .build()?;
 
-    // Setup layout for 6 blocks
+    // Setup layout for the title and 6 blocks
     use Constraint::*;
-    let [full, half_height, middle, bottom] =
-        Layout::vertical([Length(8), Length(4), Length(8), Length(6)]).areas(frame.size());
+    let [top, full, half_height, middle, bottom] =
+        Layout::vertical([Length(2), Length(8), Length(4), Length(8), Length(6)])
+            .areas(frame.size());
     let [half_wide, quadrant] = Layout::horizontal([Length(32), Length(32)]).areas(middle);
     let [third_height, sextant] = Layout::horizontal([Length(32), Length(32)]).areas(bottom);
 
+    frame.render_widget(title, top);
     frame.render_widget(full_size_text, full);
     frame.render_widget(half_height_text, half_height);
     frame.render_widget(half_wide_text, half_wide);

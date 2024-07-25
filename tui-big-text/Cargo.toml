@@ -19,9 +19,10 @@ itertools.workspace = true
 ratatui.workspace = true
 
 [dev-dependencies]
-anyhow.workspace = true
+color-eyre.workspace = true
 crossterm = { workspace = true, features = ["event-stream"] }
 futures.workspace = true
 indoc.workspace = true
+ratatui = { workspace = true, features = ["crossterm"] }
 strum.workspace = true
 tokio = { workspace = true, features = ["full"] }

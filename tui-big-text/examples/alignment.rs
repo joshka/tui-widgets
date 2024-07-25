@@ -1,28 +1,24 @@
-use std::{io::stdout, thread::sleep, time::Duration};
-
-use anyhow::Result;
-use crossterm::{
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
-    ExecutableCommand,
+use color_eyre::Result;
+use ratatui::{
+    layout::Offset,
+    prelude::{Alignment, Frame, Stylize},
+    text::Line,
 };
-use ratatui::prelude::*;
 use tui_big_text::{BigText, PixelSize};
 
+mod common;
+
 fn main() -> Result<()> {
-    stdout().execute(EnterAlternateScreen)?;
-    enable_raw_mode()?;
-    let backend = CrosstermBackend::new(stdout());
-    let mut terminal = Terminal::new(backend)?;
-    terminal.clear()?;
-    terminal.draw(|frame| render(frame).expect("failed to render"))?;
-    sleep(Duration::from_secs(5));
-    terminal.clear()?;
-    stdout().execute(LeaveAlternateScreen)?;
-    disable_raw_mode()?;
+    color_eyre::install()?;
+    common::run(render)?;
     Ok(())
 }
 
 fn render(frame: &mut Frame) -> Result<()> {
+    let title = Line::from("tui-big-text alignment demo. Press 'q' to quit")
+        .cyan()
+        .centered();
+
     let left = BigText::builder()
         .pixel_size(PixelSize::Quadrant)
         .alignment(Alignment::Left)
@@ -41,12 +37,13 @@ fn render(frame: &mut Frame) -> Result<()> {
         .lines(vec!["Centered".red().into()])
         .build()?;
 
-    use Constraint::*;
-    let [top, middle, bottom] = Layout::vertical([Length(4); 3]).areas(frame.size());
+    let area = frame.size();
+    frame.render_widget(title, area);
 
-    frame.render_widget(left, top);
-    frame.render_widget(right, middle);
-    frame.render_widget(centered, bottom);
+    let area = area.offset(Offset { x: 0, y: 2 }).intersection(area);
+    frame.render_widget(left, area);
+    frame.render_widget(right, area);
+    frame.render_widget(centered, area);
 
     Ok(())
 }

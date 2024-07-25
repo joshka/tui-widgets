@@ -3,7 +3,10 @@ use std::{
     time::{Duration, Instant},
 };
 
-use anyhow::{bail, Context, Result};
+use color_eyre::{
+    eyre::{bail, Context},
+    Result,
+};
 use crossterm::{
     event::{self, KeyCode},
     execute,
@@ -308,17 +311,17 @@ struct Tui {
 impl Tui {
     fn init() -> Result<Tui> {
         let mut stdout = io::stdout();
-        execute!(stdout, EnterAlternateScreen).context("failed to enter alternate screen")?;
+        execute!(stdout, EnterAlternateScreen).wrap_err("failed to enter alternate screen")?;
         let backend = CrosstermBackend::new(stdout);
-        let mut terminal = Terminal::new(backend).context("failed to create terminal")?;
-        enable_raw_mode().context("failed to enable raw mode")?;
-        terminal.hide_cursor().context("failed to hide cursor")?;
-        terminal.clear().context("failed to clear console")?;
+        let mut terminal = Terminal::new(backend).wrap_err("failed to create terminal")?;
+        enable_raw_mode().wrap_err("failed to enable raw mode")?;
+        terminal.hide_cursor().wrap_err("failed to hide cursor")?;
+        terminal.clear().wrap_err("failed to clear console")?;
         Ok(Self { terminal })
     }
 
     fn draw(&mut self, frame: impl FnOnce(&mut Frame)) -> Result<()> {
-        self.terminal.draw(frame).context("failed to draw frame")?;
+        self.terminal.draw(frame).wrap_err("failed to draw frame")?;
         Ok(())
     }
 }

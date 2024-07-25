@@ -1,12 +1,14 @@
 # VHS Tape (see https://github.com/charmbracelet/vhs)
-Output "target/demo.gif"
+Output "target/big_text.gif"
 Set Theme "Aardvark Blue"
 Set Width 600
 Set Height 800
 Hide
-Type@0 "cargo run --example demo --quiet"
+Type@0 "cargo run --example big_text --quiet"
 Enter
 Sleep 2s
 Show
-Screenshot "target/demo.png"
+Screenshot "target/big_text.png"
 Sleep 1s
+Hide
+Escape
