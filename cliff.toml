@@ -24,8 +24,19 @@ body = """
     {% for commit in commits %}
         - {% if commit.scope %}*({{ commit.scope }})* {% endif %}\
             {% if commit.breaking %}[**breaking**] {% endif %}\
-            {{ commit.message | upper_first }}\
-    {% endfor %}
+            {{ commit.message | upper_first }}
+            {%- if commit.body %}
+                {{ commit.body | indent(prefix="  > ", first=true, blank=true) }}
+            {%- endif %}
+            {%- for footer in commit.footers %}\n
+            {%- if footer.token != "Signed-off-by" and footer.token != "Co-authored-by" %}
+                {{ " " | indent(prefix="  > ", first=true, blank=true) }}
+                {{ footer.token | indent(prefix="  > ", first=true, blank=true) }}
+                {{- footer.separator }}
+                {{- footer.value| indent(prefix="  > ", first=false, blank=true)  }}
+            {%- endif %}
+            {%- endfor %}
+    {% endfor -%}
 {% endfor %}\n
 """
 # template for the changelog footer
@@ -37,6 +48,7 @@ trim = true
 # postprocessors
 postprocessors = [
   { pattern = '<REPO>', replace = "https://github.com/joshka/tui-scollview" }, # replace repository URL
+  { pattern = ' +\n', replace = "\n" },
 ]
 
 [git]
