@@ -14,7 +14,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn render(frame: &mut Frame) -> Result<()> {
+fn render(frame: &mut Frame) {
     let title = Line::from("tui-big-text Demo. Press 'q' to quit").cyan();
 
     let big_text = BigText::builder()
@@ -24,12 +24,11 @@ fn render(frame: &mut Frame) -> Result<()> {
             "big-".white().into(),
             "text".into(),
         ])
-        .build()?;
+        .build();
 
     let area = frame.size();
     frame.render_widget(title, area);
 
     let area = area.offset(Offset { x: 0, y: 2 }).intersection(area);
     frame.render_widget(big_text, area);
-    Ok(())
 }

@@ -16,12 +16,12 @@ type Terminal = ratatui::Terminal<CrosstermBackend<io::Stdout>>;
 /// user presses 'q' or 'Esc'
 pub fn run<F>(render: F) -> Result<()>
 where
-    F: Fn(&mut ratatui::Frame) -> Result<()>,
+    F: Fn(&mut ratatui::Frame),
 {
     install_panic_handler();
 
     with_terminal(|mut terminal| loop {
-        terminal.draw(|frame| render(frame).expect("failed to render"))?;
+        terminal.draw(|frame| render(frame))?;
         if let crossterm::event::Event::Key(event) = crossterm::event::read()? {
             if matches!(
                 event.code,

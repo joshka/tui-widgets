@@ -35,7 +35,7 @@ use anyhow::Result;
 use ratatui::prelude::*;
 use tui_big_text::{BigText, PixelSize};
 
-fn render(frame: &mut Frame) -> Result<()> {
+fn render(frame: &mut Frame) {
     let big_text = BigText::builder()
         .pixel_size(PixelSize::Full)
         .style(Style::new().blue())
@@ -44,9 +44,8 @@ fn render(frame: &mut Frame) -> Result<()> {
             "World".white().into(),
             "~~~~~".into(),
         ])
-        .build()?;
+        .build();
     frame.render_widget(big_text, frame.size());
-    Ok(())
 }
 ```
 
