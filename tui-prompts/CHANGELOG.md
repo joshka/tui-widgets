@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.20] - 2024-08-02
+
+### 📚 Documentation
+
+- Clean up changelogs ([#17](https://github.com/joshka/tui-widgets/pull/17))
+  > - removed unnecessary footer comments
+  > - removed [unreleased] sections
+  > - removed duplicate release notes
+
 ## [0.3.19] - 2024-07-25
 
 ### ⚙️ Miscellaneous Tasks
