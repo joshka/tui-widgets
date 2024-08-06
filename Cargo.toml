@@ -14,7 +14,7 @@ keywords = ["cli", "console", "ratatui", "terminal", "tui"]
 [workspace.dependencies]
 clap = { version = "4.5.8", features = ["derive"] }
 color-eyre = "0.6.3"
-crossterm = { version = "0.27.0" }
+crossterm = { version = "0.28.1" }
 derive_builder = "0.20.0"
 derive-getters = "0.4.0"
 derive_setters = "0.1.6"
