@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.4] - 2024-08-06
+
+### ⚙️ Miscellaneous Tasks
+
+- Update Cargo.toml dependencies
+
 ## [0.5.3] - 2024-08-02
 
 ### 📚 Documentation
