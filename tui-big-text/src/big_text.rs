@@ -196,7 +196,7 @@ fn render_glyph(glyph: [u8; 8], area: Rect, buf: &mut Buffer, pixel_size: &Pixel
             .clone()
             .zip(area.left()..area.right())
         {
-            let cell = buf.get_mut(x, y);
+            let cell = &mut buf[Position { x, y }];
             let symbol_character = pixel_size.symbol_for_position(&glyph, row, col);
             cell.set_char(symbol_character);
         }
