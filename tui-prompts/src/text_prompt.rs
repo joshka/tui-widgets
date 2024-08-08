@@ -75,7 +75,7 @@ impl Prompt for TextPrompt<'_> {
     fn draw(self, frame: &mut Frame, area: Rect, state: &mut Self::State) {
         frame.render_stateful_widget(self, area, state);
         if state.is_focused() {
-            frame.set_cursor(state.cursor().0, state.cursor().1);
+            frame.set_cursor_position(state.cursor());
         }
     }
 }
