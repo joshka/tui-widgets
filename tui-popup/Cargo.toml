@@ -1,6 +1,6 @@
 [package]
 name = "tui-popup"
-version = "0.4.6"
+version = "0.4.7"
 description = "A simple popup for ratatui"
 documentation = "https://docs.rs/tui-popup"
 
