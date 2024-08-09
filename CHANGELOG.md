@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.5] - 2024-08-09
+
+### 🐛 Bug Fixes
+
+- Add missing cfg ([#28](https://github.com/joshka/tui-widgets/pull/28))
+
+### ⚙️ Miscellaneous Tasks
+
+- *(tui-big-text)* Release v0.5.5 ([#25](https://github.com/joshka/tui-widgets/pull/25))
+  > ## 🤖 New release
+  > * `tui-big-text`: 0.5.4 -> 0.5.5
+  >
+  > <details><summary><i><b>Changelog</b></i></summary><p>
+  >
+  > ## `tui-big-text`
+  > <blockquote>
+  >
+  > ## [0.5.5] - 2024-08-09
+  >
+  > ### 🐛 Bug Fixes
+  >
+  > - Update to ratatui 0.28
+  > ([[#24](https://github.com/joshka/tui-widgets/pull/24)](https://github.com/joshka/tui-widgets/pull/24))
+  > > Note that for projects that rely on crossterm, Ratatui 0.28.0 now
+  > relies internally on Crossterm 0.28.0.
+  > > Ratatui release notes highlights: https://ratatui.rs/highlights/v028/
+  > > See https://github.com/ratatui-org/ratatui/issues/1298 for notes about
+  > crossterm compatibility
+  > </blockquote>
+  >
+  >
+  > </p></details>
+  >
+  > ---
+  > This PR was generated with
+  > [release-plz](https://github.com/MarcoIeni/release-plz/).
+
 ## [0.2.4] - 2024-08-06
 
 ### Other
