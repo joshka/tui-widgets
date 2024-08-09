@@ -68,7 +68,7 @@ scrollview = ["tui-scrollview"]
 [dependencies]
 document-features.workspace = true
 ratatui = { workspace = true }
-tui-big-text = { version = "0.5.4", path = "tui-big-text", optional = true }
+tui-big-text = { version = "0.5.5", path = "tui-big-text", optional = true }
 tui-popup = { version = "0.4.6", path = "tui-popup", optional = true }
 tui-prompts = { version = "0.3.21", path = "tui-prompts", optional = true }
 tui-scrollview = { version = "0.3.13", path = "tui-scrollview", optional = true }

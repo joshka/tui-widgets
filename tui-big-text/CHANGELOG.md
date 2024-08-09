@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.5] - 2024-08-09
+
+### 🐛 Bug Fixes
+
+- Update to ratatui 0.28 ([#24](https://github.com/joshka/tui-widgets/pull/24))
+  > Note that for projects that rely on crossterm, Ratatui 0.28.0 now relies internally on Crossterm 0.28.0.
+  > Ratatui release notes highlights: https://ratatui.rs/highlights/v028/
+  > See https://github.com/ratatui-org/ratatui/issues/1298 for notes about crossterm compatibility
+
 ## [0.5.4] - 2024-08-06
 
 ### ⚙️ Miscellaneous Tasks
