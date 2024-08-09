@@ -23,7 +23,7 @@ fn main() -> Result<()> {
 }
 
 fn render(frame: &mut Frame) {
-    let area = frame.size();
+    let area = frame.area();
     let background = background(area);
     let popup = Popup::new("Press any key to exit")
         .title("tui-popup demo")

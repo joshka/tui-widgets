@@ -195,14 +195,7 @@ impl ScrollView {
         // TODO: there's probably a more efficient way to do this
         for (src_row, dst_row) in visible_area.rows().zip(area.rows()) {
             for (src_col, dst_col) in src_row.columns().zip(dst_row.columns()) {
-                buf[Position {
-                    x: dst_col.x,
-                    y: dst_col.y,
-                }] = self.buf[Position {
-                    x: src_col.x,
-                    y: src_col.y,
-                }]
-                .clone();
+                buf[dst_col] = self.buf[src_col].clone();
             }
         }
     }

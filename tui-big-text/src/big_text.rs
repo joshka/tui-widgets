@@ -191,14 +191,9 @@ fn render_glyph(glyph: [u8; 8], area: Rect, buf: &mut Buffer, pixel_size: &Pixel
     let glyph_vertical_index = (0..glyph.len()).step_by(step_y as usize);
     let glyph_horizontal_bit_selector = (0..8).step_by(step_x as usize);
 
-    for (row, y) in glyph_vertical_index.zip(area.top()..area.bottom()) {
-        for (col, x) in glyph_horizontal_bit_selector
-            .clone()
-            .zip(area.left()..area.right())
-        {
-            let cell = &mut buf[Position { x, y }];
-            let symbol_character = pixel_size.symbol_for_position(&glyph, row, col);
-            cell.set_char(symbol_character);
+    for (y, row) in glyph_vertical_index.zip(area.rows()) {
+        for (x, col) in glyph_horizontal_bit_selector.clone().zip(row.columns()) {
+            buf[col].set_char(pixel_size.symbol_for_position(&glyph, y, x));
         }
     }
 }

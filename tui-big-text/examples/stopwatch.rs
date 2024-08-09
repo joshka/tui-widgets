@@ -119,7 +119,7 @@ impl StopwatchApp {
 
     fn draw(&mut self, tui: &mut Tui) -> Result<()> {
         tui.draw(|frame| {
-            let layout = layout(frame.size());
+            let layout = layout(frame.area());
             frame.render_widget(Paragraph::new("Stopwatch Example"), layout[0]);
             frame.render_widget(self.fps_paragraph(), layout[1]);
             frame.render_widget(self.timer_paragraph(), layout[2]);

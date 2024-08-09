@@ -49,7 +49,7 @@ fn render(frame: &mut Frame) {
     use Constraint::*;
     let [top, full, half_height, middle, bottom] =
         Layout::vertical([Length(2), Length(8), Length(4), Length(8), Length(6)])
-            .areas(frame.size());
+            .areas(frame.area());
     let [half_wide, quadrant] = Layout::horizontal([Length(32), Length(32)]).areas(middle);
     let [third_height, sextant] = Layout::horizontal([Length(32), Length(32)]).areas(bottom);
 

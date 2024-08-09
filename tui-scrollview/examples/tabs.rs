@@ -134,7 +134,7 @@ impl App {
     }
 
     fn draw(&mut self, tui: &mut Tui) -> io::Result<()> {
-        tui.draw(|frame| frame.render_widget(self, frame.size()))?;
+        tui.draw(|frame| frame.render_widget(self, frame.area()))?;
         Ok(())
     }
 
