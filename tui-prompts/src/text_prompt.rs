@@ -75,7 +75,7 @@ impl Prompt for TextPrompt<'_> {
     fn draw(self, frame: &mut Frame, area: Rect, state: &mut Self::State) {
         frame.render_stateful_widget(self, area, state);
         if state.is_focused() {
-            frame.set_cursor(state.cursor().0, state.cursor().1);
+            frame.set_cursor_position(state.cursor());
         }
     }
 }
@@ -367,9 +367,12 @@ mod tests {
         let prompt = TextPrompt::from("prompt");
         let mut state = TextState::new().with_value("hello");
         // The cursor is not changed when the prompt is not focused.
-        let _ = terminal.draw(|frame| prompt.draw(frame, frame.size(), &mut state))?;
+        let _ = terminal.draw(|frame| prompt.draw(frame, frame.area(), &mut state))?;
         assert_eq!(state.cursor(), (11, 0));
-        assert_eq!(terminal.backend_mut().get_cursor().unwrap(), (0, 0));
+        assert_eq!(
+            terminal.backend_mut().get_cursor_position().unwrap(),
+            Position::ORIGIN
+        );
         Ok(())
     }
 
@@ -379,9 +382,12 @@ mod tests {
         let mut state = TextState::new().with_value("hello");
         // The cursor is changed when the prompt is focused.
         state.focus();
-        let _ = terminal.draw(|frame| prompt.clone().draw(frame, frame.size(), &mut state))?;
+        let _ = terminal.draw(|frame| prompt.clone().draw(frame, frame.area(), &mut state))?;
         assert_eq!(state.cursor(), (11, 0));
-        assert_eq!(terminal.backend_mut().get_cursor().unwrap(), (11, 0));
+        assert_eq!(
+            terminal.backend_mut().get_cursor_position().unwrap(),
+            Position::new(11, 0)
+        );
         Ok(())
     }
 
@@ -408,9 +414,9 @@ mod tests {
         // The cursor is changed when the prompt is focused and the position is changed.
         state.focus();
         *state.position_mut() = position;
-        let _ = terminal.draw(|frame| prompt.clone().draw(frame, frame.size(), &mut state))?;
+        let _ = terminal.draw(|frame| prompt.clone().draw(frame, frame.area(), &mut state))?;
         assert_eq!(state.cursor(), expected_cursor);
-        assert_eq!(terminal.get_cursor()?, expected_cursor);
+        assert_eq!(terminal.get_cursor_position()?, expected_cursor.into());
 
         Ok(())
     }
@@ -442,9 +448,9 @@ mod tests {
         // The cursor is changed when the prompt is focused and the position is changed.
         state.focus();
         *state.position_mut() = position;
-        let _ = terminal.draw(|frame| prompt.clone().draw(frame, frame.size(), &mut state))?;
+        let _ = terminal.draw(|frame| prompt.clone().draw(frame, frame.area(), &mut state))?;
         assert_eq!(state.cursor(), expected_cursor);
-        assert_eq!(terminal.get_cursor()?, expected_cursor);
+        assert_eq!(terminal.get_cursor_position()?, expected_cursor.into());
 
         Ok(())
     }

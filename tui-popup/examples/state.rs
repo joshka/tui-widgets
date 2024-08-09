@@ -29,7 +29,7 @@ struct App {
 impl App {
     fn render(&mut self, frame: &mut Frame) {
         let [background_area, status_area] =
-            Layout::vertical([Constraint::Min(0), Constraint::Length(1)]).areas(frame.size());
+            Layout::vertical([Constraint::Min(0), Constraint::Length(1)]).areas(frame.area());
 
         let background = Self::background(background_area);
         frame.render_widget(background, background_area);

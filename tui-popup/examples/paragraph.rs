@@ -29,7 +29,7 @@ struct App {
 
 impl App {
     fn render(&self, frame: &mut Frame) {
-        let area = frame.size();
+        let area = frame.area();
         let background = background(area);
 
         let paragraph = paragraph(self.scroll);

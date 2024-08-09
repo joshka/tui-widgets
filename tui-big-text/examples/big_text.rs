@@ -26,7 +26,7 @@ fn render(frame: &mut Frame) {
         ])
         .build();
 
-    let area = frame.size();
+    let area = frame.area();
     frame.render_widget(title, area);
 
     let area = area.offset(Offset { x: 0, y: 2 }).intersection(area);

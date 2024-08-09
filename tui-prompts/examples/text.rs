@@ -74,7 +74,7 @@ impl<'a> App<'a> {
 
     fn draw_ui(&mut self, frame: &mut Frame) {
         let (username_area, password_area, invisible_area, value_area, debug_area) =
-            self.split_layout(frame.size());
+            self.split_layout(frame.area());
         self.draw_text_prompt(frame, username_area);
         self.draw_password_prompt(frame, password_area);
         self.draw_invisible_prompt(frame, invisible_area);
@@ -88,6 +88,7 @@ impl<'a> App<'a> {
     /// - invisible prompt
     /// - state value
     /// - debug area
+    ///
     /// The debug area is only visible if the `debug` flag is set.
     fn split_layout(&self, area: Rect) -> (Rect, Rect, Rect, Rect, Rect) {
         let (prompt_area, debug_area) = if self.debug {

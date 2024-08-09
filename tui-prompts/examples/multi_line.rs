@@ -71,7 +71,7 @@ impl<'a> App<'a> {
     }
 
     fn draw_ui(&mut self, frame: &mut Frame) {
-        let (text_area, debug_area) = self.split_layout(frame.size());
+        let (text_area, debug_area) = self.split_layout(frame.area());
         self.draw_text_prompt(frame, text_area);
         self.draw_debug(frame, debug_area);
     }
@@ -79,6 +79,7 @@ impl<'a> App<'a> {
     /// split the frame into 2 areas:
     /// - prompt area
     /// - debug area
+    ///
     /// The debug area is only visible if the `debug` flag is set.
     fn split_layout(&self, area: Rect) -> (Rect, Rect) {
         if self.debug {
