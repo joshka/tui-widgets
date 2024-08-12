@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.7] - 2024-08-12
+
+### ⚙️ Miscellaneous Tasks
+
+- Bump ratatui-macros to 0.5.0
+
 ## [0.2.6] - 2024-08-09
 
 ### ⚙️ Miscellaneous Tasks
