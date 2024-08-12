@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2024-08-11
+
+Ratatui-0.28.0 compatible release
+
 ## [0.5.6] - 2024-08-09
 
 ### ⚙️ Miscellaneous Tasks
@@ -14,8 +18,8 @@ All notable changes to this project will be documented in this file.
 
 - Update to ratatui 0.28 ([#24](https://github.com/joshka/tui-widgets/pull/24))
   > Note that for projects that rely on crossterm, Ratatui 0.28.0 now relies internally on Crossterm 0.28.0.
-  > Ratatui release notes highlights: https://ratatui.rs/highlights/v028/
-  > See https://github.com/ratatui-org/ratatui/issues/1298 for notes about crossterm compatibility
+  > Ratatui release notes highlights: <https://ratatui.rs/highlights/v028/>
+  > See <https://github.com/ratatui-org/ratatui/issues/1298> for notes about crossterm compatibility
 
 ## [0.5.4] - 2024-08-06
 
@@ -106,20 +110,21 @@ All notable changes to this project will be documented in this file.
 ### ⚙️ Miscellaneous Tasks
 
 - *(deps)* Bump ratatui version ([#45](https://github.com/joshka/tui-big-text/pull/45))
-- Use https://github.com/joshka/github-workflows/
+- Use <https://github.com/joshka/github-workflows/>
 - Set msrv to 1.74
 - Update git cliff config
 
 ## [0.4.6](https://github.com/joshka/tui-widgets/compare/tui-big-text-v0.4.5...tui-big-text-v0.4.6) - 2024-07-24
 
 ### Other
+
 - Move to tui-widgets repository
 
 ### ⚙️ Miscellaneous Tasks
 
 - Use faster release-plz
 - *(deps)* Bump ratatui version ([#45](https://github.com/joshka/tui-big-text/issues/45))
-- Use https://github.com/joshka/github-workflows/
+- Use <https://github.com/joshka/github-workflows/>
 - Set msrv to 1.74
 
 ## [0.4.4] - 2024-05-28

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2024-08-12
+
+Ratatui-0.28.0 compatible release
+
+### ⚙️ Miscellaneous Tasks
+
+- Bump ratatui-macros to 0.5.0
+- Bump tui-big-text to 0.6.0
+- Bump tui-popup to 0.5.0
+- Bump tui-prompts to 0.4.0
+- Bump tui-scrollview to 0.4.0
+
 ## [0.2.6] - 2024-08-09
 
 ### ⚙️ Miscellaneous Tasks
@@ -17,12 +29,15 @@ All notable changes to this project will be documented in this file.
 ### ⚙️ Miscellaneous Tasks
 
 - *(tui-big-text)* Release v0.5.5 ([#25](https://github.com/joshka/tui-widgets/pull/25))
+
   > ## 🤖 New release
-  > * `tui-big-text`: 0.5.4 -> 0.5.5
+  >
+  > - `tui-big-text`: 0.5.4 -> 0.5.5
   >
   > <details><summary><i><b>Changelog</b></i></summary><p>
   >
   > ## `tui-big-text`
+  >
   > <blockquote>
   >
   > ## [0.5.5] - 2024-08-09
@@ -30,11 +45,11 @@ All notable changes to this project will be documented in this file.
   > ### 🐛 Bug Fixes
   >
   > - Update to ratatui 0.28
-  > ([[#24](https://github.com/joshka/tui-widgets/pull/24)](https://github.com/joshka/tui-widgets/pull/24))
+  > ([[#24](https://github.com/joshka/tui-widgets/pull/24)](<https://github.com/joshka/tui-widgets/pull/24>))
   > > Note that for projects that rely on crossterm, Ratatui 0.28.0 now
   > relies internally on Crossterm 0.28.0.
-  > > Ratatui release notes highlights: https://ratatui.rs/highlights/v028/
-  > > See https://github.com/ratatui-org/ratatui/issues/1298 for notes about
+  > > Ratatui release notes highlights: <https://ratatui.rs/highlights/v028/>
+  > > See <https://github.com/ratatui-org/ratatui/issues/1298> for notes about
   > crossterm compatibility
   > </blockquote>
   >
@@ -392,7 +407,7 @@ All notable changes to this project will be documented in this file.
 ### ⚙️ Miscellaneous Tasks
 
 - Remove changelog footer ([#19](https://github.com/joshka/tui-widgets/pull/19))
-  > wrt https://github.com/joshka/tui-widgets/pull/18/files#r1701302921
+  > wrt <https://github.com/joshka/tui-widgets/pull/18/files#r1701302921>
   >
   > not working as expected with `release-plz`
 
@@ -492,8 +507,10 @@ All notable changes to this project will be documented in this file.
 ## [0.1.3](https://github.com/joshka/tui-widgets/compare/tui-widgets-v0.1.2...tui-widgets-v0.1.3) - 2024-07-24
 
 ### Fixed
+
 - *(deps)* update minimal version for futures
 
 ### Other
+
 - add workflows and dependabot settings
 - Move to tui-widgets repository
