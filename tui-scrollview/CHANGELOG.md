@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2024-08-11
+
+Ratatui-0.28.0 compatible release
+
 ## [0.3.13] - 2024-08-06
 
 ### ⚙️ Miscellaneous Tasks
@@ -38,6 +42,7 @@ All notable changes to this project will be documented in this file.
 ## [0.3.8](https://github.com/joshka/tui-widgets/compare/tui-scrollview-v0.3.7...tui-scrollview-v0.3.8) - 2024-07-24
 
 ### Other
+
 - Move to tui-widgets repository
 - move tui-scrollview to its own directory
 

@@ -41,7 +41,7 @@ nursery = "warn"
 [package]
 name = "tui-widgets"
 description = "A collection of useful widgets for building terminal user interfaces using Ratatui"
-version = "0.2.7"
+version = "0.3.0"
 documentation = "https://docs.rs/tui-widgets"
 
 authors.workspace = true

@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2024-08-11
+
+Ratatui-0.28.0 compatible release
+
 ## [0.4.7] - 2024-08-09
 
 ### ⚙️ Miscellaneous Tasks
@@ -394,7 +398,7 @@ All notable changes to this project will be documented in this file.
   > widgets to be used as the body of the popup. This change also allows for
   > the popup to be rendered multiple times without needing to clone it.
   >
-  > Fixes: https://github.com/joshka/tui-popup/issues/16
+  > Fixes: <https://github.com/joshka/tui-popup/issues/16>
   >
   > BREAKING CHANGE: The Popup widget now accepts any widget as the body
   > instead of just a Text. This allows for more complex widgets to be used
@@ -451,7 +455,7 @@ All notable changes to this project will be documented in this file.
 
 - [7273147](https://github.com/joshka/tui-popup/commit/727314715cfbfbc4b57a5251b2e9223455e3acdb) ci: use joshka/github-workflows ([#10](https://github.com/joshka/tui-popup/issues/10))
   >
-  > https://github.com/joshka/github-workflows
+  > <https://github.com/joshka/github-workflows>
 
 - [e0d7ba4](https://github.com/joshka/tui-popup/commit/e0d7ba4d24f96738ba345ed998923be266b88135) chore(deps): bump mio from 0.8.10 to 0.8.11 ([#9](https://github.com/joshka/tui-popup/issues/9))
   >
