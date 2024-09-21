@@ -13,6 +13,14 @@ let card = Card::new(Rank::Ace, Suit::Spades);
 frame.render_widget(&card, area);
 ```
 
+## Demo
+
+```shell
+cargo run --example card
+```
+
+![demo](https://github.com/user-attachments/assets/a415581b-1d04-4aaf-a7f5-8f3427f11756)
+
 <!-- cargo-rdme end -->
 
 ## TODO
