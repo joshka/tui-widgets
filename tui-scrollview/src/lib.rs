@@ -47,7 +47,7 @@
 //! ## Full Example
 //!
 //! A full example can be found in the [examples] directory.
-//! [scrollview.rs](https://github.com/joshka/tui-scrollview/tree/main/examples/scrollview.rs)
+//! [scrollview.rs](https://github.com/joshka/tui-widgets/tree/main/tui-scrollview/examples/scrollview.rs)
 //!
 //! This example shows a scrollable view with two paragraphs of text, one for the line numbers and
 //! one for the text. On top of this a Gauge widget is rendered to show that this can be used in

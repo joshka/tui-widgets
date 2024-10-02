@@ -79,7 +79,7 @@ match event.read()? {
 The popup also supports rendering arbitrary widgets by implementing SizedWidgetRef (or wrapping them
 with the provided SizedWrapper). This makes it possible to support wrapping and scrolling in using a
 `Paragraph` widget, or scrolling any amount of widgets using
-[tui-scrollview](https://github.com/joshka/tui-scrollview/).
+[tui-scrollview](https://crates.io/crates/tui-scrollview).
 
 ```rust
 let lines: Text = (0..10).map(|i| Span::raw(format!("Line {}", i))).collect();
