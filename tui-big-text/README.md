@@ -99,10 +99,10 @@ BigText::builder().right_aligned();
 [Code Coverage]: https://app.codecov.io/gh/joshka/tui-big-text
 [Ratatui Discord]: https://discord.gg/pMCEU9hNEj
 
-[GitHub Repository]: https://github.com/joshka/tui-big-text
-[Examples]: https://github.com/joshka/tui-big-text/tree/main/examples
-[Changelog]: https://github.com/joshka/tui-big-text/blob/main/CHANGELOG.md
-[Contributing]: https://github.com/joshka/tui-big-text/blob/main/CONTRIBUTING.md
+[GitHub Repository]: https://github.com/joshka/tui-widgets
+[Examples]: https://github.com/joshka/tui-widgets/tree/main/tui-big-text/examples
+[Changelog]: https://github.com/joshka/tui-widgets/blob/main/tui-big-text/CHANGELOG.md
+[Contributing]: https://github.com/joshka/tui-widgets/blob/main/CONTRIBUTING.md
 
 <!-- cargo-rdme end -->
 
