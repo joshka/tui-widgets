@@ -83,7 +83,7 @@ combination with any other widget.
 ## TODO
 
 - [ ] Conditionally show scrollbar
-- [ ] Implement horizontal scrolling and bar
+- [x] Implement horizontal scrolling and bar
 
 ## License
 
