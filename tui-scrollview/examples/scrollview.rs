@@ -1,25 +1,23 @@
-use std::io::{self, stdout};
+use std::io::{self};
 
-use color_eyre::{config::HookBuilder, Result};
+use color_eyre::Result;
 use ratatui::{
-    crossterm::{
-        event::{self, Event, KeyCode, KeyEventKind},
-        terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
-        ExecutableCommand,
-    },
-    layout::Size,
-    prelude::*,
-    style::palette::tailwind,
+    buffer::Buffer,
+    crossterm::event::{self, Event, KeyCode, KeyEventKind},
+    layout::{Constraint, Direction, Layout, Rect, Size},
+    style::{palette::tailwind, Color, Stylize},
+    text::{Line, Text},
     widgets::*,
+    DefaultTerminal,
 };
 use tui_scrollview::{ScrollView, ScrollViewState};
 
 fn main() -> Result<()> {
-    init_error_hooks()?;
-    let terminal = init_terminal()?;
-    App::new().run(terminal)?;
-    restore_terminal()?;
-    Ok(())
+    color_eyre::install()?;
+    let terminal = ratatui::init();
+    let result = App::new().run(terminal);
+    ratatui::restore();
+    result
 }
 
 #[derive(Debug, Default, Clone)]
@@ -48,11 +46,10 @@ impl App {
         }
     }
 
-    fn run(&mut self, mut terminal: Terminal<impl Backend>) -> Result<()> {
-        self.draw(&mut terminal)?;
+    fn run(&mut self, mut terminal: DefaultTerminal) -> Result<()> {
         while self.is_running() {
-            self.handle_events()?;
             self.draw(&mut terminal)?;
+            self.handle_events()?;
         }
         Ok(())
     }
@@ -61,7 +58,7 @@ impl App {
         self.state == AppState::Running
     }
 
-    fn draw(&mut self, terminal: &mut Terminal<impl Backend>) -> io::Result<()> {
+    fn draw(&mut self, terminal: &mut DefaultTerminal) -> io::Result<()> {
         terminal.draw(|frame| frame.render_widget(self, frame.area()))?;
         Ok(())
     }
@@ -189,33 +186,4 @@ fn bars() -> BarGroup<'static> {
     let data = CHART_DATA
         .map(|(label, value, color)| Bar::default().label(label.into()).value(value).style(color));
     BarGroup::default().bars(&data)
-}
-
-fn init_error_hooks() -> Result<()> {
-    let (panic, error) = HookBuilder::default().into_hooks();
-    let panic = panic.into_panic_hook();
-    let error = error.into_eyre_hook();
-    color_eyre::eyre::set_hook(Box::new(move |e| {
-        let _ = restore_terminal();
-        error(e)
-    }))?;
-    std::panic::set_hook(Box::new(move |info| {
-        let _ = restore_terminal();
-        panic(info)
-    }));
-    Ok(())
-}
-
-fn init_terminal() -> Result<Terminal<impl Backend>> {
-    enable_raw_mode()?;
-    stdout().execute(EnterAlternateScreen)?;
-    let backend = CrosstermBackend::new(stdout());
-    let terminal = Terminal::new(backend)?;
-    Ok(terminal)
-}
-
-fn restore_terminal() -> Result<()> {
-    disable_raw_mode()?;
-    stdout().execute(LeaveAlternateScreen)?;
-    Ok(())
 }

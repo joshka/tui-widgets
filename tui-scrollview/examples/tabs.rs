@@ -16,17 +16,16 @@ use ratatui::{
     style::{palette::tailwind, Stylize},
     text::Line,
     widgets::{Paragraph, StatefulWidget, StatefulWidgetRef, Tabs, Widget, Wrap},
+    DefaultTerminal,
 };
-use tui::Tui;
 use tui_scrollview::{ScrollView, ScrollViewState};
 
 fn main() -> Result<()> {
-    tui::init_error_hooks()?;
-    let terminal = tui::init_terminal()?;
-    let app = &mut App::new();
-    app.run(terminal)?;
-    tui::restore_terminal()?;
-    Ok(())
+    color_eyre::install()?;
+    let terminal = ratatui::init();
+    let result = App::new().run(terminal);
+    ratatui::restore();
+    result
 }
 
 #[derive(Default)]
@@ -121,9 +120,9 @@ impl App {
         }
     }
 
-    fn run(&mut self, mut tui: Tui) -> Result<()> {
+    fn run(&mut self, mut terminal: DefaultTerminal) -> Result<()> {
         while self.is_running() {
-            self.draw(&mut tui)?;
+            self.draw(&mut terminal)?;
             self.handle_events()?;
         }
         Ok(())
@@ -133,8 +132,8 @@ impl App {
         self.state == AppState::Running
     }
 
-    fn draw(&mut self, tui: &mut Tui) -> io::Result<()> {
-        tui.draw(|frame| frame.render_widget(self, frame.area()))?;
+    fn draw(&mut self, terminal: &mut DefaultTerminal) -> io::Result<()> {
+        terminal.draw(|frame| frame.render_widget(self, frame.area()))?;
         Ok(())
     }
 
@@ -275,56 +274,5 @@ impl StatefulWidgetRef for BlueTab {
             Rect::new(0, 0, area.width - 1, SCROLLVIEW_HEIGHT),
         );
         scroll_view.render(area, buf, state);
-    }
-}
-
-mod tui {
-    use std::{
-        io::{self, stdout, Stdout},
-        panic,
-    };
-
-    use color_eyre::{config::HookBuilder, eyre, Result};
-    use ratatui::{
-        backend::CrosstermBackend,
-        crossterm::{
-            terminal::{
-                disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen,
-            },
-            ExecutableCommand,
-        },
-        Terminal,
-    };
-
-    // a type alias to simplify the use of the crossterm backend
-    pub type Tui = Terminal<CrosstermBackend<Stdout>>;
-
-    pub fn init_error_hooks() -> Result<()> {
-        let (panic, error) = HookBuilder::default().into_hooks();
-        let panic = panic.into_panic_hook();
-        let error = error.into_eyre_hook();
-        eyre::set_hook(Box::new(move |e| {
-            let _ = restore_terminal();
-            error(e)
-        }))?;
-        panic::set_hook(Box::new(move |info| {
-            let _ = restore_terminal();
-            panic(info)
-        }));
-        Ok(())
-    }
-
-    pub fn init_terminal() -> io::Result<Tui> {
-        enable_raw_mode()?;
-        stdout().execute(EnterAlternateScreen)?;
-        let backend = CrosstermBackend::new(stdout());
-        let terminal = Terminal::new(backend)?;
-        Ok(terminal)
-    }
-
-    pub fn restore_terminal() -> io::Result<()> {
-        disable_raw_mode()?;
-        stdout().execute(LeaveAlternateScreen)?;
-        Ok(())
     }
 }
