@@ -3,7 +3,8 @@ use std::iter::zip;
 use color_eyre::eyre::Ok;
 use ratatui::{
     crossterm::event::{self, Event, KeyCode, KeyEventKind},
-    layout::Rect,
+    layout::{Constraint, Layout, Rect},
+    text::Line,
     DefaultTerminal, Frame,
 };
 use tui_box_text::BoxChar;
@@ -30,10 +31,15 @@ fn run(mut terminal: DefaultTerminal) -> color_eyre::Result<()> {
 }
 
 fn draw(frame: &mut Frame) {
-    let area = frame.area();
+    let layout = Layout::vertical([Constraint::Length(1), Constraint::Fill(1)]);
+    let [header, body] = layout.areas(frame.area());
+    frame.render_widget(
+        Line::from("Tui-box-text. Press Esc to exit").centered(),
+        header,
+    );
     let mut areas = Vec::new();
-    for y in (area.top() + 3..area.bottom()).step_by(3) {
-        for x in (area.left() + 4..area.right()).step_by(4) {
+    for y in (body.top() + 3..body.bottom()).step_by(3) {
+        for x in (body.left() + 4..body.right()).step_by(4) {
             areas.push(Rect::new(x - 4, y - 3, 4, 3));
         }
     }

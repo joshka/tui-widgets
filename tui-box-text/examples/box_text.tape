@@ -2,7 +2,7 @@
 Output "target/box_text.gif"
 Set Theme "Aardvark Blue"
 Set Width 1890
-Set Height 420
+Set Height 450
 Hide
 Type@0 "cargo run -p tui-box-text --example box_text --quiet"
 Enter
