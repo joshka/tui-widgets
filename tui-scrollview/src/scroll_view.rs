@@ -118,8 +118,16 @@ impl StatefulWidget for ScrollView {
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
         let (mut x, mut y) = state.offset.into();
         // ensure that we don't scroll past the end of the buffer in either direction
-        let max_x_offset = self.buf.area.width.saturating_sub(area.width - 1);
-        let max_y_offset = self.buf.area.height.saturating_sub(area.height - 1);
+        let max_x_offset = self
+            .buf
+            .area
+            .width
+            .saturating_sub(area.width.saturating_sub(1));
+        let max_y_offset = self
+            .buf
+            .area
+            .height
+            .saturating_sub(area.height.saturating_sub(1));
 
         x = x.min(max_x_offset);
         y = y.min(max_y_offset);
@@ -151,22 +159,22 @@ impl ScrollView {
                 // area is taller and narrower than the scroll_view
                 state.offset.y = 0;
                 self.render_horizontal_scrollbar(area, buf, state);
-                Rect::new(state.offset.x, 0, area.width, area.height - 1)
+                Rect::new(state.offset.x, 0, area.width, area.height.saturating_sub(1))
             }
             (0, _) if area.width > size.width => {
                 // area is wider and shorter than the scroll_view
                 state.offset.x = 0;
                 self.render_vertical_scrollbar(area, buf, state);
-                Rect::new(0, state.offset.y, area.width - 1, area.height)
+                Rect::new(0, state.offset.y, area.width.saturating_sub(1), area.height)
             }
             (_, _) => {
                 // scroll_view is both wider and taller than the area
                 let vertical_area = Rect {
-                    height: area.height - 1,
+                    height: area.height.saturating_sub(1),
                     ..area
                 };
                 let horizontal_area = Rect {
-                    width: area.width - 1,
+                    width: area.width.saturating_sub(1),
                     ..area
                 };
                 self.render_vertical_scrollbar(vertical_area, buf, state);
@@ -174,8 +182,8 @@ impl ScrollView {
                 Rect::new(
                     state.offset.x,
                     state.offset.y,
-                    area.width - 1,
-                    area.height - 1,
+                    area.width.saturating_sub(1),
+                    area.height.saturating_sub(1),
                 )
             }
         }
@@ -459,5 +467,19 @@ mod tests {
                 "◄═██► ",
             ])
         )
+    }
+    #[rstest]
+    #[should_panic(expected = "Scrollbar area is empty")]
+    fn zero_width(scroll_view: ScrollView) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 0, 10));
+        let mut state = ScrollViewState::new();
+        scroll_view.render(buf.area, &mut buf, &mut state);
+    }
+    #[rstest]
+    #[should_panic(expected = "Scrollbar area is empty")]
+    fn zero_height(scroll_view: ScrollView) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 10, 0));
+        let mut state = ScrollViewState::new();
+        scroll_view.render(buf.area, &mut buf, &mut state);
     }
 }
