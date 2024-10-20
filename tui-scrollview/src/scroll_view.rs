@@ -118,8 +118,19 @@ impl StatefulWidget for ScrollView {
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
         let (mut x, mut y) = state.offset.into();
         // ensure that we don't scroll past the end of the buffer in either direction
-        x = x.min(self.buf.area.width.saturating_sub(1));
-        y = y.min(self.buf.area.height.saturating_sub(1));
+        let max_x_offset = self
+            .buf
+            .area
+            .width
+            .saturating_sub(area.width.saturating_sub(1));
+        let max_y_offset = self
+            .buf
+            .area
+            .height
+            .saturating_sub(area.height.saturating_sub(1));
+
+        x = x.min(max_x_offset);
+        y = y.min(max_y_offset);
         state.offset = (x, y).into();
         state.size = Some(self.size);
         state.page_size = Some(area.into());
@@ -135,6 +146,7 @@ impl ScrollView {
     /// scrollbars
     fn render_scrollbars(&self, area: Rect, buf: &mut Buffer, state: &mut ScrollViewState) -> Rect {
         let size = self.size;
+
         let width = size.width.saturating_sub(area.width);
         let height = size.height.saturating_sub(area.height);
         match (width, height) {
@@ -147,22 +159,22 @@ impl ScrollView {
                 // area is taller and narrower than the scroll_view
                 state.offset.y = 0;
                 self.render_horizontal_scrollbar(area, buf, state);
-                Rect::new(state.offset.x, 0, area.width, area.height - 1)
+                Rect::new(state.offset.x, 0, area.width, area.height.saturating_sub(1))
             }
             (0, _) if area.width > size.width => {
                 // area is wider and shorter than the scroll_view
                 state.offset.x = 0;
                 self.render_vertical_scrollbar(area, buf, state);
-                Rect::new(0, state.offset.y, area.width - 1, area.height)
+                Rect::new(0, state.offset.y, area.width.saturating_sub(1), area.height)
             }
             (_, _) => {
                 // scroll_view is both wider and taller than the area
                 let vertical_area = Rect {
-                    height: area.height - 1,
+                    height: area.height.saturating_sub(1),
                     ..area
                 };
                 let horizontal_area = Rect {
-                    width: area.width - 1,
+                    width: area.width.saturating_sub(1),
                     ..area
                 };
                 self.render_vertical_scrollbar(vertical_area, buf, state);
@@ -170,23 +182,25 @@ impl ScrollView {
                 Rect::new(
                     state.offset.x,
                     state.offset.y,
-                    area.width - 1,
-                    area.height - 1,
+                    area.width.saturating_sub(1),
+                    area.height.saturating_sub(1),
                 )
             }
         }
     }
 
     fn render_vertical_scrollbar(&self, area: Rect, buf: &mut Buffer, state: &ScrollViewState) {
+        let scrollbar_height = self.size.height.saturating_sub(area.height);
         let mut scrollbar_state =
-            ScrollbarState::new(self.size.height as usize).position(state.offset.y as usize);
+            ScrollbarState::new(scrollbar_height as usize).position(state.offset.y as usize);
         let scrollbar = Scrollbar::new(ScrollbarOrientation::VerticalRight);
         scrollbar.render(area, buf, &mut scrollbar_state);
     }
 
     fn render_horizontal_scrollbar(&self, area: Rect, buf: &mut Buffer, state: &ScrollViewState) {
+        let scrollbar_width = self.size.width.saturating_sub(area.width);
         let mut scrollbar_state =
-            ScrollbarState::new(self.size.width as usize).position(state.offset.x as usize);
+            ScrollbarState::new(scrollbar_width as usize).position(state.offset.x as usize);
         let scrollbar = Scrollbar::new(ScrollbarOrientation::HorizontalBottom);
         scrollbar.render(area, buf, &mut scrollbar_state);
     }
@@ -246,10 +260,10 @@ mod tests {
             Buffer::with_lines(vec![
                 "ABCDE▲",
                 "KLMNO█",
-                "UVWXY║",
+                "UVWXY█",
                 "EFGHI║",
                 "OPQRS▼",
-                "◄█══► ",
+                "◄██═► ",
             ])
         )
     }
@@ -264,10 +278,10 @@ mod tests {
             Buffer::with_lines(vec![
                 "DEFGH▲",
                 "NOPQR█",
-                "XYZAB║",
+                "XYZAB█",
                 "HIJKL║",
                 "RSTUV▼",
-                "◄═█═► ",
+                "◄═██► ",
             ])
         )
     }
@@ -283,9 +297,9 @@ mod tests {
                 "EFGHI▲",
                 "OPQRS║",
                 "YZABC█",
-                "IJKLM║",
+                "IJKLM█",
                 "STUVW▼",
-                "◄█══► ",
+                "◄██═► ",
             ])
         )
     }
@@ -325,9 +339,9 @@ mod tests {
                 "UVWXYZABCD█",
                 "EFGHIJKLMN█",
                 "OPQRSTUVWX█",
-                "YZABCDEFGH║",
-                "IJKLMNOPQR║",
-                "STUVWXYZAB║",
+                "YZABCDEFGH█",
+                "IJKLMNOPQR█",
+                "STUVWXYZAB█",
                 "CDEFGHIJKL▼",
             ])
         )
@@ -351,7 +365,7 @@ mod tests {
                 "STUVWXYZA",
                 "CDEFGHIJK",
                 "MNOPQRSTU",
-                "◄████═══►",
+                "◄███████►",
             ])
         )
     }
@@ -370,11 +384,11 @@ mod tests {
                 "KLMNOPQRS█",
                 "UVWXYZABC█",
                 "EFGHIJKLM█",
-                "OPQRSTUVW║",
-                "YZABCDEFG║",
+                "OPQRSTUVW█",
+                "YZABCDEFG█",
                 "IJKLMNOPQ║",
                 "STUVWXYZA▼",
-                "◄████═══► ",
+                "◄███████► ",
             ])
         )
     }
@@ -394,21 +408,21 @@ mod tests {
                 "UVWXYZAB█",
                 "EFGHIJKL█",
                 "OPQRSTUV█",
-                "YZABCDEF║",
-                "IJKLMNOP║",
-                "STUVWXYZ║",
+                "YZABCDEF█",
+                "IJKLMNOP█",
+                "STUVWXYZ█",
                 "CDEFGHIJ▼",
-                "◄███═══► ",
+                "◄█████═► ",
             ])
         )
     }
 
     /// The purpose of this test is to ensure that the buffer offset is correctly calculated when
-    /// rendering a scroll view into a buffer (i.e. the buffer offset is not always (0, 0))
+    /// rendering a scroll view into a buffer (i.e. the buffer offset is not always (0, 0)).
     #[rstest]
     fn ensure_buffer_offset_is_correct(scroll_view: ScrollView) {
         let mut buf = Buffer::empty(Rect::new(0, 0, 20, 20));
-        let mut state = ScrollViewState::with_offset((3, 4).into());
+        let mut state = ScrollViewState::with_offset((2, 3).into());
         scroll_view.render(Rect::new(5, 6, 7, 8), &mut buf, &mut state);
         assert_eq!(
             buf,
@@ -419,14 +433,14 @@ mod tests {
                 "                    ",
                 "                    ",
                 "                    ",
-                "     RSTUVW▲        ",
-                "     BCDEFG║        ",
-                "     LMNOPQ█        ",
-                "     VWXYZA█        ",
-                "     FGHIJK║        ",
-                "     PQRSTU║        ",
-                "           ▼        ",
-                "     ◄═█══►         ",
+                "     GHIJKL▲        ",
+                "     QRSTUV║        ",
+                "     ABCDEF█        ",
+                "     KLMNOP█        ",
+                "     UVWXYZ█        ",
+                "     EFGHIJ█        ",
+                "     OPQRST▼        ",
+                "     ◄═███►         ",
                 "                    ",
                 "                    ",
                 "                    ",
@@ -435,5 +449,37 @@ mod tests {
                 "                    ",
             ])
         )
+    }
+    /// The purpose of this test is to ensure that the last elements are rendered.
+    #[rstest]
+    fn ensure_buffer_last_elements(scroll_view: ScrollView) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 6, 6));
+        let mut state = ScrollViewState::with_offset((5, 5).into());
+        scroll_view.render(buf.area, &mut buf, &mut state);
+        assert_eq!(
+            buf,
+            Buffer::with_lines(vec![
+                "DEFGH▲",
+                "NOPQR║",
+                "XYZAB█",
+                "HIJKL█",
+                "RSTUV▼",
+                "◄═██► ",
+            ])
+        )
+    }
+    #[rstest]
+    #[should_panic(expected = "Scrollbar area is empty")]
+    fn zero_width(scroll_view: ScrollView) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 0, 10));
+        let mut state = ScrollViewState::new();
+        scroll_view.render(buf.area, &mut buf, &mut state);
+    }
+    #[rstest]
+    #[should_panic(expected = "Scrollbar area is empty")]
+    fn zero_height(scroll_view: ScrollView) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 10, 0));
+        let mut state = ScrollViewState::new();
+        scroll_view.render(buf.area, &mut buf, &mut state);
     }
 }
