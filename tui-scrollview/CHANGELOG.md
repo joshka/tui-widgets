@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.1] - 2024-10-20
+
+### 🐛 Bug Fixes
+
+- Broken links from move to tui-widgets
+
+- *(tui-scrollview)* Make scroll_view buffer area the same as its content ([#37](https://github.com/joshka/tui-widgets/pull/37))
+  > This makes the scroll_view buffer area the same as its content by
+  > default.
+  > The previous behavior is easily reproduced by adding empty space to the
+  > buffer. =)
+  > Most tests remain the same with the scrollbar updated to match the new
+  > size.
+  >
+  > Fixes:[#35](https://github.com/joshka/tui-widgets/pull/35)
+
+### 📚 Documentation
+
+- Use ratatui 0.28.1 methods for examples
+
+- Demo horizontal scrolling and mark TODO as done
+
 ## [0.4.0] - 2024-08-11
 
 Ratatui-0.28.0 compatible release

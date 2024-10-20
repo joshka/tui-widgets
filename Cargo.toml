@@ -41,7 +41,7 @@ nursery = "warn"
 [package]
 name = "tui-widgets"
 description = "A collection of useful widgets for building terminal user interfaces using Ratatui"
-version = "0.3.0"
+version = "0.3.1"
 documentation = "https://docs.rs/tui-widgets"
 
 authors.workspace = true
@@ -70,8 +70,8 @@ cards = ["tui-cards"]
 [dependencies]
 document-features.workspace = true
 ratatui = { workspace = true }
-tui-big-text = { version = "0.6.0", path = "tui-big-text", optional = true }
+tui-big-text = { version = "0.6.1", path = "tui-big-text", optional = true }
 tui-cards = { version = "0.1.0", path = "tui-cards", optional = true }
-tui-popup = { version = "0.5.0", path = "tui-popup", optional = true }
-tui-prompts = { version = "0.4.0", path = "tui-prompts", optional = true }
-tui-scrollview = { version = "0.4.0", path = "tui-scrollview", optional = true }
+tui-popup = { version = "0.5.1", path = "tui-popup", optional = true }
+tui-prompts = { version = "0.4.1", path = "tui-prompts", optional = true }
+tui-scrollview = { version = "0.4.1", path = "tui-scrollview", optional = true }

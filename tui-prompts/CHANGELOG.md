@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.1] - 2024-10-20
+
+### ⚙️ Miscellaneous Tasks
+
+- Update Cargo.toml dependencies
+
 ## [0.4.0] - 2024-08-11
 
 Ratatui-0.28.0 compatible release
