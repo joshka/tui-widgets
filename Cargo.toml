@@ -25,7 +25,7 @@ indoc = "2.0.5"
 lipsum = "0.9.1"
 ratatui = { version = "0.28.1", default-features = false }
 ratatui-macros = "0.5.0"
-rstest = "0.22.0"
+rstest = "0.23.0"
 strum = { version = "0.26.3", features = ["derive"] }
 tokio = { version = "1.39" }
 
