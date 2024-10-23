@@ -7,7 +7,7 @@
 //!
 //! # fn draw(frame: &mut ratatui::Frame) {
 //! let card = Card::new(Rank::Ace, Suit::Spades);
-//! frame.render_widget(&card, area);
+//! frame.render_widget(&card, frame.area());
 //! # }
 //! ```
 //!
@@ -35,7 +35,7 @@ use strum::{Display, EnumIter};
 /// use tui_cards::{Card, Rank, Suit};
 /// # fn draw(frame: &mut ratatui::Frame) {
 /// let card = Card::new(Rank::Ace, Suit::Spades);
-/// frame.render_widget(&card, area);
+/// frame.render_widget(&card, frame.area());
 /// # }
 /// ```
 #[derive(Debug, Clone, Copy)]
