@@ -52,6 +52,8 @@ use crate::ScrollViewState;
 pub struct ScrollView {
     buf: Buffer,
     size: Size,
+    show_vertical_scrollbar: bool,
+    show_horizontal_scrollbar: bool,
 }
 
 impl ScrollView {
@@ -64,6 +66,8 @@ impl ScrollView {
         Self {
             buf: Buffer::empty(area),
             size,
+            show_vertical_scrollbar: true,
+            show_horizontal_scrollbar: true,
         }
     }
 
@@ -97,6 +101,40 @@ impl ScrollView {
     /// ```
     pub fn buf_mut(&mut self) -> &mut Buffer {
         &mut self.buf
+    }
+
+    /// Hide the vertical scrollbar if it exists
+    ///
+    /// This is a fluent method which must be chained or used as it consumes self
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// # use ratatui::{prelude::*, layout::Size, widgets::*};
+    /// # use tui_scrollview::ScrollView;
+    ///
+    /// let mut scroll_view = ScrollView::new(Size::new(20, 20)).no_vertical_scrollbar();
+    /// ```
+    pub fn no_vertical_scrollbar(mut self) -> Self {
+        self.show_vertical_scrollbar = false;
+        self
+    }
+
+    /// Hide the horizontal scrollbar if it exists
+    ///
+    /// This is a fluent method which must be chained or used as it consumes self
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// # use ratatui::{prelude::*, layout::Size, widgets::*};
+    /// # use tui_scrollview::ScrollView;
+    ///
+    /// let mut scroll_view = ScrollView::new(Size::new(20, 20)).no_horizontal_scrollbar();
+    /// ```
+    pub fn no_horizontal_scrollbar(mut self) -> Self {
+        self.show_horizontal_scrollbar = false;
+        self
     }
 
     /// Render a widget into the scroll buffer
@@ -142,8 +180,8 @@ impl StatefulWidget for ScrollView {
 }
 
 impl ScrollView {
-    /// Render the horizontal and vertical scrollbars if exists, and return the size taken by the
-    /// scrollbars
+    /// Render the horizontal and vertical scrollbars if exist and not hidden,
+    /// and return the size taken by the scrollbars.
     fn render_scrollbars(&self, area: Rect, buf: &mut Buffer, state: &mut ScrollViewState) -> Rect {
         let size = self.size;
 
@@ -155,35 +193,72 @@ impl ScrollView {
                 state.offset = Position::default();
                 Rect::new(state.offset.x, state.offset.y, area.width, area.height)
             }
-            (_, 0) if area.height > size.height => {
+            (_, 0) if area.height > size.height ||
+                !self.show_horizontal_scrollbar => {
                 // area is taller and narrower than the scroll_view
-                state.offset.y = 0;
-                self.render_horizontal_scrollbar(area, buf, state);
-                Rect::new(state.offset.x, 0, area.width, area.height.saturating_sub(1))
-            }
-            (0, _) if area.width > size.width => {
-                // area is wider and shorter than the scroll_view
-                state.offset.x = 0;
-                self.render_vertical_scrollbar(area, buf, state);
-                Rect::new(0, state.offset.y, area.width.saturating_sub(1), area.height)
-            }
-            (_, _) => {
-                // scroll_view is both wider and taller than the area
-                let vertical_area = Rect {
-                    height: area.height.saturating_sub(1),
-                    ..area
-                };
-                let horizontal_area = Rect {
-                    width: area.width.saturating_sub(1),
-                    ..area
-                };
-                self.render_vertical_scrollbar(vertical_area, buf, state);
-                self.render_horizontal_scrollbar(horizontal_area, buf, state);
+                let mut rendered = 0;
+                if self.show_horizontal_scrollbar {
+                    state.offset.y = 0;
+                    self.render_horizontal_scrollbar(area, buf, state);
+                    rendered = 1;
+                }
                 Rect::new(
                     state.offset.x,
                     state.offset.y,
-                    area.width.saturating_sub(1),
-                    area.height.saturating_sub(1),
+                    area.width,
+                    area.height.saturating_sub(rendered)
+                )
+            }
+            (0, _) if area.width > size.width ||
+                !self.show_vertical_scrollbar => {
+                // area is wider and shorter than the scroll_view
+                let mut rendered = 0;
+                if self.show_vertical_scrollbar {
+                    state.offset.x = 0;
+                    self.render_vertical_scrollbar(area, buf, state);
+                    rendered = 1;
+                }
+                Rect::new(
+                    state.offset.x,
+                    state.offset.y,
+                    area.width.saturating_sub(rendered),
+                    area.height
+                )
+            }
+            (_, _) => {
+                // scroll_view is both wider and taller than the area
+                let mut both_bars = 0;
+                if self.show_vertical_scrollbar &&
+                    self.show_horizontal_scrollbar {
+                        both_bars = 1;
+                }
+
+                let mut new_height = area.height;
+                let mut new_width = area.width;
+
+                if self.show_vertical_scrollbar {
+                    let vertical_area = Rect {
+                        height: area.height.saturating_sub(both_bars),
+                        ..area
+                    };
+                    self.render_vertical_scrollbar(vertical_area, buf, state);
+                    new_width = new_width.saturating_sub(1);
+                }
+
+                if self.show_horizontal_scrollbar {
+                    let horizontal_area = Rect {
+                        width: area.width.saturating_sub(both_bars),
+                        ..area
+                    };
+                    self.render_horizontal_scrollbar(horizontal_area, buf, state);
+                    new_height = new_height.saturating_sub(1);
+                }
+
+                Rect::new(
+                    state.offset.x,
+                    state.offset.y,
+                    new_width,
+                    new_height,
                 )
             }
         }
@@ -481,5 +556,155 @@ mod tests {
         let mut buf = Buffer::empty(Rect::new(0, 0, 10, 0));
         let mut state = ScrollViewState::new();
         scroll_view.render(buf.area, &mut buf, &mut state);
+    }
+
+    #[rstest]
+    fn no_vertical_scrollbar(mut scroll_view: ScrollView) {
+        scroll_view = scroll_view.no_vertical_scrollbar();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 11, 9));
+        let mut state = ScrollViewState::new();
+        scroll_view.render(buf.area, &mut buf, &mut state);
+        assert_eq!(
+            buf,
+            Buffer::with_lines(vec![
+                "ABCDEFGHIJ ",
+                "KLMNOPQRST ",
+                "UVWXYZABCD ",
+                "EFGHIJKLMN ",
+                "OPQRSTUVWX ",
+                "YZABCDEFGH ",
+                "IJKLMNOPQR ",
+                "STUVWXYZAB ",
+                "CDEFGHIJKL ",
+            ])
+        )
+    }
+
+    #[rstest]
+    fn no_horizontal_scrollbar(mut scroll_view: ScrollView) {
+        scroll_view = scroll_view.no_horizontal_scrollbar();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 9, 11));
+        let mut state = ScrollViewState::new();
+        scroll_view.render(buf.area, &mut buf, &mut state);
+        assert_eq!(
+            buf,
+            Buffer::with_lines(vec![
+                "ABCDEFGHI",
+                "KLMNOPQRS",
+                "UVWXYZABC",
+                "EFGHIJKLM",
+                "OPQRSTUVW",
+                "YZABCDEFG",
+                "IJKLMNOPQ",
+                "STUVWXYZA",
+                "CDEFGHIJK",
+                "MNOPQRSTU",
+                "         ",
+            ])
+        )
+    }
+
+    #[rstest]
+    fn does_not_trigger_horizontal_scrollbar(mut scroll_view: ScrollView) {
+        scroll_view = scroll_view.no_vertical_scrollbar();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 10, 9));
+        let mut state = ScrollViewState::new();
+        scroll_view.render(buf.area, &mut buf, &mut state);
+        assert_eq!(
+            buf,
+            Buffer::with_lines(vec![
+                "ABCDEFGHIJ",
+                "KLMNOPQRST",
+                "UVWXYZABCD",
+                "EFGHIJKLMN",
+                "OPQRSTUVWX",
+                "YZABCDEFGH",
+                "IJKLMNOPQR",
+                "STUVWXYZAB",
+                "CDEFGHIJKL",
+            ])
+        )
+    }
+
+    #[rstest]
+    fn does_not_trigger_vertical_scrollbar(mut scroll_view: ScrollView) {
+        scroll_view = scroll_view.no_horizontal_scrollbar();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 9, 10));
+        let mut state = ScrollViewState::new();
+        scroll_view.render(buf.area, &mut buf, &mut state);
+        assert_eq!(
+            buf,
+            Buffer::with_lines(vec![
+                "ABCDEFGHI",
+                "KLMNOPQRS",
+                "UVWXYZABC",
+                "EFGHIJKLM",
+                "OPQRSTUVW",
+                "YZABCDEFG",
+                "IJKLMNOPQ",
+                "STUVWXYZA",
+                "CDEFGHIJK",
+                "MNOPQRSTU",
+            ])
+        )
+    }
+
+    #[rstest]
+    fn does_not_render_vertical_scrollbar(mut scroll_view: ScrollView) {
+        scroll_view = scroll_view.no_vertical_scrollbar();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 6, 6));
+        let mut state = ScrollViewState::default();
+        scroll_view.render(buf.area, &mut buf, &mut state);
+        assert_eq!(
+            buf,
+            Buffer::with_lines(vec![
+                "ABCDEF",
+                "KLMNOP",
+                "UVWXYZ",
+                "EFGHIJ",
+                "OPQRST",
+                "◄███═►",
+            ])
+        )
+    }
+
+    #[rstest]
+    fn does_not_render_horizontal_scrollbar(mut scroll_view: ScrollView) {
+        scroll_view = scroll_view.no_horizontal_scrollbar();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 6, 6));
+        let mut state = ScrollViewState::default();
+        scroll_view.render(buf.area, &mut buf, &mut state);
+        assert_eq!(
+            buf,
+            Buffer::with_lines(vec![
+                "ABCDE▲",
+                "KLMNO█",
+                "UVWXY█",
+                "EFGHI█",
+                "OPQRS║",
+                "YZABC▼",
+            ])
+        )
+    }
+
+    #[rstest]
+    fn does_not_render_both_scrollbars(mut scroll_view: ScrollView) {
+        scroll_view = scroll_view
+            .no_vertical_scrollbar()
+            .no_horizontal_scrollbar();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 6, 6));
+        let mut state = ScrollViewState::default();
+        scroll_view.render(buf.area, &mut buf, &mut state);
+        assert_eq!(
+            buf,
+            Buffer::with_lines(vec![
+                "ABCDEF",
+                "KLMNOP",
+                "UVWXYZ",
+                "EFGHIJ",
+                "OPQRST",
+                "YZABCD",
+            ])
+        )
     }
 }
