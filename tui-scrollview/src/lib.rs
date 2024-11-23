@@ -79,5 +79,5 @@
 mod scroll_view;
 mod state;
 
-pub use scroll_view::ScrollView;
+pub use scroll_view::{ScrollView, ScrollbarVisibility};
 pub use state::ScrollViewState;
