@@ -1,8 +1,4 @@
-use ratatui::{
-    layout::Size,
-    prelude::*,
-    widgets::*,
-};
+use ratatui::{layout::Size, prelude::*, widgets::*};
 
 use crate::ScrollViewState;
 
@@ -52,13 +48,8 @@ use crate::ScrollViewState;
 pub struct ScrollView {
     buf: Buffer,
     size: Size,
-    scrollbars_visibility: ScrollbarVisibilityInfo,
-}
-
-#[derive(Debug, Default, Clone, Eq, PartialEq, Hash)]
-struct ScrollbarVisibilityInfo {
-    vertical: ScrollbarVisibility,
-    horizontal: ScrollbarVisibility,
+    vertical_scrollbar_visibility: ScrollbarVisibility,
+    horizontal_scrollbar_visibility: ScrollbarVisibility,
 }
 
 /// The visbility of the vertical and horizontal scrollbars.
@@ -83,7 +74,8 @@ impl ScrollView {
         Self {
             buf: Buffer::empty(area),
             size,
-            scrollbars_visibility: ScrollbarVisibilityInfo::default(),
+            horizontal_scrollbar_visibility: ScrollbarVisibility::default(),
+            vertical_scrollbar_visibility: ScrollbarVisibility::default(),
         }
     }
 
@@ -133,8 +125,8 @@ impl ScrollView {
     ///
     /// let mut scroll_view = ScrollView::new(Size::new(20, 20)).vertical_scrollbar_visibility(ScrollbarVisibility::Always);
     /// ```
-    pub fn vertical_scrollbar_visibility(mut self, opt: ScrollbarVisibility) -> Self {
-        self.scrollbars_visibility.vertical = opt;
+    pub fn vertical_scrollbar_visibility(mut self, visibility: ScrollbarVisibility) -> Self {
+        self.vertical_scrollbar_visibility = visibility;
         self
     }
 
@@ -152,8 +144,8 @@ impl ScrollView {
     ///
     /// let mut scroll_view = ScrollView::new(Size::new(20, 20)).horizontal_scrollbar_visibility(ScrollbarVisibility::Never);
     /// ```
-    pub fn horizontal_scrollbar_visibility(mut self, opt: ScrollbarVisibility) -> Self {
-        self.scrollbars_visibility.horizontal = opt;
+    pub fn horizontal_scrollbar_visibility(mut self, visibility: ScrollbarVisibility) -> Self {
+        self.horizontal_scrollbar_visibility = visibility;
         self
     }
 
@@ -171,9 +163,9 @@ impl ScrollView {
     ///
     /// let mut scroll_view = ScrollView::new(Size::new(20, 20)).scrollbars_visibility(ScrollbarVisibility::Automatic);
     /// ```
-    pub fn scrollbars_visibility(mut self, opt: ScrollbarVisibility) -> Self {
-        self.scrollbars_visibility.vertical = opt;
-        self.scrollbars_visibility.horizontal = opt;
+    pub fn scrollbars_visibility(mut self, visibility: ScrollbarVisibility) -> Self {
+        self.vertical_scrollbar_visibility = visibility;
+        self.horizontal_scrollbar_visibility = visibility;
         self
     }
 
@@ -220,50 +212,6 @@ impl StatefulWidget for ScrollView {
 }
 
 impl ScrollView {
-    /// Resolve whether to render or not each scrollbar considering the
-    /// visibility options set by the user and whether the scrollview
-    /// size fits into the the available area on each direction.
-    /// Returns bool tuple with (horizontal, vertical) resolutions.
-    fn resolve_scrollbars_visibility(&self, horiz_fit: i32, vert_fit: i32) -> (bool, bool) {
-        type SBV = crate::scroll_view::ScrollbarVisibility;
-        let vis_info = &self.scrollbars_visibility;
-
-        match (vis_info.horizontal, vis_info.vertical) {
-            // straightfoward, no need to check fit values
-            (SBV::Always, SBV::Always) => { (true, true) },
-            (SBV::Never, SBV::Never) => { (false, false) },
-            (SBV::Always, SBV::Never) => { (true, false) },
-            (SBV::Never, SBV::Always) => { (false, true) },
-
-            // Auto => render scrollbar only if it doesn't fit
-            (SBV::Automatic, SBV::Never) => { (horiz_fit < 0, false) },
-            (SBV::Never, SBV::Automatic) => { (false, vert_fit < 0) },
-
-            // Auto => render scrollbar if:
-            //   it doesn't fit; or
-            //   exact fit (other scrollbar steals a line and triggers it)
-            (SBV::Always, SBV::Automatic) => { (true, vert_fit <= 0) },
-            (SBV::Automatic, SBV::Always) => { (horiz_fit <= 0, true) },
-
-            // depends solely on fit values
-            (SBV::Automatic, SBV::Automatic) => {
-                // both either fit or don't
-                if horiz_fit >= 0 && vert_fit >= 0 { (false, false) }
-                else if horiz_fit < 0 && vert_fit < 0 { (true, true) }
-                // one fits and other does not
-                else if horiz_fit > 0 && vert_fit < 0 { (false, true) }
-                else if horiz_fit < 0 && vert_fit > 0 { (true, false) }
-                // one is an exact fit and other does not fit which
-                // triggers both scrollbars to be visible
-                else if (horiz_fit == 0 && vert_fit < 0) ||
-                    (horiz_fit < 0 && vert_fit == 0) { (true, true) }
-                else {
-                    unreachable!("All fit combinations are covered!")
-                }
-            }
-        }
-    }
-
     /// Render needed scrollbars and return remaining area relative to
     /// scrollview's buffer area.
     fn render_scrollbars(&self, area: Rect, buf: &mut Buffer, state: &mut ScrollViewState) -> Rect {
@@ -271,48 +219,96 @@ impl ScrollView {
         //   > 0 => fits
         //  == 0 => exact fit
         //   < 0 => does not fit
-        let horiz_fit = area.width as i32 - self.size.width as i32;
-        let vert_fit = area.height as i32 - self.size.height as i32;
+        let horizontal_space = area.width as i32 - self.size.width as i32;
+        let vertical_space = area.height as i32 - self.size.height as i32;
 
         // if it fits in that direction, reset state to reflect it
-        if horiz_fit > 0 {
+        if horizontal_space > 0 {
             state.offset.x = 0;
         }
-        if vert_fit > 0 {
+        if vertical_space > 0 {
             state.offset.y = 0;
         }
 
-        let (show_horiz, show_vert) =
-            self.resolve_scrollbars_visibility(horiz_fit, vert_fit);
+        let (show_horizontal, show_vertical) =
+            self.visible_scrollbars(horizontal_space, vertical_space);
 
         let mut new_width = area.width;
         let mut new_height = area.height;
 
-        if show_horiz {
-            let render_area = if show_vert {
-                // both bars will be rendered, so avoid the corner
-                Rect { width: area.width.saturating_sub(1), ..area }
-            } else {
-                area
-            };
+        if show_horizontal {
+            // if both bars are rendered, avoid the corner
+            let width = area.width.saturating_sub(show_vertical as u16);
+            let render_area = Rect { width, ..area };
             // render scrollbar, update available space
             self.render_horizontal_scrollbar(render_area, buf, state);
             new_height = area.height.saturating_sub(1);
         }
 
-        if show_vert {
-            let render_area = if show_horiz {
-                // both bars will be rendered, so avoid the corner
-                Rect { height: area.height.saturating_sub(1), ..area }
-            } else {
-                area
-            };
+        if show_vertical {
+            // if both bars are rendered, avoid the corner
+            let height = area.height.saturating_sub(show_horizontal as u16);
+            let render_area = Rect { height, ..area };
             // render scrollbar, update available space
             self.render_vertical_scrollbar(render_area, buf, state);
             new_width = area.width.saturating_sub(1);
         }
 
         Rect::new(state.offset.x, state.offset.y, new_width, new_height)
+    }
+
+    /// Resolve whether to render each scrollbar.
+    ///
+    /// Considers the visibility options set by the user and whether the scrollview size fits into
+    /// the the available area on each direction.
+    ///
+    /// The space arguments are the difference between the scrollview size and the available area.
+    ///
+    /// Returns a bool tuple with (horizontal, vertical) resolutions.
+    fn visible_scrollbars(&self, horizontal_space: i32, vertical_space: i32) -> (bool, bool) {
+        type V = crate::scroll_view::ScrollbarVisibility;
+
+        match (
+            self.horizontal_scrollbar_visibility,
+            self.vertical_scrollbar_visibility,
+        ) {
+            // straightfoward, no need to check fit values
+            (V::Always, V::Always) => (true, true),
+            (V::Never, V::Never) => (false, false),
+            (V::Always, V::Never) => (true, false),
+            (V::Never, V::Always) => (false, true),
+
+            // Auto => render scrollbar only if it doesn't fit
+            (V::Automatic, V::Never) => (horizontal_space < 0, false),
+            (V::Never, V::Automatic) => (false, vertical_space < 0),
+
+            // Auto => render scrollbar if:
+            //   it doesn't fit; or
+            //   exact fit (other scrollbar steals a line and triggers it)
+            (V::Always, V::Automatic) => (true, vertical_space <= 0),
+            (V::Automatic, V::Always) => (horizontal_space <= 0, true),
+
+            // depends solely on fit values
+            (V::Automatic, V::Automatic) => {
+                if horizontal_space >= 0 && vertical_space >= 0 {
+                    // there is enough space for both dimensions
+                    (false, false)
+                } else if horizontal_space < 0 && vertical_space < 0 {
+                    // there is not enough space for either dimension
+                    (true, true)
+                } else if horizontal_space > 0 && vertical_space < 0 {
+                    // horizontal fits, vertical does not
+                    (false, true)
+                } else if horizontal_space < 0 && vertical_space > 0 {
+                    // vertical fits, horizontal does not
+                    (true, false)
+                } else {
+                    // one is an exact fit and other does not fit which triggers both scrollbars to
+                    // be visible because the other scrollbar will steal a line from the buffer
+                    (true, true)
+                }
+            }
+        }
     }
 
     fn render_vertical_scrollbar(&self, area: Rect, buf: &mut Buffer, state: &ScrollViewState) {
@@ -728,32 +724,21 @@ mod tests {
         assert_eq!(
             buf,
             Buffer::with_lines(vec![
-                "ABCDE▲",
-                "KLMNO█",
-                "UVWXY█",
-                "EFGHI█",
-                "OPQRS║",
-                "YZABC▼",
+                "ABCDE▲", "KLMNO█", "UVWXY█", "EFGHI█", "OPQRS║", "YZABC▼",
             ])
         )
     }
 
     #[rstest]
     fn does_not_render_both_scrollbars(mut scroll_view: ScrollView) {
-        scroll_view = scroll_view
-            .scrollbars_visibility(ScrollbarVisibility::Never);
+        scroll_view = scroll_view.scrollbars_visibility(ScrollbarVisibility::Never);
         let mut buf = Buffer::empty(Rect::new(0, 0, 6, 6));
         let mut state = ScrollViewState::default();
         scroll_view.render(buf.area, &mut buf, &mut state);
         assert_eq!(
             buf,
             Buffer::with_lines(vec![
-                "ABCDEF",
-                "KLMNOP",
-                "UVWXYZ",
-                "EFGHIJ",
-                "OPQRST",
-                "YZABCD",
+                "ABCDEF", "KLMNOP", "UVWXYZ", "EFGHIJ", "OPQRST", "YZABCD",
             ])
         )
     }
