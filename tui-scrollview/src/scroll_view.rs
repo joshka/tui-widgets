@@ -606,7 +606,7 @@ mod tests {
     }
 
     #[rstest]
-    fn no_vertical_scrollbar(mut scroll_view: ScrollView) {
+    fn never_vertical_scrollbar(mut scroll_view: ScrollView) {
         scroll_view = scroll_view.vertical_scrollbar_visibility(ScrollbarVisibility::Never);
         let mut buf = Buffer::empty(Rect::new(0, 0, 11, 9));
         let mut state = ScrollViewState::new();
@@ -628,7 +628,7 @@ mod tests {
     }
 
     #[rstest]
-    fn no_horizontal_scrollbar(mut scroll_view: ScrollView) {
+    fn never_horizontal_scrollbar(mut scroll_view: ScrollView) {
         scroll_view = scroll_view.horizontal_scrollbar_visibility(ScrollbarVisibility::Never);
         let mut buf = Buffer::empty(Rect::new(0, 0, 9, 11));
         let mut state = ScrollViewState::new();
@@ -718,18 +718,24 @@ mod tests {
     #[rstest]
     fn does_not_render_horizontal_scrollbar(mut scroll_view: ScrollView) {
         scroll_view = scroll_view.horizontal_scrollbar_visibility(ScrollbarVisibility::Never);
-        let mut buf = Buffer::empty(Rect::new(0, 0, 6, 6));
+        let mut buf = Buffer::empty(Rect::new(0, 0, 7, 6));
         let mut state = ScrollViewState::default();
         scroll_view.render(buf.area, &mut buf, &mut state);
         assert_eq!(
             buf,
             Buffer::with_lines(vec![
-                "ABCDE▲", "KLMNO█", "UVWXY█", "EFGHI█", "OPQRS║", "YZABC▼",
+                "ABCDEF▲",
+                "KLMNOP█",
+                "UVWXYZ█",
+                "EFGHIJ█",
+                "OPQRST║",
+                "YZABCD▼",
             ])
         )
     }
 
     #[rstest]
+    #[rustfmt::skip]
     fn does_not_render_both_scrollbars(mut scroll_view: ScrollView) {
         scroll_view = scroll_view.scrollbars_visibility(ScrollbarVisibility::Never);
         let mut buf = Buffer::empty(Rect::new(0, 0, 6, 6));
@@ -738,7 +744,12 @@ mod tests {
         assert_eq!(
             buf,
             Buffer::with_lines(vec![
-                "ABCDEF", "KLMNOP", "UVWXYZ", "EFGHIJ", "OPQRST", "YZABCD",
+                "ABCDEF",
+                "KLMNOP",
+                "UVWXYZ",
+                "EFGHIJ",
+                "OPQRST",
+                "YZABCD",
             ])
         )
     }
