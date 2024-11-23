@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.1] - 2024-11-23
+
+### ⚙️ Miscellaneous Tasks
+
+- Updated the following local packages: tui-scrollview
+
 ## [0.3.1] - 2024-10-20
 
 ### 🚀 Features

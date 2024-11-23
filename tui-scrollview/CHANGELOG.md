@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.1] - 2024-11-23
+
+### 🚀 Features
+
+- *(tui-scrollview)* Add scrollbars visibility handling ([#45](https://github.com/joshka/tui-widgets/pull/45))
+  > Scrollbars can now be set to never display, always display or automatically display (default).
+
 ## [0.4.1] - 2024-10-20
 
 ### 🐛 Bug Fixes
