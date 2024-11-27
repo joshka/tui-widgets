@@ -21,7 +21,9 @@
 use std::iter::zip;
 
 use indoc::indoc;
-use ratatui::{
+use ratatui_core::{
+    buffer::Buffer,
+    layout::Rect,
     style::{Color, Stylize},
     widgets::Widget,
 };
@@ -281,7 +283,7 @@ impl Rank {
 }
 
 impl Widget for &Card {
-    fn render(self, area: ratatui::prelude::Rect, buf: &mut ratatui::prelude::Buffer)
+    fn render(self, area: Rect, buf: &mut Buffer)
     where
         Self: Sized,
     {
