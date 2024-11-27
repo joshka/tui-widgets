@@ -26,6 +26,7 @@ lipsum = "0.9.1"
 ratatui = { version = "0.30.0-alpha.0", default-features = false }
 ratatui-core = { version = "0.1.0-alpha.0" }
 ratatui-macros = "0.7.0-alpha.0"
+ratatui-widgets = { version = "0.3.0-alpha.0" }
 rstest = "0.23.0"
 strum = { version = "0.26.3", features = ["derive"] }
 tokio = { version = "1.41.0" }
