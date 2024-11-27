@@ -86,13 +86,13 @@ impl<'content, W: SizedWidgetRef> Popup<'content, W> {
     }
 }
 
-impl SizedWidgetRef for Text<'_> {
+impl SizedWidgetRef for &Text<'_> {
     fn width(&self) -> usize {
-        self.width()
+        Text::width(self)
     }
 
     fn height(&self) -> usize {
-        self.height()
+        Text::height(self)
     }
 }
 
@@ -178,7 +178,7 @@ impl<W: SizedWidgetRef> StatefulWidgetRef for Popup<'_, W> {
             .border_style(self.border_style)
             .title(self.title.clone())
             .style(self.style);
-        block.render_ref(area, buf);
+        Widget::render(&block, area, buf);
         self.body.render_ref(block.inner(area), buf);
     }
 }

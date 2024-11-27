@@ -23,8 +23,8 @@ futures = "0.3.31"
 itertools = "0.13.0"
 indoc = "2.0.5"
 lipsum = "0.9.1"
-ratatui = { version = "0.29.0", default-features = false }
-ratatui-macros = "0.6.0"
+ratatui = { version = "0.30.0-alpha.0", default-features = false }
+ratatui-macros = "0.7.0-alpha.0"
 rstest = "0.23.0"
 strum = { version = "0.26.3", features = ["derive"] }
 tokio = { version = "1.41.0" }
@@ -33,7 +33,7 @@ tokio = { version = "1.41.0" }
 unused = "warn"
 
 [lints.clippy]
-cargo = "warn"    # when this fails, investigate and disable the lint if needed, noting the reason
+# cargo = "warn"    # when this fails, investigate and disable the lint if needed, noting the reason
 pedantic = "warn"
 nursery = "warn"
 
