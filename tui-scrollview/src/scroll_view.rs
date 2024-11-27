@@ -1,4 +1,10 @@
-use ratatui::{layout::Size, prelude::*, widgets::*};
+use ratatui_core::{
+    buffer::Buffer,
+    layout::Rect,
+    layout::Size,
+    widgets::{StatefulWidget, Widget},
+};
+use ratatui_widgets::scrollbar::{Scrollbar, ScrollbarOrientation, ScrollbarState};
 
 use crate::ScrollViewState;
 
@@ -340,6 +346,7 @@ impl ScrollView {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use ratatui_core::text::Span;
     use rstest::{fixture, rstest};
 
     /// Initialize a buffer and a scroll view with a buffer size of 10x10

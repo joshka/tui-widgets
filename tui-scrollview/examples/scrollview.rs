@@ -184,6 +184,6 @@ const CHART_DATA: [(&str, u64, Color); 3] = [
 
 fn bars() -> BarGroup<'static> {
     let data = CHART_DATA
-        .map(|(label, value, color)| Bar::default().label(label.into()).value(value).style(color));
+        .map(|(label, value, color)| Bar::default().label(label).value(value).style(color));
     BarGroup::default().bars(&data)
 }
