@@ -45,8 +45,13 @@ fn render_stateful_popup(frame: &mut Frame, popup_state: &mut PopupState) {
     frame.render_stateful_widget_ref(popup, frame.size(), popup_state);
 }
 
-fn move_up(popup_state: &mut PopupState) {
-    popup_state.move_by(0, -1);
+fn handle_key(event: KeyEvent, &mut state) {
+    match event.code {
+        KeyCode::Up => state.move_up(1),
+        KeyCode::Down => state.move_down(1),
+        KeyCode::Left => state.move_left(1),
+        KeyCode::Right => state.move_right(1),
+    }
 }
 ```
 

@@ -1,12 +1,13 @@
 use std::iter::once;
 
-use crate::Status;
 use itertools::chain;
 use ratatui::{
     crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers},
     prelude::*,
     widgets::StatefulWidget,
 };
+
+use crate::Status;
 
 /// A prompt that can be drawn to a terminal.
 pub trait Prompt: StatefulWidget {
@@ -184,9 +185,10 @@ pub trait State {
         if self.position() == self.len() {
             self.value_mut().push(c);
         } else {
-            // We cannot use String::insert() as it operates on bytes, which can lead to incorrect modifications with
-            // multibyte characters. Instead, we handle text manipulation at the character level using Rust's char type
-            // for Unicode correctness. Check docs of String::insert() and String::chars() for futher info.
+            // We cannot use String::insert() as it operates on bytes, which can lead to incorrect
+            // modifications with multibyte characters. Instead, we handle text
+            // manipulation at the character level using Rust's char type for Unicode
+            // correctness. Check docs of String::insert() and String::chars() for futher info.
             *self.value_mut() = chain![
                 self.value().chars().take(self.position()),
                 once(c),
