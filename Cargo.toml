@@ -1,13 +1,14 @@
 [workspace]
 resolver = "2"
 members = ["tui-*"]
+default-members = ["tui-*"]
 
 [workspace.package]
 authors = ["Joshka"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/joshka/tui-widgets"
 edition = "2021"
-rust-version = "1.74.0"
+rust-version = "1.80.0"
 categories = ["command-line-interface", "gui"]
 keywords = ["cli", "console", "ratatui", "terminal", "tui"]
 
@@ -23,6 +24,7 @@ futures = "0.3.31"
 itertools = "0.13.0"
 indoc = "2.0.5"
 lipsum = "0.9.1"
+pretty_assertions = "1.4.1"
 ratatui = { version = "0.30.0-alpha.0", default-features = false }
 ratatui-core = { version = "0.1.0-alpha.0" }
 ratatui-macros = "0.7.0-alpha.0"

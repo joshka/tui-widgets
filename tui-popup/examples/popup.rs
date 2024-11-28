@@ -8,18 +8,23 @@ use ratatui::{
 };
 use tui_popup::Popup;
 
-mod terminal;
-
 fn main() -> Result<()> {
-    let mut terminal = terminal::init()?;
+    color_eyre::install()?;
+    let mut terminal = ratatui::init();
+    let result = run(&mut terminal);
+    ratatui::restore();
+    result
+}
+
+fn run(terminal: &mut ratatui::DefaultTerminal) -> Result<()> {
     loop {
-        terminal.draw(render)?;
-        if read_any_key()? {
-            break;
+        terminal.draw(|frame| {
+            render(frame);
+        })?;
+        if matches!(event::read()?, Event::Key(_)) {
+            break Ok(());
         }
     }
-    terminal::restore()?;
-    Ok(())
 }
 
 fn render(frame: &mut Frame) {
@@ -30,11 +35,6 @@ fn render(frame: &mut Frame) {
         .style(Style::new().white().on_blue());
     frame.render_widget(background, area);
     frame.render_widget(&popup, area);
-}
-
-fn read_any_key() -> Result<bool> {
-    let event = event::read()?;
-    Ok(matches!(event, Event::Key(_)))
 }
 
 fn background(area: Rect) -> Paragraph<'static> {

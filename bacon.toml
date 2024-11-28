@@ -8,43 +8,23 @@
 default_job = "check"
 
 [jobs.check]
-command = ["cargo", "check", "--workspace", "--color", "always"]
+command = ["cargo", "check", "--workspace"]
 need_stdout = false
 
 [jobs.check-all]
-command = [
-    "cargo",
-    "check",
-    "--workspace",
-    "--all-targets",
-    "--color",
-    "always",
-]
+command = ["cargo", "check", "--workspace", "--all-targets", "--all-features"]
 need_stdout = false
 
 [jobs.clippy]
-command = [
-    "cargo",
-    "clippy",
-    "--workspace",
-    "--all-features",
-    "--all-targets",
-    "--color",
-    "always",
-]
+command = ["cargo", "clippy", "--workspace", "--all-features", "--all-targets"]
 need_stdout = false
 
 [jobs.test]
-command = [
-    "cargo",
-    "test",
-    "--workspace",
-    "--color",
-    "always",
-    "--",
-    "--color",
-    "always",      # see https://github.com/Canop/bacon/issues/124
-]
+command = ["cargo", "test", "--workspace"]
+need_stdout = true
+
+[jobs.test-unit]
+command = ["cargo", "test", "--workspace", "--lib"]
 need_stdout = true
 
 [jobs.doc]
@@ -55,8 +35,6 @@ command = [
     "-Zunstable-options",
     "-Zrustdoc-scrape-examples",
     "--all-features",
-    "--color",
-    "always",
     "--no-deps",
 ]
 need_stdout = false
@@ -71,8 +49,6 @@ command = [
     "-Zunstable-options",
     "-Zrustdoc-scrape-examples",
     "--all-features",
-    "--color",
-    "always",
     "--no-deps",
     "--open",
 ]
@@ -84,27 +60,12 @@ on_success = "job:doc" # so that we don't open the browser at each change
 # way. Don't forget the `--color always` part or the errors won't be
 # properly parsed.
 [jobs.run]
-command = [
-    "cargo",
-    "run",
-    "--color",
-    "always",
-    # put launch parameters for your program behind a `--` separator
-]
+command = ["cargo", "run"]
 need_stdout = true
 allow_warnings = true
 
 [jobs.coverage]
-command = [
-    "cargo",
-    "llvm-cov",
-    "--workspace",
-    "--lcov",
-    "--output-path",
-    "target/lcov.info",
-    "--color",
-    "always",
-]
+command = ["cargo", "llvm-cov", "--workspace", "--lcov", "--output-path", "target/lcov.info"]
 
 [jobs.format]
 command = ["cargo", "+nightly", "fmt", "--", "--check"]
@@ -128,3 +89,4 @@ shift-r = "job:rdme"
 f = "job:format"
 o = "job:coverage"
 v = "job:vhs"
+u = "job:test-unit"

@@ -21,8 +21,14 @@
 //! # Feature flags
 #![doc = document_features::document_features!()]
 
+mod known_size;
+mod known_size_wrapper;
 mod popup;
 mod popup_state;
 
-pub use popup::{Popup, SizedWidgetRef, SizedWrapper};
-pub use popup_state::{DragState, PopupState};
+pub use crate::{
+    known_size::KnownSize,
+    known_size_wrapper::KnownSizeWrapper,
+    popup::Popup,
+    popup_state::{DragState, PopupState},
+};
