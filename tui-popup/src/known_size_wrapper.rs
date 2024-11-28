@@ -45,7 +45,7 @@ impl<W> KnownSize for &KnownSizeWrapper<W> {
 
 impl<W> KnownSizeWrapper<W> {
     /// Create a new `KnownSizeWrapper` with the given widget and size.
-    pub fn new(inner: W, width: usize, height: usize) -> Self {
+    pub const fn new(inner: W, width: usize, height: usize) -> Self {
         Self {
             inner,
             width,
@@ -62,8 +62,8 @@ mod tests {
     struct TestWidget;
 
     impl WidgetRef for TestWidget {
-        fn render_ref(&self, _area: Rect, _buf: &mut Buffer) {
-            "Hello".render_ref(_area, _buf);
+        fn render_ref(&self, area: Rect, buf: &mut Buffer) {
+            "Hello".render_ref(area, buf);
         }
     }
 

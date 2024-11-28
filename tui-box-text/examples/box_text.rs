@@ -2,7 +2,7 @@ use std::iter::zip;
 
 use color_eyre::eyre::Ok;
 use ratatui::{
-    crossterm::event::{self, Event, KeyCode, KeyEventKind},
+    crossterm::event::{self, Event, KeyCode},
     layout::{Constraint, Layout, Rect},
     text::Line,
     DefaultTerminal, Frame,
@@ -19,13 +19,9 @@ fn main() -> color_eyre::Result<()> {
 
 fn run(mut terminal: DefaultTerminal) -> color_eyre::Result<()> {
     loop {
-        terminal.draw(|frame| draw(frame))?;
-        match event::read()? {
-            Event::Key(key) if key.kind == KeyEventKind::Press => match key.code {
-                KeyCode::Esc => break Ok(()),
-                _ => {}
-            },
-            _ => {}
+        terminal.draw(draw)?;
+        if matches!(event::read()?, Event::Key(key) if key.code == KeyCode::Esc) {
+            break Ok(());
         }
     }
 }

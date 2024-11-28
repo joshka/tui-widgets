@@ -24,19 +24,19 @@ pub enum DragState {
 
 impl PopupState {
     pub fn move_up(&mut self, amount: u16) {
-        self.move_by(0, -(amount as i32));
+        self.move_by(0, -i32::from(amount));
     }
 
     pub fn move_down(&mut self, amount: u16) {
-        self.move_by(0, amount as i32);
+        self.move_by(0, i32::from(amount));
     }
 
     pub fn move_left(&mut self, amount: u16) {
-        self.move_by(-(amount as i32), 0);
+        self.move_by(-i32::from(amount), 0);
     }
 
     pub fn move_right(&mut self, amount: u16) {
-        self.move_by(amount as i32, 0);
+        self.move_by(i32::from(amount), 0);
     }
 
     /// Move the popup by the given amount.

@@ -201,7 +201,7 @@ mod tests {
                 title: Line::default(),
                 style: Style::default(),
             }
-        )
+        );
     }
 
     #[test]
