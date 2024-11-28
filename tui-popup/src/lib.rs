@@ -23,6 +23,12 @@
 
 mod popup;
 mod popup_state;
+mod sized_widget;
+mod sized_wrapper;
 
-pub use popup::{Popup, SizedWidgetRef, SizedWrapper};
-pub use popup_state::{DragState, PopupState};
+pub use crate::{
+    popup::Popup,
+    popup_state::{DragState, PopupState},
+    sized_widget::SizedWidgetRef,
+    sized_wrapper::SizedWrapper,
+};
