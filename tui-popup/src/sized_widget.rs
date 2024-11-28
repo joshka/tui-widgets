@@ -32,3 +32,13 @@ impl SizedWidgetRef for &str {
         Text::from(*self).height()
     }
 }
+
+impl SizedWidgetRef for String {
+    fn width(&self) -> usize {
+        Text::from(self.as_str()).width()
+    }
+
+    fn height(&self) -> usize {
+        Text::from(self.as_str()).height()
+    }
+}
