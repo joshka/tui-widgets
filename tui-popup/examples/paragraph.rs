@@ -6,7 +6,7 @@ use ratatui::{
     widgets::{Paragraph, Wrap},
     Frame,
 };
-use tui_popup::{Popup, SizedWrapper};
+use tui_popup::{KnownSizeWrapper, Popup};
 
 mod terminal;
 
@@ -62,10 +62,10 @@ impl App {
     }
 }
 
-fn paragraph(scroll: u16) -> SizedWrapper<Paragraph<'static>> {
+fn paragraph(scroll: u16) -> KnownSizeWrapper<Paragraph<'static>> {
     let lines: Text = (0..10).map(|i| Span::raw(format!("Line {i}"))).collect();
     let paragraph = Paragraph::new(lines).scroll((scroll, 0));
-    SizedWrapper {
+    KnownSizeWrapper {
         inner: paragraph,
         width: 21,
         height: 5,
