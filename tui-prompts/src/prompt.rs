@@ -2,11 +2,8 @@ use std::iter::once;
 
 use crate::Status;
 use itertools::chain;
-use ratatui::{
-    crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers},
-    prelude::*,
-    widgets::StatefulWidget,
-};
+use ratatui_core::{layout::Rect, widgets::StatefulWidget};
+use ratatui_crossterm::crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 
 /// A prompt that can be drawn to a terminal.
 pub trait Prompt: StatefulWidget {
@@ -200,6 +197,8 @@ pub trait State {
 
 #[cfg(test)]
 mod tests {
+    use ratatui_core::style::Stylize;
+
     use super::*;
 
     #[test]
