@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use ratatui::{text::Text, widgets::WidgetRef};
 
 /// A trait for widgets that have a fixed size.
@@ -8,7 +6,7 @@ use ratatui::{text::Text, widgets::WidgetRef};
 /// Implementing this trait for a widget allows it to be used as the body of a popup. You can also
 /// wrap existing widgets in a newtype and implement this trait for the newtype to use them as the
 /// body of a popup.
-pub trait SizedWidgetRef: WidgetRef + Debug {
+pub trait SizedWidgetRef: WidgetRef {
     fn width(&self) -> usize;
     fn height(&self) -> usize;
 }
