@@ -1,13 +1,16 @@
-use std::fmt::Debug;
+use std::{cmp::min, fmt::Debug};
 
-use crate::{sized_widget::SizedWidgetRef, PopupState};
 use derive_setters::Setters;
 use ratatui::{
-    prelude::{Buffer, Line, Rect, Style},
+    buffer::Buffer,
+    layout::Rect,
+    style::Style,
     symbols::border::Set,
-    widgets::{Block, Borders, Clear, StatefulWidgetRef, Widget, WidgetRef},
+    text::Line,
+    widgets::{Block, Borders, Clear, StatefulWidget, Widget, WidgetRef},
 };
-use std::cmp::min;
+
+use crate::{PopupState, SizedWidgetRef};
 
 /// Configuration for a popup.
 ///
@@ -48,6 +51,17 @@ pub struct Popup<'content, W: SizedWidgetRef> {
     pub border_style: Style,
 }
 
+impl<W: SizedWidgetRef + PartialEq> PartialEq for Popup<'_, W> {
+    fn eq(&self, other: &Self) -> bool {
+        self.body == other.body
+            && self.title == other.title
+            && self.style == other.style
+            && self.borders == other.borders
+            && self.border_set == other.border_set
+            && self.border_style == other.border_style
+    }
+}
+
 impl<'content, W: SizedWidgetRef> Popup<'content, W> {
     /// Create a new popup with the given title and body with all the borders.
     ///
@@ -78,14 +92,22 @@ impl<'content, W: SizedWidgetRef> Popup<'content, W> {
 impl<W: SizedWidgetRef> WidgetRef for Popup<'_, W> {
     fn render_ref(&self, area: Rect, buf: &mut Buffer) {
         let mut state = PopupState::default();
-        StatefulWidgetRef::render_ref(self, area, buf, &mut state);
+        StatefulWidget::render(self, area, buf, &mut state);
     }
 }
 
-impl<W: SizedWidgetRef> StatefulWidgetRef for Popup<'_, W> {
+impl<W: SizedWidgetRef> StatefulWidget for Popup<'_, W> {
     type State = PopupState;
 
-    fn render_ref(&self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
+    fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
+        StatefulWidget::render(&self, area, buf, state);
+    }
+}
+
+impl<W: SizedWidgetRef> StatefulWidget for &Popup<'_, W> {
+    type State = PopupState;
+
+    fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
         let area = if let Some(next) = state.area.take() {
             // ensure that the popup remains on screen
             let width = min(next.width, area.width);
@@ -136,5 +158,99 @@ fn centered_rect(width: u16, height: u16, area: Rect) -> Rect {
         y: area.height.saturating_sub(height) / 2,
         width: min(width, area.width),
         height: min(height, area.height),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use pretty_assertions::assert_eq;
+    use rstest::{fixture, rstest};
+
+    #[test]
+    fn new() {
+        let popup = Popup::new("Test Body");
+        assert_eq!(
+            popup,
+            Popup {
+                body: "Test Body", // &str is a widget
+                borders: Borders::ALL,
+                border_set: Set::default(),
+                border_style: Style::default(),
+                title: Line::default(),
+                style: Style::default(),
+            }
+        )
+    }
+
+    #[fixture]
+    fn buffer() -> Buffer {
+        Buffer::empty(Rect::new(0, 0, 20, 5))
+    }
+
+    #[fixture]
+    fn state() -> PopupState {
+        PopupState::default()
+    }
+
+    /// Check that a popup ref can render a widget defined by a ref value (e.g. `&str`).
+    #[rstest]
+    fn stateful_ref_render_str(mut buffer: Buffer, mut state: PopupState) {
+        let popup = Popup::new("Hello World").title("Title");
+        StatefulWidget::render(&popup, buffer.area, &mut buffer, &mut state);
+        let expected = Buffer::with_lines([
+            "                    ",
+            "   ┌Title──────┐    ",
+            "   │Hello World│    ",
+            "   └───────────┘    ",
+            "                    ",
+        ]);
+        assert_eq!(buffer, expected);
+    }
+
+    /// Check that a popup ref can render a widget defined by a owned value (e.g. `String`).
+    #[rstest]
+    fn stateful_ref_render_string(mut buffer: Buffer, mut state: PopupState) {
+        let popup = Popup::new("Hello World".to_string()).title("Title");
+        StatefulWidget::render(&popup, buffer.area, &mut buffer, &mut state);
+        let expected = Buffer::with_lines([
+            "                    ",
+            "   ┌Title──────┐    ",
+            "   │Hello World│    ",
+            "   └───────────┘    ",
+            "                    ",
+        ]);
+        assert_eq!(buffer, expected);
+    }
+
+    /// Check that a popup can render a widget defined by a ref value (e.g. `&str`).
+    #[rstest]
+    fn stateful_render_str(mut buffer: Buffer, mut state: PopupState) {
+        let popup = Popup::new("Hello World").title("Title");
+        StatefulWidget::render(popup, buffer.area, &mut buffer, &mut state);
+        let expected = Buffer::with_lines([
+            "                    ",
+            "   ┌Title──────┐    ",
+            "   │Hello World│    ",
+            "   └───────────┘    ",
+            "                    ",
+        ]);
+        assert_eq!(buffer, expected);
+    }
+
+    /// Check that a popup can render a widget defined by a owned value (e.g. `String`).
+    #[rstest]
+    fn stateful_render_string(mut buffer: Buffer, mut state: PopupState) {
+        let popup = Popup::new("Hello World".to_string()).title("Title");
+        StatefulWidget::render(popup, buffer.area, &mut buffer, &mut state);
+        let expected = Buffer::with_lines([
+            "                    ",
+            "   ┌Title──────┐    ",
+            "   │Hello World│    ",
+            "   └───────────┘    ",
+            "                    ",
+        ]);
+        assert_eq!(buffer, expected);
     }
 }
