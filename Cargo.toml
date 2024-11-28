@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = ["tui-*"]
+default-members = ["tui-*"]
 
 [workspace.package]
 authors = ["Joshka"]
