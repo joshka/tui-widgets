@@ -129,35 +129,9 @@ impl<W: KnownSize + WidgetRef> StatefulWidget for &Popup<'_, W> {
     type State = PopupState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
-        let popup_area = if let Some(next) = state.area.take() {
-            // ensure that the popup remains on screen
-            let width = min(next.width, area.width);
-            let height = min(next.height, area.height);
-            let x = next.x.clamp(buf.area.x, area.right() - width);
-            let y = next.y.clamp(buf.area.y, area.bottom() - height);
+        let area = area.clamp(buf.area);
 
-            Rect::new(x, y, width, height)
-        } else {
-            let border_height = usize::from(self.borders.intersects(Borders::TOP))
-                + usize::from(self.borders.intersects(Borders::BOTTOM));
-            let border_width = usize::from(self.borders.intersects(Borders::LEFT))
-                + usize::from(self.borders.intersects(Borders::RIGHT));
-
-            let height = self
-                .body
-                .height()
-                .saturating_add(border_height)
-                .try_into()
-                .unwrap_or(area.height);
-            let width = self
-                .body
-                .width()
-                .saturating_add(border_width)
-                .try_into()
-                .unwrap_or(area.width);
-            centered_rect(width, height, area)
-        };
-
+        let popup_area = self.popup_area(state, area);
         state.area.replace(popup_area);
 
         Clear.render(popup_area, buf);
@@ -167,8 +141,34 @@ impl<W: KnownSize + WidgetRef> StatefulWidget for &Popup<'_, W> {
             .border_style(self.border_style)
             .title(self.title.clone())
             .style(self.style);
-        Widget::render(&block, popup_area, buf);
-        self.body.render_ref(block.inner(popup_area), buf);
+        let inner_area = block.inner(popup_area);
+        block.render(popup_area, buf);
+
+        self.body.render_ref(inner_area, buf);
+    }
+}
+
+impl<'content, W: KnownSize> Popup<'content, W> {
+    fn popup_area(&self, state: &mut PopupState, area: Rect) -> Rect {
+        if let Some(current) = state.area.take() {
+            return current.clamp(area);
+        }
+
+        let has_top = self.borders.intersects(Borders::TOP);
+        let has_bottom = self.borders.intersects(Borders::BOTTOM);
+        let has_left = self.borders.intersects(Borders::LEFT);
+        let has_right = self.borders.intersects(Borders::RIGHT);
+
+        let border_height = usize::from(has_top) + usize::from(has_bottom);
+        let border_width = usize::from(has_left) + usize::from(has_right);
+
+        let height = self.body.height().saturating_add(border_height);
+        let width = self.body.width().saturating_add(border_width);
+
+        let height = u16::try_from(height).unwrap_or(area.height);
+        let width = u16::try_from(width).unwrap_or(area.width);
+
+        centered_rect(width, height, area)
     }
 }
 
