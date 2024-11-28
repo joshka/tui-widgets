@@ -23,6 +23,22 @@ pub enum DragState {
 }
 
 impl PopupState {
+    pub fn move_up(&mut self, amount: u16) {
+        self.move_by(0, -(amount as i32));
+    }
+
+    pub fn move_down(&mut self, amount: u16) {
+        self.move_by(0, amount as i32);
+    }
+
+    pub fn move_left(&mut self, amount: u16) {
+        self.move_by(-(amount as i32), 0);
+    }
+
+    pub fn move_right(&mut self, amount: u16) {
+        self.move_by(amount as i32, 0);
+    }
+
     /// Move the popup by the given amount.
     pub fn move_by(&mut self, x: i32, y: i32) {
         if let Some(area) = self.area {

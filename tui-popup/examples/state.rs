@@ -83,11 +83,10 @@ fn handle_key_event(event: KeyEvent, popup: &mut PopupState, exit: &mut bool) {
     match event.code {
         KeyCode::Char('q') | KeyCode::Esc => *exit = true,
         KeyCode::Char('r') => *popup = PopupState::default(),
-        // TODO: move handling to PopupState (e.g. move_up, move_down, etc. or move(Move:Up))
-        KeyCode::Char('j') | KeyCode::Down => popup.move_by(0, 1),
-        KeyCode::Char('k') | KeyCode::Up => popup.move_by(0, -1),
-        KeyCode::Char('h') | KeyCode::Left => popup.move_by(-1, 0),
-        KeyCode::Char('l') | KeyCode::Right => popup.move_by(1, 0),
+        KeyCode::Char('j') | KeyCode::Down => popup.move_down(1),
+        KeyCode::Char('k') | KeyCode::Up => popup.move_up(1),
+        KeyCode::Char('h') | KeyCode::Left => popup.move_left(1),
+        KeyCode::Char('l') | KeyCode::Right => popup.move_right(1),
         _ => {}
     }
 }

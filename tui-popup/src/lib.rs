@@ -5,14 +5,14 @@
 //! # Example
 //!
 //! ```rust
-//! use ratatui::prelude::*;
+//! use ratatui::{Frame, style::{Style, Stylize}};
 //! use tui_popup::Popup;
 //!
 //! fn render_popup(frame: &mut Frame) {
 //!     let popup = Popup::new("Press any key to exit")
 //!         .title("tui-popup demo")
-//!        .style(Style::new().white().on_blue());
-//!     frame.render_widget(&popup, frame.size());
+//!         .style(Style::new().white().on_blue());
+//!     frame.render_widget(&popup, frame.area());
 //! }
 //! ```
 //!
