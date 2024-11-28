@@ -35,7 +35,7 @@ use crate::{KnownSize, PopupState};
 #[derive(Setters)]
 #[setters(into)]
 #[non_exhaustive]
-pub struct Popup<'content, W: KnownSize> {
+pub struct Popup<'content, W> {
     /// The body of the popup.
     #[setters(skip)]
     pub body: W,
@@ -51,7 +51,7 @@ pub struct Popup<'content, W: KnownSize> {
     pub border_style: Style,
 }
 
-impl<W: KnownSize> fmt::Debug for Popup<'_, W> {
+impl<W> fmt::Debug for Popup<'_, W> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         // body does not implement Debug, so we can't use #[derive(Debug)]
         f.debug_struct("Popup")
@@ -65,7 +65,7 @@ impl<W: KnownSize> fmt::Debug for Popup<'_, W> {
     }
 }
 
-impl<W: KnownSize + PartialEq> PartialEq for Popup<'_, W> {
+impl<W: PartialEq> PartialEq for Popup<'_, W> {
     fn eq(&self, other: &Self) -> bool {
         self.body == other.body
             && self.title == other.title
@@ -76,7 +76,7 @@ impl<W: KnownSize + PartialEq> PartialEq for Popup<'_, W> {
     }
 }
 
-impl<'content, W: KnownSize> Popup<'content, W> {
+impl<'content, W> Popup<'content, W> {
     /// Create a new popup with the given title and body with all the borders.
     ///
     /// # Parameters
