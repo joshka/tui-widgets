@@ -29,6 +29,6 @@ mod sized_wrapper;
 pub use crate::{
     popup::Popup,
     popup_state::{DragState, PopupState},
-    sized_widget::SizedWidgetRef,
+    sized_widget::KnownSize,
     sized_wrapper::SizedWrapper,
 };

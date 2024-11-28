@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use derive_setters::Setters;
 use ratatui::{buffer::Buffer, layout::Rect, widgets::WidgetRef};
 
-use crate::SizedWidgetRef;
+use crate::KnownSize;
 
 /// The `SizedWrapper` struct wraps a widget and provides a fixed size for it.
 ///
@@ -23,7 +23,7 @@ impl<W: WidgetRef> WidgetRef for SizedWrapper<W> {
     }
 }
 
-impl<W: WidgetRef> SizedWidgetRef for SizedWrapper<W> {
+impl<W: WidgetRef> KnownSize for SizedWrapper<W> {
     fn width(&self) -> usize {
         self.width
     }

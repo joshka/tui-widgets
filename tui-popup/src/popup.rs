@@ -7,10 +7,10 @@ use ratatui::{
     style::Style,
     symbols::border::Set,
     text::Line,
-    widgets::{Block, Borders, Clear, StatefulWidget, Widget},
+    widgets::{Block, Borders, Clear, StatefulWidget, Widget, WidgetRef},
 };
 
-use crate::{PopupState, SizedWidgetRef};
+use crate::{KnownSize, PopupState};
 
 /// Configuration for a popup.
 ///
@@ -35,7 +35,7 @@ use crate::{PopupState, SizedWidgetRef};
 #[derive(Setters)]
 #[setters(into)]
 #[non_exhaustive]
-pub struct Popup<'content, W: SizedWidgetRef> {
+pub struct Popup<'content, W: KnownSize> {
     /// The body of the popup.
     #[setters(skip)]
     pub body: W,
@@ -51,7 +51,7 @@ pub struct Popup<'content, W: SizedWidgetRef> {
     pub border_style: Style,
 }
 
-impl<W: SizedWidgetRef> fmt::Debug for Popup<'_, W> {
+impl<W: KnownSize> fmt::Debug for Popup<'_, W> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         // body does not implement Debug, so we can't use #[derive(Debug)]
         f.debug_struct("Popup")
@@ -65,7 +65,7 @@ impl<W: SizedWidgetRef> fmt::Debug for Popup<'_, W> {
     }
 }
 
-impl<W: SizedWidgetRef + PartialEq> PartialEq for Popup<'_, W> {
+impl<W: KnownSize + PartialEq> PartialEq for Popup<'_, W> {
     fn eq(&self, other: &Self) -> bool {
         self.body == other.body
             && self.title == other.title
@@ -76,7 +76,7 @@ impl<W: SizedWidgetRef + PartialEq> PartialEq for Popup<'_, W> {
     }
 }
 
-impl<'content, W: SizedWidgetRef> Popup<'content, W> {
+impl<'content, W: KnownSize> Popup<'content, W> {
     /// Create a new popup with the given title and body with all the borders.
     ///
     /// # Parameters
@@ -103,21 +103,21 @@ impl<'content, W: SizedWidgetRef> Popup<'content, W> {
     }
 }
 
-impl<W: SizedWidgetRef> Widget for Popup<'_, W> {
+impl<W: KnownSize + WidgetRef> Widget for Popup<'_, W> {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let mut state = PopupState::default();
         StatefulWidget::render(&self, area, buf, &mut state);
     }
 }
 
-impl<W: SizedWidgetRef> Widget for &Popup<'_, W> {
+impl<W: KnownSize + WidgetRef> Widget for &Popup<'_, W> {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let mut state = PopupState::default();
         StatefulWidget::render(self, area, buf, &mut state);
     }
 }
 
-impl<W: SizedWidgetRef> StatefulWidget for Popup<'_, W> {
+impl<W: KnownSize + WidgetRef> StatefulWidget for Popup<'_, W> {
     type State = PopupState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
@@ -125,7 +125,7 @@ impl<W: SizedWidgetRef> StatefulWidget for Popup<'_, W> {
     }
 }
 
-impl<W: SizedWidgetRef> StatefulWidget for &Popup<'_, W> {
+impl<W: KnownSize + WidgetRef> StatefulWidget for &Popup<'_, W> {
     type State = PopupState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
