@@ -1,8 +1,7 @@
 use derive_getters::Getters;
-use ratatui::prelude::Rect;
-
 #[cfg(feature = "crossterm")]
 use ratatui::crossterm::event::{MouseButton, MouseEvent, MouseEventKind};
+use ratatui::prelude::Rect;
 
 #[derive(Clone, Debug, Default, Getters)]
 pub struct PopupState {

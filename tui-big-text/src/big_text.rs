@@ -206,8 +206,9 @@ fn render_glyph(glyph: [u8; 8], area: Rect, buf: &mut Buffer, pixel_size: &Pixel
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use ratatui_core::style::Stylize;
+
+    use super::*;
 
     #[test]
     fn build() {

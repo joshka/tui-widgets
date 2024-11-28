@@ -1,12 +1,12 @@
 use std::{borrow::Cow, vec};
 
-use crate::prelude::*;
-
 use itertools::Itertools;
 use ratatui::{
     prelude::*,
     widgets::{Block, Paragraph, StatefulWidget, Widget},
 };
+
+use crate::prelude::*;
 
 // TODO style the widget
 // TODO style each element of the widget.
@@ -196,12 +196,12 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::Status;
+    use ratatui::{backend::TestBackend, widgets::Borders};
     use ratatui_macros::line;
     use rstest::{fixture, rstest};
 
     use super::*;
-    use ratatui::{backend::TestBackend, widgets::Borders};
+    use crate::Status;
 
     #[test]
     fn new() {
