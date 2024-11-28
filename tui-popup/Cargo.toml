@@ -28,7 +28,9 @@ crossterm = ["ratatui/crossterm"]
 document-features.workspace = true
 derive-getters.workspace = true
 derive_setters.workspace = true
-ratatui = { workspace = true, features = ["unstable-widget-ref"] }
+ratatui = { workspace = true, features = ["unstable-widget-ref"], optional = true }
+ratatui-core.workspace = true
+ratatui-widgets.workspace = true
 
 [dev-dependencies]
 pretty_assertions.workspace = true
