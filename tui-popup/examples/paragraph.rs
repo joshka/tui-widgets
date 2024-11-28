@@ -8,37 +8,55 @@ use ratatui::{
 };
 use tui_popup::{KnownSizeWrapper, Popup};
 
-mod terminal;
-
 fn main() -> Result<()> {
-    let mut terminal = terminal::init()?;
-    let mut app = App::default();
-    while !app.should_exit {
-        terminal.draw(|frame| app.render(frame))?;
-        app.handle_events()?;
-    }
-    terminal::restore()?;
-    Ok(())
+    color_eyre::install()?;
+    let terminal = ratatui::init();
+    let result = App::default().run(terminal);
+    ratatui::restore();
+    result
 }
 
 #[derive(Default)]
 struct App {
     should_exit: bool,
+    lorem_ipsum: String,
     scroll: u16,
 }
 
 impl App {
+    fn run(&mut self, mut terminal: ratatui::DefaultTerminal) -> Result<()> {
+        self.lorem_ipsum = lipsum(2000);
+        while !self.should_exit {
+            terminal.draw(|frame| self.render(frame))?;
+            self.handle_events()?;
+        }
+        Ok(())
+    }
+
     fn render(&self, frame: &mut Frame) {
         let area = frame.area();
-        let background = background(area);
+        self.render_background(frame, area);
+        self.render_popup(frame);
+    }
 
-        let paragraph = paragraph(self.scroll);
-        let popup = Popup::new(paragraph)
+    fn render_background(&self, frame: &mut Frame, area: Rect) {
+        let text = Text::raw(&self.lorem_ipsum);
+        let paragraph = Paragraph::new(text).wrap(Wrap { trim: false }).dark_gray();
+        frame.render_widget(paragraph, area);
+    }
+
+    fn render_popup(&self, frame: &mut Frame) {
+        let lines: Text = (0..10).map(|i| Span::raw(format!("Line {i}"))).collect();
+        let paragraph = Paragraph::new(lines).scroll((self.scroll, 0));
+        let wrapper = KnownSizeWrapper {
+            inner: &paragraph,
+            width: 21,
+            height: 5,
+        };
+        let popup = Popup::new(wrapper)
             .title("scroll: ↑/↓ quit: Esc")
             .style(Style::new().white().on_blue());
-
-        frame.render_widget(background, area);
-        frame.render_widget(&popup, area);
+        frame.render_widget(popup, frame.area());
     }
 
     fn handle_events(&mut self) -> Result<()> {
@@ -60,21 +78,4 @@ impl App {
     fn scroll_down(&mut self) {
         self.scroll = self.scroll.saturating_add(1);
     }
-}
-
-fn paragraph(scroll: u16) -> KnownSizeWrapper<Paragraph<'static>> {
-    let lines: Text = (0..10).map(|i| Span::raw(format!("Line {i}"))).collect();
-    let paragraph = Paragraph::new(lines).scroll((scroll, 0));
-    KnownSizeWrapper {
-        inner: paragraph,
-        width: 21,
-        height: 5,
-    }
-}
-
-fn background(area: Rect) -> Paragraph<'static> {
-    let lorem_ipsum = lipsum(area.area() as usize / 5);
-    Paragraph::new(lorem_ipsum)
-        .wrap(Wrap { trim: false })
-        .dark_gray()
 }

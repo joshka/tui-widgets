@@ -14,6 +14,16 @@ pub trait KnownSize {
     fn height(&self) -> usize;
 }
 
+impl KnownSize for Text<'_> {
+    fn width(&self) -> usize {
+        self.width()
+    }
+
+    fn height(&self) -> usize {
+        self.height()
+    }
+}
+
 impl KnownSize for &Text<'_> {
     fn width(&self) -> usize {
         Text::width(self)

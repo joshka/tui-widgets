@@ -129,7 +129,7 @@ impl<W: KnownSize + WidgetRef> StatefulWidget for &Popup<'_, W> {
     type State = PopupState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
-        let area = if let Some(next) = state.area.take() {
+        let popup_area = if let Some(next) = state.area.take() {
             // ensure that the popup remains on screen
             let width = min(next.width, area.width);
             let height = min(next.height, area.height);
@@ -158,17 +158,17 @@ impl<W: KnownSize + WidgetRef> StatefulWidget for &Popup<'_, W> {
             centered_rect(width, height, area)
         };
 
-        state.area.replace(area);
+        state.area.replace(popup_area);
 
-        Clear.render(area, buf);
+        Clear.render(popup_area, buf);
         let block = Block::default()
             .borders(self.borders)
             .border_set(self.border_set)
             .border_style(self.border_style)
             .title(self.title.clone())
             .style(self.style);
-        Widget::render(&block, area, buf);
-        self.body.render_ref(block.inner(area), buf);
+        Widget::render(&block, popup_area, buf);
+        self.body.render_ref(block.inner(popup_area), buf);
     }
 }
 

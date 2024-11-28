@@ -23,7 +23,17 @@ impl<W: WidgetRef> WidgetRef for KnownSizeWrapper<W> {
     }
 }
 
-impl<W: WidgetRef> KnownSize for KnownSizeWrapper<W> {
+impl<W> KnownSize for KnownSizeWrapper<W> {
+    fn width(&self) -> usize {
+        self.width
+    }
+
+    fn height(&self) -> usize {
+        self.height
+    }
+}
+
+impl<W> KnownSize for &KnownSizeWrapper<W> {
     fn width(&self) -> usize {
         self.width
     }

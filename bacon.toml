@@ -12,7 +12,7 @@ command = ["cargo", "check", "--workspace"]
 need_stdout = false
 
 [jobs.check-all]
-command = ["cargo", "check", "--workspace", "--all-targets"]
+command = ["cargo", "check", "--workspace", "--all-targets", "--all-features"]
 need_stdout = false
 
 [jobs.clippy]
@@ -25,6 +25,7 @@ need_stdout = true
 
 [jobs.test-unit]
 command = ["cargo", "test", "--workspace", "--lib"]
+need_stdout = true
 
 [jobs.doc]
 command = [
