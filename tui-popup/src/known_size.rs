@@ -1,4 +1,4 @@
-use ratatui::text::Text;
+use ratatui_core::text::Text;
 
 /// A trait for widgets that have a fixed size.
 ///

@@ -1,14 +1,15 @@
 use std::cmp::min;
 
 use derive_setters::Setters;
-use ratatui::{
+use ratatui_core::{
     buffer::Buffer,
     layout::Rect,
     style::Style,
     symbols::border::Set,
     text::Line,
-    widgets::{Block, Borders, Clear, StatefulWidget, Widget, WidgetRef},
+    widgets::{StatefulWidget, Widget},
 };
+use ratatui_widgets::{block::Block, borders::Borders, clear::Clear};
 
 use crate::{KnownSize, PopupState};
 
@@ -78,21 +79,21 @@ impl<'content, W> Popup<'content, W> {
     }
 }
 
-impl<W: KnownSize + WidgetRef> Widget for Popup<'_, W> {
+impl<W: KnownSize + Widget + Clone> Widget for Popup<'_, W> {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let mut state = PopupState::default();
         StatefulWidget::render(&self, area, buf, &mut state);
     }
 }
 
-impl<W: KnownSize + WidgetRef> Widget for &Popup<'_, W> {
+impl<W: KnownSize + Widget + Clone> Widget for &Popup<'_, W> {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let mut state = PopupState::default();
         StatefulWidget::render(self, area, buf, &mut state);
     }
 }
 
-impl<W: KnownSize + WidgetRef> StatefulWidget for Popup<'_, W> {
+impl<W: KnownSize + Widget + Clone> StatefulWidget for Popup<'_, W> {
     type State = PopupState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
@@ -100,7 +101,7 @@ impl<W: KnownSize + WidgetRef> StatefulWidget for Popup<'_, W> {
     }
 }
 
-impl<W: KnownSize + WidgetRef> StatefulWidget for &Popup<'_, W> {
+impl<W: KnownSize + Widget + Clone> StatefulWidget for &Popup<'_, W> {
     type State = PopupState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
@@ -119,7 +120,7 @@ impl<W: KnownSize + WidgetRef> StatefulWidget for &Popup<'_, W> {
         let inner_area = block.inner(popup_area);
         block.render(popup_area, buf);
 
-        self.body.render_ref(inner_area, buf);
+        self.body.clone().render(inner_area, buf);
     }
 }
 
