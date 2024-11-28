@@ -1,4 +1,4 @@
-use std::{cmp::min, fmt};
+use std::cmp::min;
 
 use derive_setters::Setters;
 use ratatui::{
@@ -49,31 +49,6 @@ pub struct Popup<'content, W> {
     pub border_set: Set,
     /// Border style
     pub border_style: Style,
-}
-
-impl<W> fmt::Debug for Popup<'_, W> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        // body does not implement Debug, so we can't use #[derive(Debug)]
-        f.debug_struct("Popup")
-            .field("body", &"...")
-            .field("title", &self.title)
-            .field("style", &self.style)
-            .field("borders", &self.borders)
-            .field("border_set", &self.border_set)
-            .field("border_style", &self.border_style)
-            .finish()
-    }
-}
-
-impl<W: PartialEq> PartialEq for Popup<'_, W> {
-    fn eq(&self, other: &Self) -> bool {
-        self.body == other.body
-            && self.title == other.title
-            && self.style == other.style
-            && self.borders == other.borders
-            && self.border_set == other.border_set
-            && self.border_style == other.border_style
-    }
 }
 
 impl<'content, W> Popup<'content, W> {
@@ -191,17 +166,12 @@ mod tests {
     #[test]
     fn new() {
         let popup = Popup::new("Test Body");
-        assert_eq!(
-            popup,
-            Popup {
-                body: "Test Body", // &str is a widget
-                borders: Borders::ALL,
-                border_set: Set::default(),
-                border_style: Style::default(),
-                title: Line::default(),
-                style: Style::default(),
-            }
-        );
+        assert_eq!(popup.body, "Test Body");
+        assert_eq!(popup.title, Line::default());
+        assert_eq!(popup.style, Style::default());
+        assert_eq!(popup.borders, Borders::ALL);
+        assert_eq!(popup.border_set, Set::default());
+        assert_eq!(popup.border_style, Style::default());
     }
 
     #[test]
