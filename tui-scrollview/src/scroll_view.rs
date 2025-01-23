@@ -598,14 +598,12 @@ mod tests {
         )
     }
     #[rstest]
-    #[should_panic(expected = "Scrollbar area is empty")]
     fn zero_width(scroll_view: ScrollView) {
         let mut buf = Buffer::empty(Rect::new(0, 0, 0, 10));
         let mut state = ScrollViewState::new();
         scroll_view.render(buf.area, &mut buf, &mut state);
     }
     #[rstest]
-    #[should_panic(expected = "Scrollbar area is empty")]
     fn zero_height(scroll_view: ScrollView) {
         let mut buf = Buffer::empty(Rect::new(0, 0, 10, 0));
         let mut state = ScrollViewState::new();
