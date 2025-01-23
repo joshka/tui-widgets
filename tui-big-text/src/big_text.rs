@@ -26,7 +26,7 @@ use crate::PixelSize;
 /// use ratatui::prelude::*;
 /// use tui_big_text::{BigText, PixelSize};
 ///
-/// BigText::builder()
+/// let big_text = BigText::builder()
 ///     .pixel_size(PixelSize::Full)
 ///     .style(Style::new().white())
 ///     .lines(vec![
@@ -35,6 +35,10 @@ use crate::PixelSize;
 ///         "=====".into(),
 ///     ])
 ///    .build();
+///
+/// # let area = Rect::new(0, 0, 38, 18);
+/// # let mut buf = Buffer::empty(area);
+/// big_text.render(area, &mut buf);
 /// ```
 ///
 /// Renders:
@@ -129,6 +133,12 @@ impl<'a> BigTextBuilder<'a> {
 }
 
 impl Widget for BigText<'_> {
+    fn render(self, area: Rect, buf: &mut Buffer) {
+        (&self).render(area, buf);
+    }
+}
+
+impl Widget for &BigText<'_> {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let layout = layout(area, &self.pixel_size, self.alignment, &self.lines);
         for (line, line_layout) in self.lines.iter().zip(layout) {
@@ -228,6 +238,27 @@ mod tests {
                 pixel_size,
                 alignment,
             }
+        );
+    }
+
+    #[test]
+    fn render_ref() {
+        let big_text = BigText::builder().lines(vec![Line::from("Hello")]).build();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 38, 8));
+        (&big_text).render(buf.area, &mut buf);
+
+        assert_eq!(
+            buf,
+            Buffer::with_lines(vec![
+                "██  ██           ███     ███          ",
+                "██  ██            ██      ██          ",
+                "██  ██   ████     ██      ██     ████ ",
+                "██████  ██  ██    ██      ██    ██  ██",
+                "██  ██  ██████    ██      ██    ██  ██",
+                "██  ██  ██        ██      ██    ██  ██",
+                "██  ██   ████    ████    ████    ████ ",
+                "                                      ",
+            ])
         );
     }
 
