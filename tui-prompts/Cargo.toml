@@ -17,9 +17,9 @@ rust-version.workspace = true
 itertools.workspace = true
 ratatui = { workspace = true, features = ["crossterm"] }
 ratatui-macros.workspace = true
-rstest.workspace = true
 
 [dev-dependencies]
 clap.workspace = true
 color-eyre.workspace = true
 indoc.workspace = true
+rstest.workspace = true
