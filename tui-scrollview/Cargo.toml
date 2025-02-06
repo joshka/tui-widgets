@@ -15,10 +15,10 @@ rust-version.workspace = true
 indoc.workspace = true
 ratatui-core.workspace = true
 ratatui-widgets.workspace = true
-rstest.workspace = true
 
 [dev-dependencies]
 color-eyre.workspace = true
+rstest.workspace = true
 ratatui = { workspace = true, features = ["crossterm"] }
 lipsum = "0.9.1"
 
