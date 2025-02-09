@@ -52,7 +52,7 @@ fn render_popup(frame: &mut Frame, area: Rect, state: &mut PopupState) {
         "h: move left",
         "l: move right",
     ]);
-    let popup = Popup::new(&body)
+    let popup = Popup::new(body)
         .title("Popup")
         .style(Style::new().white().on_blue());
     frame.render_stateful_widget(popup, area, state);

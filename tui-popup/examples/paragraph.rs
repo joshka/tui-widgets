@@ -49,7 +49,7 @@ impl App {
         let lines: Text = (0..10).map(|i| Span::raw(format!("Line {i}"))).collect();
         let paragraph = Paragraph::new(lines).scroll((self.scroll, 0));
         let wrapper = KnownSizeWrapper {
-            inner: &paragraph,
+            inner: paragraph,
             width: 21,
             height: 5,
         };

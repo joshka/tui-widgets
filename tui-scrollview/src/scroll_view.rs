@@ -1,9 +1,8 @@
-use ratatui_core::{
+use ratatui::{
     buffer::Buffer,
     layout::{Rect, Size},
-    widgets::{StatefulWidget, Widget},
+    widgets::{Scrollbar, ScrollbarOrientation, ScrollbarState, StatefulWidget, Widget},
 };
-use ratatui_widgets::scrollbar::{Scrollbar, ScrollbarOrientation, ScrollbarState};
 
 use crate::ScrollViewState;
 
@@ -344,7 +343,7 @@ impl ScrollView {
 
 #[cfg(test)]
 mod tests {
-    use ratatui_core::text::Span;
+    use ratatui::text::Span;
     use rstest::{fixture, rstest};
 
     use super::*;
