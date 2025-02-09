@@ -13,8 +13,7 @@ rust-version.workspace = true
 
 [dependencies]
 indoc.workspace = true
-ratatui-core.workspace = true
-ratatui-widgets.workspace = true
+ratatui = { workspace = true }
 
 [dev-dependencies]
 color-eyre.workspace = true

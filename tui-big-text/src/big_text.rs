@@ -2,7 +2,7 @@ use std::cmp::min;
 
 use derive_builder::Builder;
 use font8x8::UnicodeFonts;
-use ratatui_core::{
+use ratatui::{
     buffer::Buffer,
     layout::{Alignment, Rect},
     style::Style,
@@ -206,7 +206,7 @@ fn render_glyph(glyph: [u8; 8], area: Rect, buf: &mut Buffer, pixel_size: &Pixel
 
 #[cfg(test)]
 mod tests {
-    use ratatui_core::style::Stylize;
+    use ratatui::style::Stylize;
 
     use super::*;
 
