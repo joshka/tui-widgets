@@ -21,7 +21,7 @@
 //!
 //! This example can be found in the `examples` directory of the repository.
 //!
-//! ```
+//! ```no_run
 //! use qrcode::QrCode;
 //! use ratatui::{crossterm::event, DefaultTerminal, Frame};
 //! use tui_qrcode::{Colors, QrCodeWidget};
@@ -104,7 +104,7 @@ use ratatui::{
 ///
 /// # Examples
 ///
-/// ```
+/// ```no_run
 /// use qrcode::QrCode;
 /// use tui_qrcode::QrCodeWidget;
 ///
@@ -116,10 +116,10 @@ use ratatui::{
 /// Additionally, the widget implements the `Styled` trait, so all the methods from Ratatui's
 /// [Stylize](ratatui::style::Stylize) trait can be used.
 ///
-/// ```
+/// ```no_run
 /// use qrcode::QrCode;
 /// use tui_qrcode::{Colors, QrCodeWidget, QuietZone, Scaling};
-/// use ratatui::{Frame, style::Style};
+/// use ratatui::{Frame, style::{Style, Stylize}};
 ///
 /// fn render(frame: &mut Frame) {
 ///     let qr_code = QrCode::new("https://ratatui.rs").expect("failed to create QR code");
@@ -281,7 +281,7 @@ impl QrCodeWidget {
     ///
     /// let qr_code = QrCode::new("https://ratatui.rs").expect("failed to create QR code");
     /// let style = Style::new().red().on_light_yellow();
-    /// let widget = QrCodeWidget::new(qr_code).style();
+    /// let widget = QrCodeWidget::new(qr_code).style(style);
     /// ```
     #[must_use]
     pub fn style(mut self, style: impl Into<Style>) -> Self {
