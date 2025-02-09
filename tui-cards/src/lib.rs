@@ -17,7 +17,7 @@
 //! cargo run --example card
 //! ```
 //!
-//! ![demo](https://github.com/user-attachments/assets/a415581b-1d04-4aaf-a7f5-8f3427f11756)
+//! ![demo](https://vhs.charm.sh/vhs-34mhPM1Juk2XnnLTGpOtE9.gif)
 use std::iter::zip;
 
 use indoc::indoc;
