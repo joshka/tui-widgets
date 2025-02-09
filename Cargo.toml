@@ -57,23 +57,37 @@ rust-version.workspace = true
 [features]
 #! # features
 ## By default, all the widgets are enabled.
-default = ["big-text", "popup", "prompts", "scrollview"]
+default = [
+    "big-text",
+    "box-text",
+    "cards",
+    "popup",
+    "prompts",
+    "qrcode",
+    "scrollview",
+]
 ## Enables the [`big_text`] widget
 big-text = ["tui-big-text"]
+## Enables the [`box_text`] widget
+box-text = ["tui-box-text"]
+## Enables the [`cards`] widget
+cards = ["tui-cards"]
 ## Enables the [`popup`] widget
 popup = ["tui-popup"]
 ## Enables the [`prompts`] widget
 prompts = ["tui-prompts"]
+## Enables the [`qrcode`] widget
+qrcode = ["tui-qrcode"]
 ## Enables the [`scrollview`] widget
 scrollview = ["tui-scrollview"]
-## Enables the [`cards`] widget
-cards = ["tui-cards"]
 
 [dependencies]
 document-features.workspace = true
 ratatui = { workspace = true }
 tui-big-text = { version = "0.7.0", path = "tui-big-text", optional = true }
+tui-box-text = { version = "0.2.0", path = "tui-box-text", optional = true }
 tui-cards = { version = "0.2.0", path = "tui-cards", optional = true }
 tui-popup = { version = "0.6.0", path = "tui-popup", optional = true }
 tui-prompts = { version = "0.5.0", path = "tui-prompts", optional = true }
+tui-qrcode = { version = "0.1.0", path = "tui-qrcode", optional = true }
 tui-scrollview = { version = "0.5.1", path = "tui-scrollview", optional = true }
