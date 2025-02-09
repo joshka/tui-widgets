@@ -1,5 +1,5 @@
 use qrcode::QrCode;
-use ratatui::{crossterm::event, style::Stylize, DefaultTerminal, Frame};
+use ratatui::{crossterm::event, DefaultTerminal, Frame};
 use tui_qrcode::{Colors, QrCodeWidget};
 
 fn main() -> color_eyre::Result<()> {
@@ -21,6 +21,6 @@ fn run(mut terminal: DefaultTerminal) -> color_eyre::Result<()> {
 
 fn render(frame: &mut Frame) {
     let qr_code = QrCode::new("https://ratatui.rs").expect("failed to create QR code");
-    let widget = QrCodeWidget::new(qr_code).colors(Colors::Inverted).blue();
+    let widget = QrCodeWidget::new(qr_code).colors(Colors::Inverted);
     frame.render_widget(widget, frame.area());
 }

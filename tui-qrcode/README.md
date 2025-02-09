@@ -12,6 +12,8 @@ TUI QR Code is a library for rendering QR codes in a terminal using the [Ratatui
 
 [GitHub Repository] · [API Docs] · [Examples] · [Changelog] · [Contributing]
 
+![Demo](https://vhs.charm.sh/vhs-nUpcmCP1igCcGoJ5iio07.gif)
+
 ## Usage
 
 Add qrcode and tui-qrcode to your Cargo.toml. You can disable the default features of qrcode as
