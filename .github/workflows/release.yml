@@ -7,11 +7,10 @@ permissions:
   contents: write
 
 on:
-  workflow_call:
-    secrets:
-      CARGO_REGISTRY_TOKEN:
-        description: "Token to publish to crates.io"
-        required: true
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   release-plz:
