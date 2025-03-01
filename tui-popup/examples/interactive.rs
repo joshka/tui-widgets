@@ -2,8 +2,14 @@ use std::io::{self, stdout};
 
 use color_eyre::Result;
 use ratatui::{
-    crossterm::{self, event::{DisableMouseCapture, EnableMouseCapture}, execute, terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen}},
+    crossterm::{
+        self,
+        event::{DisableMouseCapture, EnableMouseCapture},
+        execute,
+        terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+    },
     prelude::{Constraint, CrosstermBackend, Frame, Layout, Rect, Style, Stylize},
+    symbols::border,
     widgets::{Paragraph, Wrap},
     DefaultTerminal, Terminal,
 };
@@ -57,10 +63,6 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
     let mut state = PopupState::new(Rect::new(0, 0, width, height));
     let mut exit = false;
     while !exit {
-        // Update terminal size on every frame to handle terminal resizing
-        if let Ok((width, height)) = crossterm::terminal::size() {
-            state.set_terminal_size(Rect::new(0, 0, width, height));
-        }
         terminal.draw(|frame| draw(frame, &mut state))?;
         handle_events(&mut state, &mut exit)?;
     }
@@ -86,7 +88,7 @@ fn render_popup(frame: &mut Frame, area: Rect, state: &mut PopupState) {
     let content = "This is an interactive popup example!\n\
                     \n\
                     • Drag the popup by clicking and dragging anywhere inside it\n\
-                    • Resize by dragging the ▢ handle in the bottom-right corner\n\
+                    • Resize by dragging the ⟋ handle in the bottom-right corner\n\
                     • Press 'q' to exit";
 
     let wrapped_content =
@@ -94,6 +96,7 @@ fn render_popup(frame: &mut Frame, area: Rect, state: &mut PopupState) {
 
     let popup = Popup::new(wrapped_content)
         .title("Interactive Popup")
+        .border_set(border::ROUNDED)
         .border_style(Style::default().blue().bold());
 
     frame.render_stateful_widget(popup, area, state);

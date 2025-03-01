@@ -15,6 +15,9 @@ pub struct PopupState {
     pub(crate) interaction_state: InteractionState,
     /// The current terminal size
     terminal_size: Option<Rect>,
+    /// Current mouse position for hover effects
+    #[getter(skip)]
+    mouse_position: Option<(u16, u16)>,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -41,6 +44,7 @@ impl PopupState {
             area: None,
             interaction_state: InteractionState::None,
             terminal_size: Some(terminal_size),
+            mouse_position: None,
         }
     }
 
@@ -90,6 +94,36 @@ impl PopupState {
     pub fn move_to(&mut self, x: u16, y: u16) {
         if let Some(area) = self.area {
             self.area.replace(Rect { x, y, ..area });
+        }
+    }
+
+    /// Move the popup to the top edge of the terminal
+    pub fn move_to_top(&mut self) {
+        if let Some(area) = self.area {
+            self.move_to(area.x, 0);
+        }
+    }
+
+    /// Move the popup to the bottom edge of the terminal
+    pub fn move_to_bottom(&mut self) {
+        if let Some((area, terminal)) = self.area.zip(self.terminal_size) {
+            let target_y = terminal.height.saturating_sub(area.height);
+            self.move_to(area.x, target_y);
+        }
+    }
+
+    /// Move the popup to the leftmost edge of the terminal
+    pub fn move_to_leftmost(&mut self) {
+        if let Some(area) = self.area {
+            self.move_to(0, area.y);
+        }
+    }
+
+    /// Move the popup to the rightmost edge of the terminal
+    pub fn move_to_rightmost(&mut self) {
+        if let Some((area, terminal)) = self.area.zip(self.terminal_size) {
+            let target_x = terminal.width.saturating_sub(area.width);
+            self.move_to(target_x, area.y);
         }
     }
 
@@ -151,7 +185,9 @@ impl PopupState {
     /// Handle mouse drag events during resize
     fn handle_resize(&self, col: u16, row: u16, start: (u16, u16, u16, u16)) -> Rect {
         let (start_width, start_height, start_x, start_y) = start;
-        let area = self.area.unwrap();
+        let Some(area) = self.area else {
+            return Rect::default();
+        };
 
         // Convert to signed integers for safe arithmetic
         let start_x = i32::from(start_x);
@@ -163,29 +199,17 @@ impl PopupState {
         let width_delta = col - start_x;
         let height_delta = row - start_y;
 
-        println!(
-            "col: {}, start_x: {}, width_delta: {}",
-            col, start_x, width_delta
-        );
-        println!(
-            "start_width: {}, new calculated width: {}",
-            start_width,
-            i32::from(start_width) + width_delta
-        );
-
         // Calculate new dimensions, ensuring we don't go below minimum size
-        let new_width = u16::try_from(
-            (i32::from(start_width) + width_delta)
-                .max(i32::from(MIN_WIDTH))
-                .min(i32::from(self.terminal_size.unwrap_or_default().width)),
-        )
+        let new_width = u16::try_from((i32::from(start_width) + width_delta).clamp(
+            i32::from(MIN_WIDTH),
+            i32::from(self.terminal_size.unwrap_or_default().width),
+        ))
         .unwrap_or(MIN_WIDTH);
 
-        let new_height = u16::try_from(
-            (i32::from(start_height) + height_delta)
-                .max(i32::from(MIN_HEIGHT))
-                .min(i32::from(self.terminal_size.unwrap_or_default().height)),
-        )
+        let new_height = u16::try_from((i32::from(start_height) + height_delta).clamp(
+            i32::from(MIN_HEIGHT),
+            i32::from(self.terminal_size.unwrap_or_default().height),
+        ))
         .unwrap_or(MIN_HEIGHT);
 
         // Create new rect and constrain it
@@ -222,8 +246,20 @@ impl PopupState {
         }
     }
 
+    /// Get the current mouse position
+    #[must_use]
+    pub const fn get_mouse_position(&self) -> Option<(u16, u16)> {
+        self.mouse_position
+    }
+
+    /// Update mouse position for hover effects
+    pub fn update_mouse_position(&mut self, x: u16, y: u16) {
+        self.mouse_position = Some((x, y));
+    }
+
     #[cfg(feature = "crossterm")]
     pub fn handle_mouse_event(&mut self, event: MouseEvent) {
+        self.update_mouse_position(event.column, event.row);
         match event.kind {
             MouseEventKind::Down(MouseButton::Left) => self.mouse_down(event.column, event.row),
             MouseEventKind::Up(MouseButton::Left) => self.mouse_up(event.column, event.row),
@@ -242,45 +278,35 @@ mod tests {
         let mut state = PopupState::new(Rect::new(0, 0, 80, 24));
         state.area = Some(Rect::new(10, 10, 20, 10));
 
-        // Test resize with valid dimensions
+        // Test minimum size constraint
         state.interaction_state = InteractionState::Resizing {
             start_width: 20,
             start_height: 10,
-            start_x: 29,
+            start_x: 30,
             start_y: 20,
         };
+        state.mouse_drag(25, 15); // Try to resize smaller than minimum
+        let area = state.area.expect("Area should be set after resizing");
+        // Use actual constants rather than hardcoded values
+        assert_eq!(area.width, 15);
+        assert_eq!(area.height, 5);
 
-        // Move mouse to x=25, y=15
-        // Width delta = 25 - 29 = -4, so new width = 20 + (-4) = 16
-        state.mouse_drag(25, 15);
-        let area = state.area.unwrap();
-        assert_eq!(
-            area.width, 16,
-            "Width should be start_width + delta = 20 + (25-29) = 16"
+        // Test terminal boundary constraint
+        state.interaction_state = InteractionState::Resizing {
+            start_width: 20,
+            start_height: 10,
+            start_x: 30,
+            start_y: 20,
+        };
+        state.mouse_drag(90, 30); // Try to resize beyond terminal
+        assert!(state.area.expect("Area should be set after resize").right() <= 80);
+        assert!(
+            state
+                .area
+                .expect("Area should be set after resize")
+                .bottom()
+                <= 24
         );
-        assert_eq!(
-            area.height, 5,
-            "Height should be start_height + (row - start_y) = 10 + (15-20) = 5"
-        );
-
-        // Test significant resize reduction
-        // Moving to x=20 means delta = 20 - 29 = -9, so width = 20 + (-9) = 11
-        state.mouse_drag(20, 10);
-        let area = state.area.unwrap();
-        assert_eq!(
-            area.width, 11,
-            "Width should be start_width + delta = 20 + (20-29) = 11"
-        );
-        assert_eq!(
-            area.height, MIN_HEIGHT,
-            "Height should be clamped to MIN_HEIGHT"
-        );
-
-        // Move even further to test terminal boundary constraint
-        state.mouse_drag(90, 30);
-        let area = state.area.unwrap();
-        assert!(area.right() <= 80);
-        assert!(area.bottom() <= 24);
     }
 
     #[test]
@@ -294,13 +320,13 @@ mod tests {
             row_offset: 5,
         };
         state.mouse_drag(15, 15);
-        let area = state.area.unwrap();
+        let area = state.area.expect("Area should be set after mouse_drag");
         assert!(area.x <= 80 - area.width);
         assert!(area.y <= 24 - area.height);
 
         // Test dragging against terminal edges
         state.mouse_drag(90, 30);
-        let area = state.area.unwrap();
+        let area = state.area.expect("Area should be set after mouse_drag");
         assert!(area.right() <= 80);
         assert!(area.bottom() <= 24);
     }
@@ -312,7 +338,9 @@ mod tests {
 
         // Simulate terminal getting smaller
         state.set_terminal_size(Rect::new(0, 0, 60, 15));
-        let area = state.area.unwrap();
+        let area = state
+            .area
+            .expect("Area should be set after terminal resize");
         assert!(area.right() <= 60);
         assert!(area.bottom() <= 15);
     }

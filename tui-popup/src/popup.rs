@@ -4,7 +4,8 @@ use derive_setters::Setters;
 use ratatui::{
     buffer::Buffer,
     layout::Rect,
-    style::Style,
+    prelude::Stylize,
+    style::{Modifier, Style},
     symbols::border::Set,
     text::Line,
     widgets::{Block, Borders, Clear, StatefulWidget, Widget, WidgetRef},
@@ -32,6 +33,29 @@ use crate::{KnownSize, PopupState};
 ///     frame.render_widget(&popup, frame.area());
 /// }
 /// ```
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ResizeHandle {
+    /// The symbol to use for the resize handle (defaults to "⟋")
+    pub symbol: &'static str,
+    /// Custom style for the resize handle
+    pub style: Style,
+    /// Whether to show hover effects
+    pub show_hover: bool,
+    /// The active area around the handle (defaults to 1)
+    pub active_margin: u16,
+}
+
+impl Default for ResizeHandle {
+    fn default() -> Self {
+        Self {
+            symbol: "⟋",
+            style: Style::default().bold(),
+            show_hover: true,
+            active_margin: 1,
+        }
+    }
+}
+
 #[derive(Setters)]
 #[setters(into)]
 #[non_exhaustive]
@@ -49,6 +73,8 @@ pub struct Popup<'content, W> {
     pub border_set: Set,
     /// Border style
     pub border_style: Style,
+    /// Configuration for the resize handle
+    pub resize_handle: ResizeHandle,
 }
 
 impl<W> fmt::Debug for Popup<'_, W> {
@@ -61,6 +87,7 @@ impl<W> fmt::Debug for Popup<'_, W> {
             .field("borders", &self.borders)
             .field("border_set", &self.border_set)
             .field("border_style", &self.border_style)
+            .field("resize_handle", &self.resize_handle)
             .finish()
     }
 }
@@ -73,6 +100,7 @@ impl<W: PartialEq> PartialEq for Popup<'_, W> {
             && self.borders == other.borders
             && self.border_set == other.border_set
             && self.border_style == other.border_style
+            && self.resize_handle == other.resize_handle
     }
 }
 
@@ -99,6 +127,7 @@ impl<W> Popup<'_, W> {
             border_style: Style::default(),
             title: Line::default(),
             style: Style::default(),
+            resize_handle: ResizeHandle::default(),
         }
     }
 }
@@ -130,6 +159,7 @@ impl<W: KnownSize + WidgetRef> StatefulWidget for &Popup<'_, W> {
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {
         let area = area.clamp(buf.area);
+        state.set_terminal_size(area);
 
         let popup_area = self.popup_area(state, area);
         state.area.replace(popup_area);
@@ -144,13 +174,9 @@ impl<W: KnownSize + WidgetRef> StatefulWidget for &Popup<'_, W> {
         let inner_area = block.inner(popup_area);
         block.render(popup_area, buf);
 
-        // Render resize handle in bottom-right corner
-        if popup_area.width > 0 && popup_area.height > 0 {
-            let x = popup_area.x + popup_area.width - 1;
-            let y = popup_area.y + popup_area.height - 1;
-            if let Some(cell) = buf.cell_mut((x, y)) {
-                cell.set_symbol("▢").set_style(self.border_style);
-            }
+        // Render enhanced resize handle in bottom-right corner
+        if popup_area.width > 1 && popup_area.height > 1 {
+            self.render_resize_handle(popup_area, buf, state);
         }
 
         self.body.render_ref(inner_area, buf);
@@ -179,6 +205,50 @@ impl<W: KnownSize> Popup<'_, W> {
 
         centered_rect(width, height, area)
     }
+
+    /// Render the resize handle with enhanced visual feedback
+    fn render_resize_handle(&self, area: Rect, buf: &mut Buffer, state: &PopupState) {
+        let handle_x = area.x + area.width - 1;
+        let handle_y = area.y + area.height - 1;
+
+        // Determine if mouse is hovering over handle area
+        let is_hovering = state.get_mouse_position().is_some_and(|mouse_pos| {
+            let margin = self.resize_handle.active_margin;
+            let hover_area = Rect {
+                x: handle_x.saturating_sub(margin),
+                y: handle_y.saturating_sub(margin),
+                width: margin * 2 + 1,
+                height: margin * 2 + 1,
+            };
+            hover_area.contains(mouse_pos.into())
+        });
+
+        // Base style enhanced with hover effect
+        let handle_style = if is_hovering && self.resize_handle.show_hover {
+            self.resize_handle
+                .style
+                .patch(Style::default().add_modifier(Modifier::REVERSED))
+        } else {
+            self.resize_handle.style
+        };
+
+        // Render the resize handle
+        if let Some(cell) = buf.cell_mut((handle_x, handle_y)) {
+            cell.set_symbol(self.resize_handle.symbol)
+                .set_style(handle_style);
+        }
+
+        // Optional: Render subtle indicators around handle when hovering
+        if is_hovering && self.resize_handle.show_hover {
+            // Add subtle corner markers
+            if let Some(cell) = buf.cell_mut((handle_x - 1, handle_y)) {
+                cell.set_style(handle_style.patch(Style::default().dim()));
+            }
+            if let Some(cell) = buf.cell_mut((handle_x, handle_y - 1)) {
+                cell.set_style(handle_style.patch(Style::default().dim()));
+            }
+        }
+    }
 }
 
 /// Create a rectangle centered in the given area.
@@ -193,9 +263,9 @@ fn centered_rect(width: u16, height: u16, area: Rect) -> Rect {
 
 #[cfg(test)]
 mod tests {
-    use pretty_assertions::assert_eq;
-
     use super::*;
+    use pretty_assertions::assert_eq;
+    use ratatui::style::Modifier;
 
     #[test]
     fn new() {
@@ -209,6 +279,7 @@ mod tests {
                 border_style: Style::default(),
                 title: Line::default(),
                 style: Style::default(),
+                resize_handle: ResizeHandle::default(),
             }
         );
     }
@@ -217,14 +288,28 @@ mod tests {
     fn render() {
         let mut buffer = Buffer::empty(Rect::new(0, 0, 20, 5));
         let mut state = PopupState::default();
-        let expected = Buffer::with_lines([
+
+        // Create an expected buffer with the correct styles
+        let mut expected = Buffer::with_lines([
             "                    ",
             "   ┌Title──────┐    ",
             "   │Hello World│    ",
-            "   └───────────▢    ",
+            "   └───────────⟋    ",
             "                    ",
         ]);
 
+        // Set the correct style for the resize handle (bold)
+        let resize_pos = (15, 3);
+        if let Some(cell) = expected.cell_mut((resize_pos.0, resize_pos.1)) {
+            cell.set_style(Style::default().add_modifier(Modifier::BOLD));
+        }
+
+        // Rest of test...
+        let popup = Popup::new("Hello World").title("Title");
+        StatefulWidget::render(&popup, buffer.area, &mut buffer, &mut state);
+        assert_eq!(buffer, expected, "\nBuffer contents differ");
+
+        // ...existing test cases...
         // Check that a popup ref can render a widget defined by a ref value (e.g. `&str`).
         let popup = Popup::new("Hello World").title("Title");
         StatefulWidget::render(&popup, buffer.area, &mut buffer, &mut state);
