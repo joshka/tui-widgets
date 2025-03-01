@@ -30,5 +30,5 @@ pub use crate::{
     known_size::KnownSize,
     known_size_wrapper::KnownSizeWrapper,
     popup::Popup,
-    popup_state::{DragState, PopupState},
+    popup_state::{InteractionState, PopupState},
 };

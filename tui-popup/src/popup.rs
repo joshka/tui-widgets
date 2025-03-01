@@ -29,7 +29,7 @@ use crate::{KnownSize, PopupState};
 ///         .style(Style::new().white().on_blue())
 ///         .border_set(border::ROUNDED)
 ///         .border_style(Style::new().bold());
-///     frame.render_widget(&popup, frame.size());
+///     frame.render_widget(&popup, frame.area());
 /// }
 /// ```
 #[derive(Setters)]
@@ -76,7 +76,7 @@ impl<W: PartialEq> PartialEq for Popup<'_, W> {
     }
 }
 
-impl<'content, W> Popup<'content, W> {
+impl<W> Popup<'_, W> {
     /// Create a new popup with the given title and body with all the borders.
     ///
     /// # Parameters
@@ -144,11 +144,20 @@ impl<W: KnownSize + WidgetRef> StatefulWidget for &Popup<'_, W> {
         let inner_area = block.inner(popup_area);
         block.render(popup_area, buf);
 
+        // Render resize handle in bottom-right corner
+        if popup_area.width > 0 && popup_area.height > 0 {
+            let x = popup_area.x + popup_area.width - 1;
+            let y = popup_area.y + popup_area.height - 1;
+            if let Some(cell) = buf.cell_mut((x, y)) {
+                cell.set_symbol("▢").set_style(self.border_style);
+            }
+        }
+
         self.body.render_ref(inner_area, buf);
     }
 }
 
-impl<'content, W: KnownSize> Popup<'content, W> {
+impl<W: KnownSize> Popup<'_, W> {
     fn popup_area(&self, state: &mut PopupState, area: Rect) -> Rect {
         if let Some(current) = state.area.take() {
             return current.clamp(area);
@@ -212,7 +221,7 @@ mod tests {
             "                    ",
             "   ┌Title──────┐    ",
             "   │Hello World│    ",
-            "   └───────────┘    ",
+            "   └───────────▢    ",
             "                    ",
         ]);
 
