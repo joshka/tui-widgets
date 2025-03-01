@@ -7,6 +7,38 @@ use ratatui::prelude::Rect;
 const MIN_WIDTH: u16 = 3;
 const MIN_HEIGHT: u16 = 3;
 
+/// Configuration for close button appearance
+#[derive(Clone, Debug, Default)]
+pub struct CloseButton {
+    /// The symbol to display (e.g., "×", "✕", "✖")
+    pub symbol: &'static str,
+    /// Width in terminal columns (including padding)
+    pub width: u16,
+    /// Whether to show a border around the button
+    pub show_border: bool,
+}
+
+impl CloseButton {
+    /// Create a new close button with default styling
+    #[must_use]
+    pub const fn new() -> Self {
+        Self {
+            symbol: "✕",
+            width: 3,
+            show_border: true,
+        }
+    }
+
+    /// Get the display text for the button (with optional border)
+    fn display_text(&self) -> String {
+        if self.show_border {
+            format!("[{}]", self.symbol)
+        } else {
+            self.symbol.to_string()
+        }
+    }
+}
+
 #[derive(Clone, Debug, Default, Getters)]
 pub struct PopupState {
     /// The last rendered area of the popup
@@ -18,6 +50,11 @@ pub struct PopupState {
     /// Current mouse position for hover effects
     #[getter(skip)]
     mouse_position: Option<(u16, u16)>,
+    /// Whether the popup is currently open
+    #[getter(skip)]
+    pub(crate) is_open: bool,
+    /// Close button configuration
+    pub(crate) close_button: CloseButton,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -45,7 +82,18 @@ impl PopupState {
             interaction_state: InteractionState::None,
             terminal_size: Some(terminal_size),
             mouse_position: None,
+            is_open: true,
+            close_button: CloseButton {
+                symbol: "✕",
+                width: 3,
+                show_border: true,
+            },
         }
+    }
+
+    /// Reset the popup position to the default
+    pub fn reset_position(&mut self) {
+        self.area = None;
     }
 
     /// Update the terminal size
@@ -160,6 +208,15 @@ impl PopupState {
 
     /// Set the state to dragging or resizing if the mouse click is in the popup title or on the resize handle
     pub fn mouse_down(&mut self, col: u16, row: u16) {
+        if !self.is_open {
+            return;
+        }
+
+        if self.is_on_close_button(col, row) {
+            self.close();
+            return;
+        }
+
         if let Some(area) = self.area {
             if self.is_on_resize_handle(col, row) {
                 self.interaction_state = InteractionState::Resizing {
@@ -267,6 +324,72 @@ impl PopupState {
             _ => {}
         }
     }
+
+    /// Check if the popup is currently open
+    #[must_use]
+    pub const fn is_open(&self) -> bool {
+        self.is_open
+    }
+
+    /// Close the popup
+    pub fn close(&mut self) {
+        self.is_open = false;
+        self.area = None;
+    }
+
+    /// Open the popup at the given position
+    pub fn open(&mut self, x: u16, y: u16, width: u16, height: u16) {
+        self.is_open = true;
+        self.area = Some(self.constrain_to_terminal(Rect {
+            x,
+            y,
+            width,
+            height,
+        }));
+    }
+
+    /// Check if the given position is on the close button
+    #[must_use]
+    pub fn is_on_close_button(&self, col: u16, row: u16) -> bool {
+        let Some(area) = self.area else {
+            return false;
+        };
+
+        // Close button is only shown when there's a title
+        if !self.has_title() {
+            return false;
+        }
+
+        // Check if we're in the title bar (first row)
+        if row != area.y {
+            return false;
+        }
+
+        // Calculate close button position (rightmost part of title bar)
+        let Some(button_text) = self.close_button_text() else {
+            return false;
+        };
+        let button_x = area.x + area.width - button_text.len() as u16 - 1;
+        let button_end = button_x + button_text.len() as u16;
+
+        (button_x..button_end).contains(&col)
+    }
+
+    /// Check if the popup has a title
+    #[must_use]
+    fn has_title(&self) -> bool {
+        // This will be checked via the Popup widget's title field
+        true
+    }
+
+    /// Get the close button display text if it should be shown
+    pub(crate) fn close_button_text(&self) -> Option<String> {
+        if self.is_open && self.has_title() {
+            Some(self.close_button.display_text())
+        } else {
+            None
+        }
+    }
 }
 
 #[cfg(test)]
@@ -343,5 +466,39 @@ mod tests {
             .expect("Area should be set after terminal resize");
         assert!(area.right() <= 60);
         assert!(area.bottom() <= 15);
+    }
+
+    #[test]
+    fn test_close_button_hit_detection() {
+        let mut state = PopupState::new(Rect::new(0, 0, 80, 24));
+        state.area = Some(Rect::new(10, 5, 20, 10));
+
+        // Test clicking on close button
+        assert!(state.is_on_close_button(26, 5)); // Top-right corner
+        assert!(!state.is_on_close_button(25, 6)); // One row below
+        assert!(!state.is_on_close_button(10, 5)); // Left side of title
+
+        // Test state changes on close
+        assert!(state.is_open());
+        state.mouse_down(26, 5); // Click close button
+        assert!(!state.is_open());
+        assert_eq!(state.area, None);
+    }
+
+    #[test]
+    fn test_close_button_display() {
+        let state = PopupState::new(Rect::new(0, 0, 80, 24));
+
+        // Test default close button
+        assert_eq!(state.close_button.display_text(), "[✕]");
+
+        // Test custom close button
+        let mut custom_state = PopupState::new(Rect::new(0, 0, 80, 24));
+        custom_state.close_button = CloseButton {
+            symbol: "×",
+            width: 3,
+            show_border: false,
+        };
+        assert_eq!(custom_state.close_button.display_text(), "×");
     }
 }

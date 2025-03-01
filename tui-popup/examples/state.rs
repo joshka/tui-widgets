@@ -1,7 +1,10 @@
 use color_eyre::Result;
 use lipsum::lipsum;
 use ratatui::{
-    crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind},
+    crossterm::{
+        event::{self, Event, KeyCode, KeyEvent, KeyEventKind},
+        terminal,
+    },
     prelude::{Constraint, Frame, Layout, Rect, Style, Stylize, Text},
     widgets::{Paragraph, Wrap},
     DefaultTerminal,
@@ -17,8 +20,11 @@ fn main() -> Result<()> {
 }
 
 fn run(mut terminal: DefaultTerminal) -> Result<()> {
-    let mut state = PopupState::default();
+    // Initialize state with terminal size and open state
+    let (width, height) = terminal::size()?;
+    let mut state = PopupState::new(Rect::new(0, 0, width, height));
     let mut exit = false;
+
     while !exit {
         terminal.draw(|frame| draw(frame, &mut state))?;
         handle_events(&mut state, &mut exit)?;
