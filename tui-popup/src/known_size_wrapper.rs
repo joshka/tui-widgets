@@ -1,7 +1,8 @@
 use std::fmt::Debug;
 
 use derive_setters::Setters;
-use ratatui::{buffer::Buffer, layout::Rect, widgets::WidgetRef};
+use ratatui::widgets::WidgetRef;
+use ratatui_core::{buffer::Buffer, layout::Rect};
 
 use crate::KnownSize;
 

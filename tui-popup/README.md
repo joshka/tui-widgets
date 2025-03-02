@@ -16,7 +16,7 @@ The popup widget is a simple widget that renders a popup in the center of the sc
 ## Example
 
 ```rust
-use ratatui::prelude::*;
+use ratatui_core::prelude::*;
 use tui_popup::Popup;
 
 fn render_popup(frame: &mut Frame) {
@@ -36,7 +36,7 @@ The widget supports storing the position of the popup in PopupState. This is exp
 exact api for this will likely change.
 
 ```rust
-use ratatui::prelude::*;
+use ratatui_core::prelude::*;
 use tui_popup::Popup;
 
 fn render_stateful_popup(frame: &mut Frame, popup_state: &mut PopupState) {

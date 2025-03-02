@@ -16,12 +16,13 @@ rust-version.workspace = true
 derive_builder.workspace = true
 font8x8 = "0.3.1"
 itertools.workspace = true
-ratatui = { workspace = true, features = ["crossterm"] }
+ratatui-core.workspace = true
 
 [dev-dependencies]
 color-eyre.workspace = true
 crossterm = { workspace = true, features = ["event-stream"] }
 futures.workspace = true
 indoc.workspace = true
+ratatui = { workspace = true, default-features = true }
 strum.workspace = true
-tokio = { workspace = true, features = ["full"] }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }

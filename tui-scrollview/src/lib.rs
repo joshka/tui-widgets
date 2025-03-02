@@ -75,6 +75,7 @@
 //! [Ratatui Discord]: https://discord.gg/pMCEU9hNEj
 //!
 //! [Ratatui]: https://crates.io/crates/ratatui
+//! [examples]: https://github.com/joshka/tui-widgets/tree/main/tui-scrollview/examples
 
 mod scroll_view;
 mod state;

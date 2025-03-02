@@ -18,7 +18,7 @@ color-eyre.workspace = true
 indoc.workspace = true
 strum.workspace = true
 itertools.workspace = true
-ratatui = { workspace = true }
+ratatui-core.workspace = true
 
 [dev-dependencies]
 ratatui = { workspace = true, default-features = true }

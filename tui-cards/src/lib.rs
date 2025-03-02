@@ -21,7 +21,7 @@
 use std::iter::zip;
 
 use indoc::indoc;
-use ratatui::{
+use ratatui_core::{
     buffer::Buffer,
     layout::Rect,
     style::{Color, Stylize},

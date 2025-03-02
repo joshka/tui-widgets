@@ -21,19 +21,25 @@ rustdoc-args = ["--cfg", "docsrs"]
 [features]
 default = []
 
-## Enables processing crossterm mouse events using [`PopupState::handle_mouse_event`]
-crossterm = ["ratatui/crossterm"]
+## Enables processing crossterm mouse events using `PopupState::handle_mouse_event`
+crossterm = ["dep:ratatui-crossterm"]
 
 [dependencies]
 document-features.workspace = true
 derive-getters.workspace = true
 derive_setters.workspace = true
-ratatui = { workspace = true, features = ["unstable-widget-ref"] }
+ratatui = { workspace = true, features = [
+    "unstable-widget-ref",
+], default-features = false }
+ratatui-core.workspace = true
+ratatui-crossterm = { workspace = true, optional = true }
+ratatui-widgets.workspace = true
 
 [dev-dependencies]
-pretty_assertions.workspace = true
 color-eyre.workspace = true
 lipsum.workspace = true
+pretty_assertions.workspace = true
+ratatui = { workspace = true, default-features = true }
 
 [lints.clippy]
 pedantic = { level = "warn", priority = -1 }

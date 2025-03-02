@@ -91,7 +91,7 @@
 //! [Contributing]: https://github.com/joshka/tui-widgets/blob/main/CONTRIBUTING.md
 
 use qrcode::{render::unicode::Dense1x2, QrCode};
-use ratatui::{
+use ratatui_core::{
     buffer::Buffer,
     layout::Rect,
     style::{Style, Styled},
@@ -99,7 +99,7 @@ use ratatui::{
     widgets::Widget,
 };
 
-/// A [Ratatui](ratatui) widget that renders a QR code.
+/// A [Ratatui] widget that renders a QR code.
 ///
 /// This widget can be used to render a QR code in a terminal. It uses the [qrcode] crate to
 /// generate the QR code.
@@ -116,7 +116,7 @@ use ratatui::{
 ///
 /// The widget can be customized using the `quiet_zone`, `scaling`, `colors`, and `style` methods.
 /// Additionally, the widget implements the `Styled` trait, so all the methods from Ratatui's
-/// [Stylize](ratatui::style::Stylize) trait can be used.
+/// [Stylize](ratatui_core::style::Stylize) trait can be used.
 ///
 /// ```no_run
 /// use qrcode::QrCode;
@@ -134,6 +134,8 @@ use ratatui::{
 ///     frame.render_widget(widget, frame.area());
 /// }
 /// ```
+///
+/// [Ratatui]: https://crates.io/crates/ratatui
 pub struct QrCodeWidget {
     qr_code: QrCode,
     quiet_zone: QuietZone,

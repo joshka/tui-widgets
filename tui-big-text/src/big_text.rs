@@ -2,7 +2,7 @@ use std::cmp::min;
 
 use derive_builder::Builder;
 use font8x8::UnicodeFonts;
-use ratatui::{
+use ratatui_core::{
     buffer::Buffer,
     layout::{Alignment, Rect},
     style::Style,

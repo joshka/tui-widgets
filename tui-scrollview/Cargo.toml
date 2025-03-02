@@ -13,12 +13,13 @@ rust-version.workspace = true
 
 [dependencies]
 indoc.workspace = true
-ratatui = { workspace = true }
+ratatui-core.workspace = true
+ratatui-widgets.workspace = true
 
 [dev-dependencies]
 color-eyre.workspace = true
 rstest.workspace = true
-ratatui = { workspace = true, features = ["crossterm"] }
+ratatui = { workspace = true, default-features = true }
 lipsum = "0.9.1"
 
 

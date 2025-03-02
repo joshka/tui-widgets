@@ -1,4 +1,4 @@
-use ratatui::layout::{Position, Size};
+use ratatui_core::layout::{Position, Size};
 
 #[derive(Debug, Default, Clone, Copy, Eq, PartialEq, Hash)]
 pub struct ScrollViewState {

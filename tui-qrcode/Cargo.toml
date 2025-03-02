@@ -15,7 +15,7 @@ keywords.workspace = true
 [dependencies]
 color-eyre.workspace = true
 qrcode = { version = "0.14.1", default-features = false }
-ratatui.workspace = true
+ratatui-core.workspace = true
 
 [dev-dependencies]
-ratatui = { workspace = true, features = ["crossterm"] }
+ratatui = { workspace = true, default-features = true }

@@ -19,7 +19,7 @@ cargo add tui-scrollview
 ```rust
 use std::iter;
 use tui_scrollview::{ScrollView, ScrollViewState};
-use ratatui::{layout::Size, prelude::*, widgets::*};
+use ratatui_core::{layout::Size, prelude::*, widgets::*};
 
 struct MyScrollableWidget;
 

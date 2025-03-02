@@ -31,7 +31,7 @@ render be rendered. The builder allows you to customize the [`Style`] of the wid
 ## Examples
 
 ```rust
-use ratatui::prelude::{Frame, Style, Stylize};
+use ratatui_core::prelude::{Frame, Style, Stylize};
 use tui_big_text::{BigText, PixelSize};
 
 fn render(frame: &mut Frame) {

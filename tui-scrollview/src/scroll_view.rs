@@ -1,8 +1,9 @@
-use ratatui::{
+use ratatui_core::{
     buffer::Buffer,
     layout::{Rect, Size},
-    widgets::{Scrollbar, ScrollbarOrientation, ScrollbarState, StatefulWidget, Widget},
+    widgets::{StatefulWidget, Widget},
 };
+use ratatui_widgets::scrollbar::{Scrollbar, ScrollbarOrientation, ScrollbarState};
 
 use crate::ScrollViewState;
 
@@ -596,15 +597,17 @@ mod tests {
             ])
         )
     }
+
+    /// prior to 0.30, this would panic
     #[rstest]
-    #[should_panic(expected = "Scrollbar area is empty")]
     fn zero_width(scroll_view: ScrollView) {
         let mut buf = Buffer::empty(Rect::new(0, 0, 0, 10));
         let mut state = ScrollViewState::new();
         scroll_view.render(buf.area, &mut buf, &mut state);
     }
+
+    /// prior to 0.30, this would panic
     #[rstest]
-    #[should_panic(expected = "Scrollbar area is empty")]
     fn zero_height(scroll_view: ScrollView) {
         let mut buf = Buffer::empty(Rect::new(0, 0, 10, 0));
         let mut state = ScrollViewState::new();

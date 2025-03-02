@@ -13,7 +13,7 @@ keywords.workspace = true
 [dependencies]
 color-eyre.workspace = true
 indoc.workspace = true
-ratatui = { workspace = true, default-features = true }
+ratatui-core.workspace = true
 
 [dev-dependencies]
 ratatui = { workspace = true, default-features = true }

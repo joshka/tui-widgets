@@ -1,14 +1,16 @@
 use std::{cmp::min, fmt};
 
 use derive_setters::Setters;
-use ratatui::{
+use ratatui::widgets::{Borders, WidgetRef};
+use ratatui_core::{
     buffer::Buffer,
     layout::Rect,
     style::Style,
     symbols::border::Set,
     text::Line,
-    widgets::{Block, Borders, Clear, StatefulWidget, Widget, WidgetRef},
+    widgets::{StatefulWidget, Widget},
 };
+use ratatui_widgets::{block::Block, clear::Clear};
 
 use crate::{KnownSize, PopupState};
 
@@ -91,6 +93,8 @@ impl<W> Popup<'_, W> {
     ///
     /// let popup = Popup::new("Press any key to exit").title("tui-popup demo");
     /// ```
+    ///
+    /// [`Text`]: ratatui_core::text::Text
     pub fn new(body: W) -> Self {
         Self {
             body,
