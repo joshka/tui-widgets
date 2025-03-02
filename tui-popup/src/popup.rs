@@ -76,7 +76,7 @@ impl<W: PartialEq> PartialEq for Popup<'_, W> {
     }
 }
 
-impl<'content, W> Popup<'content, W> {
+impl<W> Popup<'_, W> {
     /// Create a new popup with the given title and body with all the borders.
     ///
     /// # Parameters
@@ -148,7 +148,7 @@ impl<W: KnownSize + WidgetRef> StatefulWidget for &Popup<'_, W> {
     }
 }
 
-impl<'content, W: KnownSize> Popup<'content, W> {
+impl<W: KnownSize> Popup<'_, W> {
     fn popup_area(&self, state: &mut PopupState, area: Rect) -> Rect {
         if let Some(current) = state.area.take() {
             return current.clamp(area);
