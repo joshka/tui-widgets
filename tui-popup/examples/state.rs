@@ -44,7 +44,7 @@ fn render_background(frame: &mut Frame, area: Rect) {
 }
 
 fn render_popup(frame: &mut Frame, area: Rect, state: &mut PopupState) {
-    let body = Text::from_iter([
+    let body = &Text::from_iter([
         "q: exit",
         "r: reset",
         "j: move down",
