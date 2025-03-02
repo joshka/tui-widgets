@@ -199,9 +199,9 @@ pub trait State {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     use ratatui_core::style::Stylize;
+
+    use super::*;
 
     #[test]
     fn status_symbols() {

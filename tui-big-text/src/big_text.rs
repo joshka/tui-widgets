@@ -23,7 +23,7 @@ use crate::PixelSize;
 /// # Examples
 ///
 /// ```rust
-/// use ratatui::prelude::*;
+/// use ratatui::style::{Style, Stylize};
 /// use tui_big_text::{BigText, PixelSize};
 ///
 /// BigText::builder()
@@ -34,7 +34,7 @@ use crate::PixelSize;
 ///         "World".blue().into(),
 ///         "=====".into(),
 ///     ])
-///    .build();
+///     .build();
 /// ```
 ///
 /// Renders:

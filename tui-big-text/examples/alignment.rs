@@ -1,8 +1,9 @@
 use color_eyre::Result;
 use ratatui::{
     layout::{Constraint, Layout, Offset},
-    prelude::{Frame, Stylize},
+    style::Stylize,
     text::Line,
+    Frame,
 };
 use tui_big_text::{BigText, PixelSize};
 

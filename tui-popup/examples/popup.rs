@@ -2,7 +2,8 @@ use color_eyre::Result;
 use lipsum::lipsum;
 use ratatui::{
     crossterm::event::{self, Event},
-    prelude::{Rect, Style, Stylize},
+    layout::Rect,
+    style::{Style, Stylize},
     widgets::{Paragraph, Wrap},
     Frame,
 };

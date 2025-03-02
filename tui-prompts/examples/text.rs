@@ -6,11 +6,13 @@ use clap::Parser;
 use color_eyre::Result;
 use ratatui::{
     crossterm::event::{self, Event, KeyEvent, KeyModifiers},
-    prelude::*,
-    widgets::*,
+    layout::{Constraint, Direction, Layout, Rect},
+    style::{Style, Stylize},
+    widgets::{Block, Borders, Paragraph, Wrap},
+    Frame,
 };
 use tui::Tui;
-use tui_prompts::prelude::*;
+use tui_prompts::{FocusState, Prompt, State, TextPrompt, TextRenderStyle, TextState};
 
 #[derive(Parser)]
 struct Cli {

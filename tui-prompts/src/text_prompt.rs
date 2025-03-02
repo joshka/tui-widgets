@@ -11,7 +11,7 @@ use ratatui_core::{
 };
 use ratatui_widgets::{block::Block, paragraph::Paragraph};
 
-use crate::prelude::*;
+use crate::{Prompt, State, TextState};
 
 // TODO style the widget
 // TODO style each element of the widget.

@@ -22,7 +22,11 @@ use crate::{KnownSize, PopupState};
 /// # Example
 ///
 /// ```rust
-/// use ratatui::{prelude::*, symbols::border};
+/// use ratatui::{
+///     style::{Style, Stylize},
+///     symbols::border,
+///     Frame,
+/// };
 /// use tui_popup::Popup;
 ///
 /// fn render_popup(frame: &mut Frame) {

@@ -1,5 +1,10 @@
 use color_eyre::Result;
-use ratatui::prelude::*;
+use ratatui::{
+    layout::{Constraint, Layout},
+    style::Stylize,
+    text::Line,
+    Frame,
+};
 use tui_big_text::{BigText, PixelSize};
 
 mod common;

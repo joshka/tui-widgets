@@ -7,7 +7,7 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
     ExecutableCommand,
 };
-use ratatui::prelude::CrosstermBackend;
+use ratatui::backend::CrosstermBackend;
 
 /// A type alias for the terminal
 type Terminal = ratatui::Terminal<CrosstermBackend<io::Stdout>>;

@@ -13,9 +13,15 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use futures::{FutureExt, StreamExt};
-// use futures::{select, FutureExt, StreamExt};
 use itertools::Itertools;
-use ratatui::{prelude::*, widgets::Paragraph};
+use ratatui::{
+    backend::CrosstermBackend,
+    layout::{Constraint, Layout, Rect},
+    style::{Style, Stylize},
+    text::{Line, Span},
+    widgets::Paragraph,
+    Frame, Terminal,
+};
 use strum::EnumIs;
 use tokio::select;
 use tui_big_text::BigText;

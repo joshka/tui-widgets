@@ -9,11 +9,12 @@ use ratatui::{
         self,
         event::{self, Event, KeyEvent},
     },
-    prelude::*,
-    widgets::*,
+    layout::{Constraint, Direction, Layout, Rect},
+    widgets::{Block, Borders, Paragraph, Wrap},
+    Frame,
 };
 use tui::Tui;
-use tui_prompts::prelude::*;
+use tui_prompts::{FocusState, Prompt, State, TextPrompt, TextState};
 
 #[derive(Parser)]
 struct Cli {

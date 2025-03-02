@@ -65,10 +65,17 @@ need_stdout = true
 allow_warnings = true
 
 [jobs.coverage]
-command = ["cargo", "llvm-cov", "--workspace", "--lcov", "--output-path", "target/lcov.info"]
+command = [
+    "cargo",
+    "llvm-cov",
+    "--workspace",
+    "--lcov",
+    "--output-path",
+    "target/lcov.info",
+]
 
 [jobs.format]
-command = ["cargo", "+nightly", "fmt", "--", "--check"]
+command = ["cargo", "+nightly", "fmt"]
 on_success = "back"
 
 [jobs.rdme]
