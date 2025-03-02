@@ -175,7 +175,7 @@ fn span_split_at(span: Span, mid: usize) -> (Span, Span) {
     (first, second)
 }
 
-impl<'a> TextPrompt<'a> {
+impl TextPrompt<'_> {
     fn render_block(&mut self, area: &mut Rect, buf: &mut Buffer) {
         if let Some(block) = self.block.take() {
             let inner = block.inner(*area);

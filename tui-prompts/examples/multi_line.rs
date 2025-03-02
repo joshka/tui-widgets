@@ -40,7 +40,7 @@ struct App<'a> {
     state: TextState<'a>,
 }
 
-impl<'a> App<'a> {
+impl App<'_> {
     pub fn new(cli: Cli) -> Self {
         Self {
             debug: cli.debug,
