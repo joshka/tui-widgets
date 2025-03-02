@@ -28,7 +28,6 @@ body = """
             {%- if commit.body %}
                 {{ commit.body | indent(prefix="  > ", first=true, blank=true) }}
             {%- endif %}
-            {%- endfor %}
     {% endfor -%}
 {% endfor %}\n
 """
