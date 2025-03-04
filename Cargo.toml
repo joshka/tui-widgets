@@ -25,6 +25,7 @@ itertools = "0.14.0"
 indoc = "2.0.5"
 lipsum = "0.9.1"
 pretty_assertions = "1.4.1"
+rand = "0.9.0"
 ratatui = { version = "0.29.0", default-features = false }
 ratatui-macros = "0.6.0"
 rstest = "0.24.0"
@@ -58,6 +59,7 @@ rust-version.workspace = true
 #! # features
 ## By default, all the widgets are enabled.
 default = [
+    "bar-graph",
     "big-text",
     "box-text",
     "cards",
@@ -66,6 +68,8 @@ default = [
     "qrcode",
     "scrollview",
 ]
+## Enables the [`bar_graph`] widget
+bar-graph = ["tui-bar-graph"]
 ## Enables the [`big_text`] widget
 big-text = ["tui-big-text"]
 ## Enables the [`box_text`] widget
@@ -84,6 +88,7 @@ scrollview = ["tui-scrollview"]
 [dependencies]
 document-features.workspace = true
 ratatui = { workspace = true }
+tui-bar-graph = { version = "0.1.0", path = "tui-bar-graph", optional = true }
 tui-big-text = { version = "0.7.0", path = "tui-big-text", optional = true }
 tui-box-text = { version = "0.2.0", path = "tui-box-text", optional = true }
 tui-cards = { version = "0.2.0", path = "tui-cards", optional = true }

@@ -1,0 +1,24 @@
+[package]
+name = "tui-bar-graph"
+description = "A Ratatui widget for rendering pretty bar graphs in the terminal"
+version = "0.1.0"
+documentation = "https://docs.rs/tui-bar-graph"
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+categories.workspace = true
+keywords.workspace = true
+
+[dependencies]
+colorgrad = "0.7.0"
+ratatui.workspace = true
+strum.workspace = true
+
+[dev-dependencies]
+clap.workspace = true
+color-eyre.workspace = true
+crossterm.workspace = true
+rand.workspace = true
+ratatui = { workspace = true, default-features = true }
