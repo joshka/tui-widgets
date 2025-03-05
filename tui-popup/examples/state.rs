@@ -1,7 +1,10 @@
 use color_eyre::Result;
 use lipsum::lipsum;
 use ratatui::{
-    crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind},
+    crossterm::{
+        event::{self, Event, KeyCode, KeyEvent, KeyEventKind},
+        terminal,
+    },
     prelude::{Constraint, Frame, Layout, Rect, Style, Stylize, Text},
     widgets::{Paragraph, Wrap},
     DefaultTerminal,
@@ -17,8 +20,11 @@ fn main() -> Result<()> {
 }
 
 fn run(mut terminal: DefaultTerminal) -> Result<()> {
-    let mut state = PopupState::default();
+    // Initialize state with terminal size and open state
+    let (width, height) = terminal::size()?;
+    let mut state = PopupState::new(Rect::new(0, 0, width, height));
     let mut exit = false;
+
     while !exit {
         terminal.draw(|frame| draw(frame, &mut state))?;
         handle_events(&mut state, &mut exit)?;
@@ -80,13 +86,38 @@ fn handle_events(popup: &mut PopupState, exit: &mut bool) -> Result<()> {
 }
 
 fn handle_key_event(event: KeyEvent, popup: &mut PopupState, exit: &mut bool) {
+    let is_ctrl = event.modifiers.contains(event::KeyModifiers::CONTROL);
     match event.code {
         KeyCode::Char('q') | KeyCode::Esc => *exit = true,
         KeyCode::Char('r') => *popup = PopupState::default(),
-        KeyCode::Char('j') | KeyCode::Down => popup.move_down(1),
-        KeyCode::Char('k') | KeyCode::Up => popup.move_up(1),
-        KeyCode::Char('h') | KeyCode::Left => popup.move_left(1),
-        KeyCode::Char('l') | KeyCode::Right => popup.move_right(1),
+        KeyCode::Char('j') | KeyCode::Down => {
+            if is_ctrl {
+                popup.move_to_bottom();
+            } else {
+                popup.move_down(1);
+            }
+        }
+        KeyCode::Char('k') | KeyCode::Up => {
+            if is_ctrl {
+                popup.move_to_top();
+            } else {
+                popup.move_up(1);
+            }
+        }
+        KeyCode::Char('h') | KeyCode::Left => {
+            if is_ctrl {
+                popup.move_to_leftmost();
+            } else {
+                popup.move_left(1);
+            }
+        }
+        KeyCode::Char('l') | KeyCode::Right => {
+            if is_ctrl {
+                popup.move_to_rightmost();
+            } else {
+                popup.move_right(1);
+            }
+        }
         _ => {}
     }
 }

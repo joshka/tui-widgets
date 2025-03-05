@@ -115,7 +115,7 @@ frame.render_widget_ref(popup, area);
 - [x] move the popup (using state)
 - [x] handle mouse events for dragging
 - [x] move to position
-- [ ] resize
+- [x] resize
 - [ ] set border set / style
 - [ ] add close button
 - [ ] add nicer styling of header etc.
