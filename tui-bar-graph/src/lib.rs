@@ -191,16 +191,6 @@ impl BarGraph {
         self
     }
 
-    /// Gets the color of a bar based on its value.
-    fn color(&self, value: f64) -> Color {
-        if let Some(gradient) = &self.gradient {
-            let color = gradient.at(value as f32);
-            to_ratatui_color(&color)
-        } else {
-            Color::Reset
-        }
-    }
-
     /// Renders the graph using solid blocks (█).
     fn render_solid(&self, area: Rect, buf: &mut Buffer, min: f64, max: f64) {
         let range = max - min;
@@ -208,11 +198,7 @@ impl BarGraph {
             let normalized = (value - min) / range;
             let column_height = (normalized * area.height as f64).ceil() as usize;
             for (i, row) in column.rows().rev().enumerate().take(column_height) {
-                let color_value = match self.color_mode {
-                    ColorMode::Solid => value,
-                    ColorMode::VerticalGradient => min + i as f64 / area.height as f64 * range,
-                };
-                let color = self.color(color_value);
+                let color = self.color_for(area, min, range, value, i);
                 buf[row].set_symbol("█").set_fg(color);
             }
         }
@@ -243,15 +229,11 @@ impl BarGraph {
             let column_height = (left_total_dots.max(right_total_dots) as f64 / DOTS_PER_ROW as f64)
                 .ceil() as usize;
 
-            for (i, row) in column.rows().rev().enumerate().take(column_height) {
-                let color_value = match self.color_mode {
-                    // Use the average of the left and right values for solid color mode
-                    ColorMode::Solid => (left_value + right_value) / 2.0,
-                    ColorMode::VerticalGradient => min + i as f64 / area.height as f64 * range,
-                };
-                let color = self.color(color_value);
+            for (row_index, row) in column.rows().rev().enumerate().take(column_height) {
+                let value = f64::midpoint(left_value, right_value);
+                let color = self.color_for(area, min, max, value, row_index);
 
-                let dots_below = i * DOTS_PER_ROW;
+                let dots_below = row_index * DOTS_PER_ROW;
                 let left_dots = left_total_dots.saturating_sub(dots_below).min(4);
                 let right_dots = right_total_dots.saturating_sub(dots_below).min(4);
 
@@ -260,34 +242,39 @@ impl BarGraph {
             }
         }
     }
+
+    fn color_for(&self, area: Rect, min: f64, max: f64, value: f64, row: usize) -> Color {
+        let color_value = match self.color_mode {
+            ColorMode::Solid => value,
+            ColorMode::VerticalGradient => min + row as f64 / area.height as f64 * (max - min),
+        };
+        self.gradient
+            .as_ref()
+            .map(|gradient| {
+                let color = gradient.at(color_value as f32);
+                let rgba = color.to_rgba8();
+                // TODO this can be changed to .into() in ratatui 0.30
+                Color::Rgb(rgba[0], rgba[1], rgba[2])
+            })
+            .unwrap_or(Color::Reset)
+    }
 }
 
 impl Widget for BarGraph {
     fn render(self, area: Rect, buf: &mut Buffer) {
         // f64 doesn't impl Ord because NaN != NaN, so we use fold instead of iter::max/min
-        let max = self
-            .max
-            .unwrap_or_else(|| self.data.iter().copied().fold(f64::NEG_INFINITY, f64::max));
         let min = self
             .min
             .unwrap_or_else(|| self.data.iter().copied().fold(f64::INFINITY, f64::min));
-
-        if max == min {
-            // don't render anything for a single value
-            return;
-        }
-
+        let max = self
+            .max
+            .unwrap_or_else(|| self.data.iter().copied().fold(f64::NEG_INFINITY, f64::max));
+        let max = max.max(min + f64::EPSILON); // avoid division by zero if min == max
         match self.bar_style {
             BarStyle::Solid => self.render_solid(area, buf, min, max),
             BarStyle::Braille => self.render_braille(area, buf, min, max),
         }
     }
-}
-
-/// Converts a colorgrad color to a ratatui color.
-fn to_ratatui_color(color: &colorgrad::Color) -> Color {
-    let rgba = color.to_rgba8();
-    Color::Rgb(rgba[0], rgba[1], rgba[2])
 }
 
 #[cfg(test)]
