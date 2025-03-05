@@ -34,7 +34,7 @@ use crate::PixelSize;
 ///         "World".blue().into(),
 ///         "=====".into(),
 ///     ])
-///    .build();
+///     .build();
 /// ```
 ///
 /// Renders:

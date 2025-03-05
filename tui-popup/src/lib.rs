@@ -5,7 +5,10 @@
 //! # Example
 //!
 //! ```rust
-//! use ratatui::{Frame, style::{Style, Stylize}};
+//! use ratatui::{
+//!     style::{Style, Stylize},
+//!     Frame,
+//! };
 //! use tui_popup::Popup;
 //!
 //! fn render_popup(frame: &mut Frame) {

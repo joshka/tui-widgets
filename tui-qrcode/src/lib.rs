@@ -120,8 +120,11 @@ use ratatui::{
 ///
 /// ```no_run
 /// use qrcode::QrCode;
+/// use ratatui::{
+///     style::{Style, Stylize},
+///     Frame,
+/// };
 /// use tui_qrcode::{Colors, QrCodeWidget, QuietZone, Scaling};
-/// use ratatui::{Frame, style::{Style, Stylize}};
 ///
 /// fn render(frame: &mut Frame) {
 ///     let qr_code = QrCode::new("https://ratatui.rs").expect("failed to create QR code");
@@ -259,7 +262,7 @@ impl QrCodeWidget {
     ///
     /// ```
     /// use qrcode::QrCode;
-    /// use tui_qrcode::{QrCodeWidget, Colors};
+    /// use tui_qrcode::{Colors, QrCodeWidget};
     ///
     /// let qr_code = QrCode::new("https://ratatui.rs").expect("failed to create QR code");
     /// let widget = QrCodeWidget::new(qr_code).colors(Colors::Inverted);
@@ -278,8 +281,8 @@ impl QrCodeWidget {
     ///
     /// ```
     /// use qrcode::QrCode;
-    /// use tui_qrcode::QrCodeWidget;
     /// use ratatui::style::{Style, Stylize};
+    /// use tui_qrcode::QrCodeWidget;
     ///
     /// let qr_code = QrCode::new("https://ratatui.rs").expect("failed to create QR code");
     /// let style = Style::new().red().on_light_yellow();

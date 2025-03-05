@@ -127,7 +127,8 @@ impl ScrollView {
     /// # use ratatui::{prelude::*, layout::Size, widgets::*};
     /// # use tui_scrollview::{ScrollView, ScrollbarVisibility};
     ///
-    /// let mut scroll_view = ScrollView::new(Size::new(20, 20)).vertical_scrollbar_visibility(ScrollbarVisibility::Always);
+    /// let mut scroll_view = ScrollView::new(Size::new(20, 20))
+    ///     .vertical_scrollbar_visibility(ScrollbarVisibility::Always);
     /// ```
     pub fn vertical_scrollbar_visibility(mut self, visibility: ScrollbarVisibility) -> Self {
         self.vertical_scrollbar_visibility = visibility;
@@ -146,7 +147,8 @@ impl ScrollView {
     /// # use ratatui::{prelude::*, layout::Size, widgets::*};
     /// # use tui_scrollview::{ScrollView, ScrollbarVisibility};
     ///
-    /// let mut scroll_view = ScrollView::new(Size::new(20, 20)).horizontal_scrollbar_visibility(ScrollbarVisibility::Never);
+    /// let mut scroll_view = ScrollView::new(Size::new(20, 20))
+    ///     .horizontal_scrollbar_visibility(ScrollbarVisibility::Never);
     /// ```
     pub fn horizontal_scrollbar_visibility(mut self, visibility: ScrollbarVisibility) -> Self {
         self.horizontal_scrollbar_visibility = visibility;
@@ -165,7 +167,8 @@ impl ScrollView {
     /// # use ratatui::{prelude::*, layout::Size, widgets::*};
     /// # use tui_scrollview::{ScrollView, ScrollbarVisibility};
     ///
-    /// let mut scroll_view = ScrollView::new(Size::new(20, 20)).scrollbars_visibility(ScrollbarVisibility::Automatic);
+    /// let mut scroll_view =
+    ///     ScrollView::new(Size::new(20, 20)).scrollbars_visibility(ScrollbarVisibility::Automatic);
     /// ```
     pub fn scrollbars_visibility(mut self, visibility: ScrollbarVisibility) -> Self {
         self.vertical_scrollbar_visibility = visibility;
