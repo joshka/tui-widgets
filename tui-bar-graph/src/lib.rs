@@ -283,7 +283,7 @@ mod tests {
 
     #[test]
     fn test_render() {
-        let data = vec![1.0, 2.0, 3.0, 4.0, 5.0];
+        let data = vec![0.0, 1.0, 2.0, 3.0, 4.0, 5.0];
         let bar_graph = BarGraph::new(data);
 
         let mut buf = Buffer::empty(Rect::new(0, 0, 10, 10));
@@ -292,16 +292,16 @@ mod tests {
         assert_eq!(
             buf,
             Buffer::with_lines(vec![
-                "⠀⠀⡇       ",
-                "⠀⠀⡇       ",
-                "⠀⢠⡇       ",
-                "⠀⢸⡇       ",
-                "⠀⢸⡇       ",
-                "⠀⣿⡇       ",
-                "⠀⣿⡇       ",
-                "⢠⣿⡇       ",
-                "⢸⣿⡇       ",
-                "⢸⣿⡇       ",
+                "  ⢸       ",
+                "  ⢸       ",
+                "  ⣿       ",
+                "  ⣿       ",
+                " ⢸⣿       ",
+                " ⢸⣿       ",
+                " ⣿⣿       ",
+                " ⣿⣿       ",
+                "⢸⣿⣿       ",
+                "⢸⣿⣿       ",
             ])
         );
     }
