@@ -73,7 +73,7 @@ const BRAILLE_PATTERNS: [[&str; 5]; 5] = [
 /// # fn render(frame: &mut ratatui::Frame, area: ratatui::layout::Rect) {
 /// let data = vec![0.0, 0.1, 0.2, 0.3, 0.4, 0.5];
 /// let bar_graph = BarGraph::new(data)
-///    .with_gradient(colorgrad::preset::turbo())
+///     .with_gradient(colorgrad::preset::turbo())
 ///     .with_bar_style(BarStyle::Braille)
 ///     .with_color_mode(ColorMode::VerticalGradient);
 /// frame.render_widget(bar_graph, area);
@@ -204,86 +204,59 @@ impl BarGraph {
     /// Renders the graph using solid blocks (█).
     fn render_solid(&self, area: Rect, buf: &mut Buffer, min: f64, max: f64) {
         let range = max - min;
-
-        for (i, &value) in self.data.iter().enumerate() {
-            if i == area.width as usize {
-                break;
-            }
+        for (&value, column) in self.data.iter().zip(area.columns()) {
             let normalized = (value - min) / range;
-            let height = (normalized * area.height as f64).round() as u16;
-            for y in 0..area.height {
-                if y < height {
-                    let cell = &mut buf[(area.left() + i as u16, area.bottom() - y - 1)];
-                    cell.set_symbol("█");
-
-                    let color_value = match self.color_mode {
-                        ColorMode::Solid => value,
-                        ColorMode::VerticalGradient => {
-                            // For gradient coloring, we calculate the color based on the y position
-                            // within the bar (bottom to top gradient)
-                            let y_normalized = y as f64 / area.height as f64;
-                            min + y_normalized * range
-                        }
-                    };
-                    cell.set_fg(self.color(color_value));
-                }
+            let column_height = (normalized * area.height as f64).ceil() as usize;
+            for (i, row) in column.rows().rev().enumerate().take(column_height) {
+                let color_value = match self.color_mode {
+                    ColorMode::Solid => value,
+                    ColorMode::VerticalGradient => min + i as f64 / area.height as f64 * range,
+                };
+                let color = self.color(color_value);
+                buf[row].set_symbol("█").set_fg(color);
             }
         }
     }
 
     /// Renders the graph using braille characters.
     fn render_braille(&self, area: Rect, buf: &mut Buffer, min: f64, max: f64) {
-        // Each braille character represents 4 vertical dots
-        const DOTS_PER_ROW: usize = 4;
-
         let range = max - min;
+        const DOTS_PER_ROW: usize = 4;
         let row_count = area.height;
         let total_dots = row_count as usize * DOTS_PER_ROW;
 
-        for (i, chunk) in self.data.chunks(2).enumerate() {
-            if i >= area.width as usize {
-                break;
-            }
+        for (chunk, column) in self
+            .data
+            .chunks(2)
+            .zip(area.columns())
+            .take(area.width as usize)
+        {
             let left_value = chunk.get(0).cloned().unwrap_or(min);
             let right_value = chunk.get(1).cloned().unwrap_or(min);
 
-            let left_normalized = ((left_value - min) / range).clamp(0.0, 1.0);
-            let right_normalized = ((right_value - min) / range).clamp(0.0, 1.0);
+            let left_normalized = (left_value - min) / range;
+            let right_normalized = (right_value - min) / range;
 
-            // Calculate total height in dots (scaled to fill the entire height)
             let left_total_dots = (left_normalized * total_dots as f64).round() as usize;
             let right_total_dots = (right_normalized * total_dots as f64).round() as usize;
 
-            // Render each row of braille characters
-            for row in 0..row_count {
-                // Calculate row position (from bottom to top)
-                let y_pos = area.bottom() - 1 - row;
+            let column_height = (left_total_dots.max(right_total_dots) as f64 / DOTS_PER_ROW as f64)
+                .ceil() as usize;
 
-                // Calculate the base dot index for this row (counting from bottom)
-                let row_base = row * DOTS_PER_ROW as u16;
-
-                // Calculate dots for this braille character
-                let left_height = (left_total_dots as u16).saturating_sub(row_base).min(4) as usize;
-                let right_height =
-                    (right_total_dots as u16).saturating_sub(row_base).min(4) as usize;
-
-                // Place the braille character
-                let symbol = BRAILLE_PATTERNS[left_height][right_height];
-                let cell = &mut buf[(area.left() + i as u16, y_pos)];
-                cell.set_symbol(symbol);
-
+            for (i, row) in column.rows().rev().enumerate().take(column_height) {
                 let color_value = match self.color_mode {
-                    ColorMode::Solid => {
-                        // Use the average of the two values for coloring
-                        (left_value + right_value) / 2.0
-                    }
-                    ColorMode::VerticalGradient => {
-                        // For gradient coloring, calculate position in the overall graph
-                        let row_normalized = row as f64 / row_count as f64;
-                        min + row_normalized * range
-                    }
+                    // Use the average of the left and right values for solid color mode
+                    ColorMode::Solid => (left_value + right_value) / 2.0,
+                    ColorMode::VerticalGradient => min + i as f64 / area.height as f64 * range,
                 };
-                cell.set_fg(self.color(color_value));
+                let color = self.color(color_value);
+
+                let dots_below = i * DOTS_PER_ROW;
+                let left_dots = left_total_dots.saturating_sub(dots_below).min(4);
+                let right_dots = right_total_dots.saturating_sub(dots_below).min(4);
+
+                let symbol = BRAILLE_PATTERNS[left_dots][right_dots];
+                buf[row].set_symbol(symbol).set_fg(color);
             }
         }
     }
@@ -291,13 +264,18 @@ impl BarGraph {
 
 impl Widget for BarGraph {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        // f64 doesn't impl Ord because NaN != NaN, so we can't use iter::max/min
+        // f64 doesn't impl Ord because NaN != NaN, so we use fold instead of iter::max/min
         let max = self
             .max
             .unwrap_or_else(|| self.data.iter().copied().fold(f64::NEG_INFINITY, f64::max));
         let min = self
             .min
             .unwrap_or_else(|| self.data.iter().copied().fold(f64::INFINITY, f64::min));
+
+        if max == min {
+            // don't render anything for a single value
+            return;
+        }
 
         match self.bar_style {
             BarStyle::Solid => self.render_solid(area, buf, min, max),
