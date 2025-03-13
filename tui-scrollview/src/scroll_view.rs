@@ -187,6 +187,24 @@ impl ScrollView {
     pub fn render_widget<W: Widget>(&mut self, widget: W, area: Rect) {
         widget.render(area, &mut self.buf);
     }
+
+    /// Render a stateful widget into the scroll buffer
+    ///
+    /// This is the equivalent of `Frame::render_stateful_widget`, but renders the stateful widget
+    /// into the scroll buffer rather than the main buffer. The stateful widget will be rendered
+    /// into the area of the buffer specified by the `area` parameter.
+    ///
+    /// This should not be confused with the `render` method, which renders the visible area of the
+    /// ScrollView into the main buffer.
+
+    pub fn render_stateful_widget<W: StatefulWidget>(
+        &mut self,
+        widget: W,
+        area: Rect,
+        state: &mut W::State,
+    ) {
+        widget.render(area, &mut self.buf, state);
+    }
 }
 
 impl StatefulWidget for ScrollView {
