@@ -780,4 +780,28 @@ mod tests {
             ])
         )
     }
+
+    #[rstest]
+    #[rustfmt::skip]
+    fn render_stateful_widget(mut scroll_view: ScrollView) {
+        use ratatui::widgets::{List, ListState};
+        scroll_view = scroll_view.horizontal_scrollbar_visibility(ScrollbarVisibility::Never);
+        let mut buf = Buffer::empty(Rect::new(0, 0, 7, 5));
+        let mut state = ScrollViewState::default();
+        let mut list_state = ListState::default();
+        let items: Vec<String> = (1..=10).map(|i| format!("Item {}", i)).collect();
+        let list = List::new(items);
+        scroll_view.render_stateful_widget(list, scroll_view.area(), &mut list_state);
+        scroll_view.render(buf.area, &mut buf, &mut state);
+        assert_eq!(
+            buf,
+            Buffer::with_lines(vec![
+                "Item 1▲",
+                "Item 2█",
+                "Item 3█",
+                "Item 4║",
+                "Item 5▼",
+            ])
+        )
+    }
 }
