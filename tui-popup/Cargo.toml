@@ -53,3 +53,7 @@ required-features = ["crossterm"]
 [[example]]
 name = "state"
 required-features = ["crossterm"]
+
+[[example]]
+name = "interactive"
+required-features = ["crossterm"]
