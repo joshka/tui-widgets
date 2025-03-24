@@ -2,9 +2,17 @@
 //!
 //! Uses the [Colorgrad] crate for gradient coloring.
 //!
-//! ![Braille demo](https://vhs.charm.sh/vhs-3H7bFj0M1kj0GoHcc4EIJ4.gif)
+//! ![Braille Rainbow](https://vhs.charm.sh/vhs-1sx9Ht6NzU6e28Cl51jJVv.gif)
+//! ![Solid Plasma](https://vhs.charm.sh/vhs-7pWuLtZpzrz1OVD04cMt1a.gif)
 //!
-//! ![Solid demo](https://vhs.charm.sh/vhs-5XMtSFgX3vqOhKcKl8fEQK.gif)
+//! <details><summary>More examples</summary>
+//!
+//! ![Braille Magma](https://vhs.charm.sh/vhs-4RDwcz9DApA90iJYMQXHXd.gif)
+//! ![Braille Viridis](https://vhs.charm.sh/vhs-5ylsZAdKGPiHUYboOpZFZL.gif)
+//! ![Solid Inferno](https://vhs.charm.sh/vhs-4z1gbmJ50KGz2TPej3mnVf.gif)
+//! ![Solid Sinebow](https://vhs.charm.sh/vhs-63aAmMhcfMT8CnWCV20dsn.gif)
+//!
+//! </details>
 //!
 //! [![Crate badge]][Crate]
 //! [![Docs Badge]][Docs]
@@ -82,7 +90,7 @@ const BRAILLE_PATTERNS: [[&str; 5]; 5] = [
 /// frame.render_widget(bar_graph, area);
 /// # }
 /// ```
-pub struct BarGraph {
+pub struct BarGraph<'g> {
     /// The data to display as bars.
     data: Vec<f64>,
 
@@ -93,7 +101,7 @@ pub struct BarGraph {
     min: Option<f64>,
 
     /// A gradient to use for coloring the bars.
-    gradient: Option<Box<dyn Gradient>>,
+    gradient: Option<Box<dyn Gradient + 'g>>,
 
     /// The direction of the gradient coloring.
     color_mode: ColorMode,
@@ -129,7 +137,7 @@ pub enum BarStyle {
     Braille,
 }
 
-impl BarGraph {
+impl<'g> BarGraph<'g> {
     /// Creates a new bar graph with the given data.
     pub fn new(data: Vec<f64>) -> Self {
         Self {
@@ -144,13 +152,11 @@ impl BarGraph {
 
     /// Sets the gradient to use for coloring the bars.
     ///
-    /// If `None`, the bars are colored with the default foreground color.
-    ///
     /// See the [colorgrad] crate for information on creating gradients. Note that the default
     /// domain (range) of the gradient is [0, 1], so you may need to scale your data to fit this
     /// range, or modify the gradient's domain to fit your data.
-    pub fn with_gradient<T: Gradient + 'static>(mut self, gradient: T) -> Self {
-        self.gradient = Some(Box::new(gradient));
+    pub fn with_gradient(mut self, gradient: impl Gradient + 'g) -> Self {
+        self.gradient = Some(gradient.boxed());
         self
     }
 
@@ -265,7 +271,7 @@ impl BarGraph {
     }
 }
 
-impl Widget for BarGraph {
+impl Widget for BarGraph<'_> {
     fn render(self, area: Rect, buf: &mut Buffer) {
         // f64 doesn't impl Ord because NaN != NaN, so we use fold instead of iter::max/min
         let min = self
@@ -285,6 +291,14 @@ impl Widget for BarGraph {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn with_gradient() {
+        let data = vec![0.0, 1.0, 2.0, 3.0, 4.0, 5.0];
+        // check that we can use either a gradient or a boxed gradient
+        let _graph = BarGraph::new(data.clone()).with_gradient(colorgrad::preset::turbo());
+        let _graph = BarGraph::new(data.clone()).with_gradient(colorgrad::preset::turbo().boxed());
+    }
 
     #[test]
     fn test_render() {
