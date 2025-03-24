@@ -12,7 +12,8 @@ categories.workspace = true
 keywords.workspace = true
 
 [dependencies]
-colorgrad = "0.7.0"
+# patch to support boxed trait objects
+colorgrad = { version = "0.7.0", git = "https://github.com/mazznoer/colorgrad-rs/", rev = "900b3a156ba64fb5849767898ecbb865130e940e" }
 ratatui.workspace = true
 strum.workspace = true
 

@@ -6,9 +6,17 @@ A [Ratatui] widget for displaying pretty bar graphs
 
 Uses the [Colorgrad] crate for gradient coloring.
 
-![Braille demo](https://vhs.charm.sh/vhs-3H7bFj0M1kj0GoHcc4EIJ4.gif)
+![Braille Rainbow](https://vhs.charm.sh/vhs-1sx9Ht6NzU6e28Cl51jJVv.gif)
+![Solid Plasma](https://vhs.charm.sh/vhs-7pWuLtZpzrz1OVD04cMt1a.gif)
 
-![Solid demo](https://vhs.charm.sh/vhs-5XMtSFgX3vqOhKcKl8fEQK.gif)
+<details><summary>More examples</summary>
+
+![Braille Magma](https://vhs.charm.sh/vhs-4RDwcz9DApA90iJYMQXHXd.gif)
+![Braille Viridis](https://vhs.charm.sh/vhs-5ylsZAdKGPiHUYboOpZFZL.gif)
+![Solid Inferno](https://vhs.charm.sh/vhs-4z1gbmJ50KGz2TPej3mnVf.gif)
+![Solid Sinebow](https://vhs.charm.sh/vhs-63aAmMhcfMT8CnWCV20dsn.gif)
+
+</details>
 
 [![Crate badge]][Crate]
 [![Docs Badge]][Docs]
@@ -18,7 +26,7 @@ Uses the [Colorgrad] crate for gradient coloring.
 ## Installation
 
 ```shell
-cargo add ratatui tui-bar-graph
+cargo add colorgrad ratatui tui-bar-graph
 ```
 
 ## Example
