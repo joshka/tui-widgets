@@ -172,7 +172,7 @@ pub enum Scaling {
     /// The QR code will be scaled so each pixel is the size of the given dimensions.
     ///
     /// The minimum dimensions are 1x1 (width x height).
-    Exact(u32, u32),
+    Exact(u16, u16),
 }
 
 impl Default for Scaling {
@@ -293,6 +293,50 @@ impl QrCodeWidget {
         self.style = style.into();
         self
     }
+
+    /// The area the QR code would theoretically occupy if rendered into `area`.
+    ///
+    /// Note that if the QR code does not fit into `area`, the resulting [`Rect`] might
+    /// be larger.
+    ///
+    /// # Example
+    /// ```
+    /// use qrcode::QrCode;
+    /// use tui_qrcode::{QrCodeWidget, Scaling};
+    /// use ratatui::layout::Rect;
+    ///
+    /// let qr_code = QrCode::new("https://ratatui.rs").expect("failed to create QR code");
+    /// let widget = QrCodeWidget::new(qr_code).scaling(Scaling::Max);
+    /// let area = Rect { x: 0, y: 0, width: 50, height: 50};
+    /// let widget_area = widget.area(area);
+    ///
+    /// assert_eq!(widget_area.width, 33);
+    /// assert_eq!(widget_area.height, 50);
+    /// ```
+    #[must_use]
+    pub fn area(&self, area: Rect) -> Rect {
+        let qr_width: u16 = match self.quiet_zone {
+            QuietZone::Enabled => 8,
+            QuietZone::Disabled => 0,
+        } + self.qr_code.width() as u16;
+
+        let (x, y) = match self.scaling {
+            Scaling::Exact(x, y) => (x, y),
+            Scaling::Min => {
+                let x = area.width.div_ceil(qr_width);
+                let y = (area.height * 2).div_ceil(qr_width);
+                (x, y)
+            }
+            Scaling::Max => {
+                let x = area.width / qr_width;
+                let y = (area.height * 2) / qr_width;
+                (x, y)
+            }
+        };
+        let width = qr_width * x;
+        let height = (qr_width * y).div_ceil(2);
+        Rect::new(area.x, area.y, width, height)
+    }
 }
 
 impl Styled for QrCodeWidget {
@@ -323,7 +367,9 @@ impl Widget for &QrCodeWidget {
         match self.scaling {
             Scaling::Min => renderer.min_dimensions(area.width as u32, area.height as u32 * 2),
             Scaling::Max => renderer.max_dimensions(area.width as u32, area.height as u32 * 2),
-            Scaling::Exact(width, height) => renderer.module_dimensions(width, height),
+            Scaling::Exact(width, height) => {
+                renderer.module_dimensions(width as u32, height as u32)
+            }
         };
         match self.colors {
             Colors::Normal => renderer
@@ -336,5 +382,149 @@ impl Widget for &QrCodeWidget {
         Text::raw(renderer.build())
             .style(self.style)
             .render(area, buf);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use pretty_assertions::assert_eq;
+
+    use super::*;
+
+    #[test]
+    fn area_tiny_qr() {
+        // Width of 21
+        let qr_code = QrCode::new("").expect("failed to create QR code");
+        let rect = Rect {
+            x: 10,
+            y: 10,
+            width: 71,
+            height: 71,
+        };
+
+        // Exact
+        let widget = QrCodeWidget::new(qr_code.clone()).quiet_zone(QuietZone::Disabled);
+        let widget_area = widget.area(rect);
+        assert_eq!(widget_area.width, 21);
+        assert_eq!(widget_area.height, 11);
+
+        // Max
+        let widget = QrCodeWidget::new(qr_code.clone())
+            .quiet_zone(QuietZone::Disabled)
+            .scaling(Scaling::Max);
+        let widget_area = widget.area(rect);
+        assert_eq!(widget_area.width, 63); // Fits 3 times horizontally
+        assert_eq!(widget_area.height, 63); // Fits 6 times vertically
+
+        // Min
+        let widget = QrCodeWidget::new(qr_code.clone())
+            .quiet_zone(QuietZone::Disabled)
+            .scaling(Scaling::Min);
+        let widget_area = widget.area(rect);
+        assert_eq!(widget_area.width, 84); // 4 times
+        assert_eq!(widget_area.height, 74); // 7 times
+    }
+
+    #[test]
+    fn area_small_qr() {
+        // Width of 21
+        let qr_code = QrCode::new("").expect("failed to create QR code");
+        let rect = Rect {
+            x: 0,
+            y: 0,
+            width: 22,
+            height: 12,
+        };
+
+        // Exact
+        let widget = QrCodeWidget::new(qr_code.clone()).quiet_zone(QuietZone::Disabled);
+        let widget_area = widget.area(rect);
+        assert_eq!(widget_area.width, 21);
+        assert_eq!(widget_area.height, 11);
+
+        // Max
+        let widget = QrCodeWidget::new(qr_code.clone())
+            .quiet_zone(QuietZone::Disabled)
+            .scaling(Scaling::Max);
+        let widget_area = widget.area(rect);
+        assert_eq!(widget_area.width, 21); // Fits once horizontally
+        assert_eq!(widget_area.height, 11); // Fits once vertically
+
+        // Min
+        let widget = QrCodeWidget::new(qr_code.clone())
+            .quiet_zone(QuietZone::Disabled)
+            .scaling(Scaling::Min);
+        let widget_area = widget.area(rect);
+        assert_eq!(widget_area.width, 42); // Twice
+        assert_eq!(widget_area.height, 21); // Twice
+    }
+
+    #[test]
+    fn area_exact_qr() {
+        // Width of 21
+        let qr_code = QrCode::new("").expect("failed to create QR code");
+        let rect = Rect {
+            x: 0,
+            y: 0,
+            width: 21,
+            height: 11,
+        };
+
+        // Exact
+        let widget = QrCodeWidget::new(qr_code.clone()).quiet_zone(QuietZone::Disabled);
+        let widget_area = widget.area(rect);
+        assert_eq!(widget_area.width, 21);
+        assert_eq!(widget_area.height, 11);
+
+        // Max
+        let widget = QrCodeWidget::new(qr_code.clone())
+            .quiet_zone(QuietZone::Disabled)
+            .scaling(Scaling::Max);
+        let widget_area = widget.area(rect);
+        assert_eq!(widget_area.width, 21);
+        assert_eq!(widget_area.height, 11);
+
+        // Min
+        let widget = QrCodeWidget::new(qr_code.clone())
+            .quiet_zone(QuietZone::Disabled)
+            .scaling(Scaling::Min);
+        let widget_area = widget.area(rect);
+        assert_eq!(widget_area.width, 21);
+        // Once is too small - would only occupy (21 / 2) = 10.5
+        assert_eq!(widget_area.height, 21);
+    }
+
+    #[test]
+    fn area_large_qr() {
+        // Width of 21
+        let qr_code = QrCode::new("").expect("failed to create QR code");
+        let rect = Rect {
+            x: 0,
+            y: 0,
+            width: 20,
+            height: 10,
+        };
+
+        // Exact
+        let widget = QrCodeWidget::new(qr_code.clone()).quiet_zone(QuietZone::Disabled);
+        let widget_area = widget.area(rect);
+        assert_eq!(widget_area.width, 21);
+        assert_eq!(widget_area.height, 11);
+
+        // Max
+        let widget = QrCodeWidget::new(qr_code.clone())
+            .quiet_zone(QuietZone::Disabled)
+            .scaling(Scaling::Max);
+        let widget_area = widget.area(rect);
+        assert_eq!(widget_area.width, 0);
+        assert_eq!(widget_area.height, 0);
+
+        // Min
+        let widget = QrCodeWidget::new(qr_code.clone())
+            .quiet_zone(QuietZone::Disabled)
+            .scaling(Scaling::Min);
+        let widget_area = widget.area(rect);
+        assert_eq!(widget_area.width, 21);
+        assert_eq!(widget_area.height, 11);
     }
 }
