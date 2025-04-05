@@ -7,6 +7,7 @@
 //!
 //! Includes the following widgets, which are each also available as standalone crates:
 //!
+//! - [tui-bar-graph](https://crates.io/crates/tui-bar-graph)
 //! - [tui-big-text](https://crates.io/crates/tui-big-text)
 //! - [tui-box-text](https://crates.io/crates/tui-box-text)
 //! - [tui-cards](https://crates.io/crates/tui-cards)
@@ -16,30 +17,27 @@
 //! - [tui-scrollview](https://crates.io/crates/tui-scrollview)
 #![doc = document_features::document_features!()]
 
+#[cfg(feature = "bar-graph")]
+#[doc(inline)]
+pub use tui_bar_graph as bar_graph;
 #[cfg(feature = "big-text")]
 #[doc(inline)]
 pub use tui_big_text as big_text;
-
 #[cfg(feature = "box-text")]
 #[doc(inline)]
 pub use tui_box_text as box_text;
-
 #[cfg(feature = "cards")]
 #[doc(inline)]
 pub use tui_cards as cards;
-
 #[cfg(feature = "popup")]
 #[doc(inline)]
 pub use tui_popup as popup;
-
 #[cfg(feature = "prompts")]
 #[doc(inline)]
 pub use tui_prompts as prompts;
-
 #[cfg(feature = "qrcode")]
 #[doc(inline)]
 pub use tui_qrcode as qrcode;
-
 #[cfg(feature = "scrollview")]
 #[doc(inline)]
 pub use tui_scrollview as scrollview;

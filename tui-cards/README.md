@@ -10,7 +10,7 @@ A simple library to render playing cards in a terminal using tui-rs.
 use tui_cards::{Card, Rank, Suit};
 
 let card = Card::new(Rank::Ace, Suit::Spades);
-frame.render_widget(&card, area);
+frame.render_widget(&card, frame.area());
 ```
 
 ## Demo

@@ -127,7 +127,8 @@ impl ScrollView {
     /// # use ratatui::{prelude::*, layout::Size, widgets::*};
     /// # use tui_scrollview::{ScrollView, ScrollbarVisibility};
     ///
-    /// let mut scroll_view = ScrollView::new(Size::new(20, 20)).vertical_scrollbar_visibility(ScrollbarVisibility::Always);
+    /// let mut scroll_view = ScrollView::new(Size::new(20, 20))
+    ///     .vertical_scrollbar_visibility(ScrollbarVisibility::Always);
     /// ```
     pub fn vertical_scrollbar_visibility(mut self, visibility: ScrollbarVisibility) -> Self {
         self.vertical_scrollbar_visibility = visibility;
@@ -146,7 +147,8 @@ impl ScrollView {
     /// # use ratatui::{prelude::*, layout::Size, widgets::*};
     /// # use tui_scrollview::{ScrollView, ScrollbarVisibility};
     ///
-    /// let mut scroll_view = ScrollView::new(Size::new(20, 20)).horizontal_scrollbar_visibility(ScrollbarVisibility::Never);
+    /// let mut scroll_view = ScrollView::new(Size::new(20, 20))
+    ///     .horizontal_scrollbar_visibility(ScrollbarVisibility::Never);
     /// ```
     pub fn horizontal_scrollbar_visibility(mut self, visibility: ScrollbarVisibility) -> Self {
         self.horizontal_scrollbar_visibility = visibility;
@@ -165,7 +167,8 @@ impl ScrollView {
     /// # use ratatui::{prelude::*, layout::Size, widgets::*};
     /// # use tui_scrollview::{ScrollView, ScrollbarVisibility};
     ///
-    /// let mut scroll_view = ScrollView::new(Size::new(20, 20)).scrollbars_visibility(ScrollbarVisibility::Automatic);
+    /// let mut scroll_view =
+    ///     ScrollView::new(Size::new(20, 20)).scrollbars_visibility(ScrollbarVisibility::Automatic);
     /// ```
     pub fn scrollbars_visibility(mut self, visibility: ScrollbarVisibility) -> Self {
         self.vertical_scrollbar_visibility = visibility;
@@ -183,6 +186,24 @@ impl ScrollView {
     /// ScrollView into the main buffer.
     pub fn render_widget<W: Widget>(&mut self, widget: W, area: Rect) {
         widget.render(area, &mut self.buf);
+    }
+
+    /// Render a stateful widget into the scroll buffer
+    ///
+    /// This is the equivalent of `Frame::render_stateful_widget`, but renders the stateful widget
+    /// into the scroll buffer rather than the main buffer. The stateful widget will be rendered
+    /// into the area of the buffer specified by the `area` parameter.
+    ///
+    /// This should not be confused with the `render` method, which renders the visible area of the
+    /// ScrollView into the main buffer.
+
+    pub fn render_stateful_widget<W: StatefulWidget>(
+        &mut self,
+        widget: W,
+        area: Rect,
+        state: &mut W::State,
+    ) {
+        widget.render(area, &mut self.buf, state);
     }
 }
 
@@ -756,6 +777,30 @@ mod tests {
                 "EFGHIJ",
                 "OPQRST",
                 "YZABCD",
+            ])
+        )
+    }
+
+    #[rstest]
+    #[rustfmt::skip]
+    fn render_stateful_widget(mut scroll_view: ScrollView) {
+        use ratatui::widgets::{List, ListState};
+        scroll_view = scroll_view.horizontal_scrollbar_visibility(ScrollbarVisibility::Never);
+        let mut buf = Buffer::empty(Rect::new(0, 0, 7, 5));
+        let mut state = ScrollViewState::default();
+        let mut list_state = ListState::default();
+        let items: Vec<String> = (1..=10).map(|i| format!("Item {}", i)).collect();
+        let list = List::new(items);
+        scroll_view.render_stateful_widget(list, scroll_view.area(), &mut list_state);
+        scroll_view.render(buf.area, &mut buf, &mut state);
+        assert_eq!(
+            buf,
+            Buffer::with_lines(vec![
+                "Item 1▲",
+                "Item 2█",
+                "Item 3█",
+                "Item 4║",
+                "Item 5▼",
             ])
         )
     }

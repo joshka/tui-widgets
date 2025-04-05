@@ -93,7 +93,7 @@
 use qrcode::{render::unicode::Dense1x2, QrCode};
 use ratatui::{
     buffer::Buffer,
-    layout::Rect,
+    layout::{Rect, Size},
     style::{Style, Styled},
     text::Text,
     widgets::Widget,
@@ -120,8 +120,11 @@ use ratatui::{
 ///
 /// ```no_run
 /// use qrcode::QrCode;
+/// use ratatui::{
+///     style::{Style, Stylize},
+///     Frame,
+/// };
 /// use tui_qrcode::{Colors, QrCodeWidget, QuietZone, Scaling};
-/// use ratatui::{Frame, style::{Style, Stylize}};
 ///
 /// fn render(frame: &mut Frame) {
 ///     let qr_code = QrCode::new("https://ratatui.rs").expect("failed to create QR code");
@@ -169,7 +172,7 @@ pub enum Scaling {
     /// The QR code will be scaled so each pixel is the size of the given dimensions.
     ///
     /// The minimum dimensions are 1x1 (width x height).
-    Exact(u32, u32),
+    Exact(u16, u16),
 }
 
 impl Default for Scaling {
@@ -229,7 +232,7 @@ impl QrCodeWidget {
     /// will scale the QR code so it is at most the size of the widget. This may result in a QR code
     /// which is scaled more horizontally or vertically than the other, which may not be ideal. The
     /// `Exact` variant will scale the QR code so each pixel is the size of the given dimensions.
-    /// The minimum dimensions are 1x1 (width x height).
+    /// The minimum scaling is 1x1 (width x height).
     ///
     /// # Example
     ///
@@ -259,7 +262,7 @@ impl QrCodeWidget {
     ///
     /// ```
     /// use qrcode::QrCode;
-    /// use tui_qrcode::{QrCodeWidget, Colors};
+    /// use tui_qrcode::{Colors, QrCodeWidget};
     ///
     /// let qr_code = QrCode::new("https://ratatui.rs").expect("failed to create QR code");
     /// let widget = QrCodeWidget::new(qr_code).colors(Colors::Inverted);
@@ -278,8 +281,8 @@ impl QrCodeWidget {
     ///
     /// ```
     /// use qrcode::QrCode;
-    /// use tui_qrcode::QrCodeWidget;
     /// use ratatui::style::{Style, Stylize};
+    /// use tui_qrcode::QrCodeWidget;
     ///
     /// let qr_code = QrCode::new("https://ratatui.rs").expect("failed to create QR code");
     /// let style = Style::new().red().on_light_yellow();
@@ -289,6 +292,54 @@ impl QrCodeWidget {
     pub fn style(mut self, style: impl Into<Style>) -> Self {
         self.style = style.into();
         self
+    }
+
+    /// The theoretical size of the QR code if rendered into `area`.
+    ///
+    /// Note that if the QR code does not fit into `area`, the resulting [`Size`] might be larger
+    /// than the size of `area`.
+    ///
+    /// # Example
+    /// ```
+    /// use qrcode::QrCode;
+    /// use ratatui::layout::Rect;
+    /// use tui_qrcode::{QrCodeWidget, Scaling};
+    ///
+    /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// let qr_code = QrCode::new("https://ratatui.rs")?;
+    /// let widget = QrCodeWidget::new(qr_code).scaling(Scaling::Min);
+    /// let area = Rect::new(0, 0, 50, 50);
+    /// let widget_size = widget.size(area);
+    ///
+    /// assert_eq!(widget_size.width, 66);
+    /// assert_eq!(widget_size.height, 66);
+    /// # Ok(())
+    /// # }
+    /// ```
+    #[must_use]
+    pub fn size(&self, area: Rect) -> Size {
+        let qr_width: u16 = match self.quiet_zone {
+            QuietZone::Enabled => 8,
+            QuietZone::Disabled => 0,
+        } + self.qr_code.width() as u16;
+
+        let (x, y) = match self.scaling {
+            Scaling::Exact(x, y) => (x, y),
+            Scaling::Min => {
+                let x = area.width.div_ceil(qr_width);
+                let y = (area.height * 2).div_ceil(qr_width);
+                (x, y)
+            }
+            Scaling::Max => {
+                let x = area.width / qr_width;
+                let y = (area.height * 2) / qr_width;
+                (x, y)
+            }
+        };
+        let (x, y) = (x.max(1), y.max(1));
+        let width = qr_width * x;
+        let height = (qr_width * y).div_ceil(2);
+        Size::new(width, height)
     }
 }
 
@@ -320,7 +371,9 @@ impl Widget for &QrCodeWidget {
         match self.scaling {
             Scaling::Min => renderer.min_dimensions(area.width as u32, area.height as u32 * 2),
             Scaling::Max => renderer.max_dimensions(area.width as u32, area.height as u32 * 2),
-            Scaling::Exact(width, height) => renderer.module_dimensions(width, height),
+            Scaling::Exact(width, height) => {
+                renderer.module_dimensions(width as u32, height as u32)
+            }
         };
         match self.colors {
             Colors::Normal => renderer
@@ -333,5 +386,560 @@ impl Widget for &QrCodeWidget {
         Text::raw(renderer.build())
             .style(self.style)
             .render(area, buf);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use rstest::{fixture, rstest};
+
+    use super::*;
+
+    /// Creates an empty QR code widget. The basic dimensions of the QR code are 21x21 or 29x29 with
+    /// a quiet zone.
+    #[fixture]
+    fn empty_widget() -> QrCodeWidget {
+        let empty_qr = QrCode::new("").expect("failed to create QR code");
+        QrCodeWidget::new(empty_qr).quiet_zone(QuietZone::Disabled)
+    }
+
+    #[rstest]
+    /// Cases where the QR code is smaller (21x10.5) than the area (22, 12)
+    #[case::smaller_exact((22,12), Scaling::Exact(1, 1), (21, 11))]
+    #[case::smaller_max((22, 12), Scaling::Max, (21, 11))]
+    #[case::smaller_min((22,12),Scaling::Min, (42, 21))]
+    /// Cases where the QR code is the same size (21x10.5) as the area (21, 11)
+    #[case::same_exact((21, 11), Scaling::Exact(1, 1), (21, 11))]
+    #[case::same_max((21, 11), Scaling::Max, (21, 11))]
+    /// Exception: height would be 10.5, so height is doubled to 21
+    #[case::same_min((21, 11), Scaling::Min, (21, 21))]
+    /// Cases where the QR code is larger (21x10.5) than the area (20, 10)
+    #[rstest]
+    #[case::larger_exact((20, 10), Scaling::Exact(1, 1), (21, 11))]
+    #[case::larger_max((20, 10), Scaling::Max, (21, 11))]
+    #[case::larger_min((20, 10), Scaling::Min, (21, 11))]
+    /// Cases where the QR code is much smaller (21x10.5) than the area (71, 71).
+    #[rstest]
+    #[case::huge_exact((71, 71), Scaling::Exact(1, 1), (21, 11))]
+    #[case::huge_max((71, 71), Scaling::Max,(63, 63))]
+    #[case::huge_min((71, 71), Scaling::Min, (84, 74))]
+    fn size(
+        empty_widget: QrCodeWidget,
+        #[case] rect: (u16, u16),
+        #[case] scaling: Scaling,
+        #[case] expected: (u16, u16),
+    ) {
+        let rect = Rect::new(0, 0, rect.0, rect.1);
+        let widget = empty_widget.scaling(scaling);
+        assert_eq!(widget.size(rect), Size::from(expected));
+    }
+
+    /// Testing that a QR code with a quiet zone (29x14.5) is scaled correctly into a large area
+    /// (71x71).
+    #[rstest]
+    #[case::huge_exact(Scaling::Exact(1, 1), (29, 15))]
+    #[case::huge_max(Scaling::Max, (58, 58))]
+    #[case::huge_min(Scaling::Min, (87, 73))]
+    fn size_with_quiet_zone(
+        empty_widget: QrCodeWidget,
+        #[case] scaling: Scaling,
+        #[case] expected: (u16, u16),
+    ) {
+        let rect = Rect::new(0, 0, 71, 71);
+        let widget = empty_widget.quiet_zone(QuietZone::Enabled).scaling(scaling);
+        assert_eq!(widget.size(rect), Size::from(expected));
+    }
+
+    /// The QR code fits into the area without scaling
+    #[rstest]
+    fn render_exact_into_fitting_area(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 21, 11));
+        empty_widget.render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "█▀▀▀▀▀█  ▀▀▄█ █▀▀▀▀▀█",
+                "█ ███ █ █▀▀ ▀ █ ███ █",
+                "█ ▀▀▀ █ ██▄▄▀ █ ▀▀▀ █",
+                "▀▀▀▀▀▀▀ █▄▀ ▀ ▀▀▀▀▀▀▀",
+                "▀ ▀█▀█▀▄ ▀██▄▄█▀▀█▀▄ ",
+                "▄▄▄   ▀██▀▄▄█▄█▀ ▄ ▄ ",
+                "▀ ▀ ▀▀▀ █▄█ █  █  █  ",
+                "█▀▀▀▀▀█ ▄██▀ ▀ ▄█▀█▀█",
+                "█ ███ █ █▀██▄█▄ ▀█▀▀▀",
+                "█ ▀▀▀ █ ▀  ▄█▄█▀ ▄   ",
+                "▀▀▀▀▀▀▀ ▀   ▀  ▀  ▀  ",
+            ])
+        );
+    }
+
+    /// The QR code fits into the area without scaling
+    #[rstest]
+    fn render_max_into_fitting_area(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 21, 11));
+        empty_widget
+            .scaling(Scaling::Max)
+            .render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "█▀▀▀▀▀█  ▀▀▄█ █▀▀▀▀▀█",
+                "█ ███ █ █▀▀ ▀ █ ███ █",
+                "█ ▀▀▀ █ ██▄▄▀ █ ▀▀▀ █",
+                "▀▀▀▀▀▀▀ █▄▀ ▀ ▀▀▀▀▀▀▀",
+                "▀ ▀█▀█▀▄ ▀██▄▄█▀▀█▀▄ ",
+                "▄▄▄   ▀██▀▄▄█▄█▀ ▄ ▄ ",
+                "▀ ▀ ▀▀▀ █▄█ █  █  █  ",
+                "█▀▀▀▀▀█ ▄██▀ ▀ ▄█▀█▀█",
+                "█ ███ █ █▀██▄█▄ ▀█▀▀▀",
+                "█ ▀▀▀ █ ▀  ▄█▄█▀ ▄   ",
+                "▀▀▀▀▀▀▀ ▀   ▀  ▀  ▀  ",
+            ])
+        );
+    }
+
+    // The QR code is doubled vertically as the min scaling means this needs to render at least
+    // 21x10.5 but the buffer is 21x11
+    ///
+    /// Note: this is an instance where the square aspect ratio of the QR code is not preserved
+    /// correctly. This doesn't align with the documentation of the qrcode crate.
+    #[rstest]
+    fn render_min_into_fitting_area(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 21, 11));
+        empty_widget
+            .scaling(Scaling::Min)
+            .render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "███████  ██ █ ███████",
+                "█     █    ██ █     █",
+                "█ ███ █ ███ █ █ ███ █",
+                "█ ███ █ █     █ ███ █",
+                "█ ███ █ ██  █ █ ███ █",
+                "█     █ ████  █     █",
+                "███████ █ █ █ ███████",
+                "        ██           ",
+                "█ █████  ███  █████  ",
+                "   █ █ █  █████  █ █ ",
+                "      ████  █ ██     ",
+            ])
+        );
+    }
+
+    /// The QR code fits into the area without scaling
+    #[rstest]
+    fn render_exact_into_larger_area(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 22, 12));
+        empty_widget.render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "█▀▀▀▀▀█  ▀▀▄█ █▀▀▀▀▀█ ",
+                "█ ███ █ █▀▀ ▀ █ ███ █ ",
+                "█ ▀▀▀ █ ██▄▄▀ █ ▀▀▀ █ ",
+                "▀▀▀▀▀▀▀ █▄▀ ▀ ▀▀▀▀▀▀▀ ",
+                "▀ ▀█▀█▀▄ ▀██▄▄█▀▀█▀▄  ",
+                "▄▄▄   ▀██▀▄▄█▄█▀ ▄ ▄  ",
+                "▀ ▀ ▀▀▀ █▄█ █  █  █   ",
+                "█▀▀▀▀▀█ ▄██▀ ▀ ▄█▀█▀█ ",
+                "█ ███ █ █▀██▄█▄ ▀█▀▀▀ ",
+                "█ ▀▀▀ █ ▀  ▄█▄█▀ ▄    ",
+                "▀▀▀▀▀▀▀ ▀   ▀  ▀  ▀   ",
+                "                      ",
+            ])
+        );
+    }
+
+    /// The QR code fits into the area without scaling
+    #[rstest]
+    fn render_max_into_larger_area(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 22, 12));
+        empty_widget
+            .scaling(Scaling::Max)
+            .render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "█▀▀▀▀▀█  ▀▀▄█ █▀▀▀▀▀█ ",
+                "█ ███ █ █▀▀ ▀ █ ███ █ ",
+                "█ ▀▀▀ █ ██▄▄▀ █ ▀▀▀ █ ",
+                "▀▀▀▀▀▀▀ █▄▀ ▀ ▀▀▀▀▀▀▀ ",
+                "▀ ▀█▀█▀▄ ▀██▄▄█▀▀█▀▄  ",
+                "▄▄▄   ▀██▀▄▄█▄█▀ ▄ ▄  ",
+                "▀ ▀ ▀▀▀ █▄█ █  █  █   ",
+                "█▀▀▀▀▀█ ▄██▀ ▀ ▄█▀█▀█ ",
+                "█ ███ █ █▀██▄█▄ ▀█▀▀▀ ",
+                "█ ▀▀▀ █ ▀  ▄█▄█▀ ▄    ",
+                "▀▀▀▀▀▀▀ ▀   ▀  ▀  ▀   ",
+                "                      ",
+            ])
+        );
+    }
+
+    /// The QR code is doubled vertically and horizontall as the min scaling means this needs to
+    /// render at least 21x10.5 but the buffer is 22x12
+    #[rstest]
+    fn render_min_into_larger_area(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 22, 12));
+        empty_widget
+            .scaling(Scaling::Min)
+            .render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "██████████████    ████",
+                "██          ██        ",
+                "██  ██████  ██  ██████",
+                "██  ██████  ██  ██    ",
+                "██  ██████  ██  ████  ",
+                "██          ██  ██████",
+                "██████████████  ██  ██",
+                "                ████  ",
+                "██  ██████████    ████",
+                "      ██  ██  ██    ██",
+                "            ████████  ",
+                "██████        ████  ██",
+            ])
+        );
+    }
+
+    /// The QR code is truncated as the area is smaller than the QR code
+    #[rstest]
+    fn render_exact_into_smaler_area(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 20, 10));
+        empty_widget.render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "█▀▀▀▀▀█  ▀▀▄█ █▀▀▀▀▀",
+                "█ ███ █ █▀▀ ▀ █ ███ ",
+                "█ ▀▀▀ █ ██▄▄▀ █ ▀▀▀ ",
+                "▀▀▀▀▀▀▀ █▄▀ ▀ ▀▀▀▀▀▀",
+                "▀ ▀█▀█▀▄ ▀██▄▄█▀▀█▀▄",
+                "▄▄▄   ▀██▀▄▄█▄█▀ ▄ ▄",
+                "▀ ▀ ▀▀▀ █▄█ █  █  █ ",
+                "█▀▀▀▀▀█ ▄██▀ ▀ ▄█▀█▀",
+                "█ ███ █ █▀██▄█▄ ▀█▀▀",
+                "█ ▀▀▀ █ ▀  ▄█▄█▀ ▄  ",
+            ])
+        );
+    }
+
+    /// The QR code is truncated as the max scaling means this needs to render at most 21x10.5 but
+    /// the buffer is 20x10
+    #[rstest]
+    fn render_max_into_smaller_area(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 20, 10));
+        empty_widget
+            .scaling(Scaling::Max)
+            .render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "█▀▀▀▀▀█  ▀▀▄█ █▀▀▀▀▀",
+                "█ ███ █ █▀▀ ▀ █ ███ ",
+                "█ ▀▀▀ █ ██▄▄▀ █ ▀▀▀ ",
+                "▀▀▀▀▀▀▀ █▄▀ ▀ ▀▀▀▀▀▀",
+                "▀ ▀█▀█▀▄ ▀██▄▄█▀▀█▀▄",
+                "▄▄▄   ▀██▀▄▄█▄█▀ ▄ ▄",
+                "▀ ▀ ▀▀▀ █▄█ █  █  █ ",
+                "█▀▀▀▀▀█ ▄██▀ ▀ ▄█▀█▀",
+                "█ ███ █ █▀██▄█▄ ▀█▀▀",
+                "█ ▀▀▀ █ ▀  ▄█▄█▀ ▄  ",
+            ])
+        );
+    }
+
+    /// The QR code is truncated as the min scaling means this needs to render at least 21x10.5 but
+    /// the buffer is already too small
+    #[rstest]
+    fn render_min_into_smaller_area(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 20, 10));
+        empty_widget
+            .scaling(Scaling::Min)
+            .render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "█▀▀▀▀▀█  ▀▀▄█ █▀▀▀▀▀",
+                "█ ███ █ █▀▀ ▀ █ ███ ",
+                "█ ▀▀▀ █ ██▄▄▀ █ ▀▀▀ ",
+                "▀▀▀▀▀▀▀ █▄▀ ▀ ▀▀▀▀▀▀",
+                "▀ ▀█▀█▀▄ ▀██▄▄█▀▀█▀▄",
+                "▄▄▄   ▀██▀▄▄█▄█▀ ▄ ▄",
+                "▀ ▀ ▀▀▀ █▄█ █  █  █ ",
+                "█▀▀▀▀▀█ ▄██▀ ▀ ▄█▀█▀",
+                "█ ███ █ █▀██▄█▄ ▀█▀▀",
+                "█ ▀▀▀ █ ▀  ▄█▄█▀ ▄  ",
+            ])
+        );
+    }
+
+    /// Exact scaling doesn't scale the QR code
+    #[rstest]
+    fn render_exact_double_height(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 21, 21));
+        empty_widget.render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "█▀▀▀▀▀█  ▀▀▄█ █▀▀▀▀▀█",
+                "█ ███ █ █▀▀ ▀ █ ███ █",
+                "█ ▀▀▀ █ ██▄▄▀ █ ▀▀▀ █",
+                "▀▀▀▀▀▀▀ █▄▀ ▀ ▀▀▀▀▀▀▀",
+                "▀ ▀█▀█▀▄ ▀██▄▄█▀▀█▀▄ ",
+                "▄▄▄   ▀██▀▄▄█▄█▀ ▄ ▄ ",
+                "▀ ▀ ▀▀▀ █▄█ █  █  █  ",
+                "█▀▀▀▀▀█ ▄██▀ ▀ ▄█▀█▀█",
+                "█ ███ █ █▀██▄█▄ ▀█▀▀▀",
+                "█ ▀▀▀ █ ▀  ▄█▄█▀ ▄   ",
+                "▀▀▀▀▀▀▀ ▀   ▀  ▀  ▀  ",
+                "                     ",
+                "                     ",
+                "                     ",
+                "                     ",
+                "                     ",
+                "                     ",
+                "                     ",
+                "                     ",
+                "                     ",
+                "                     ",
+            ])
+        );
+    }
+
+    /// The QR code is doubled vertically
+    ///
+    /// Note: this is an instance where the square aspect ratio of the QR code is not preserved
+    /// correctly. This doesn't align with the documentation of the qrcode crate.
+    #[rstest]
+    fn render_max_double_height(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 21, 21));
+        empty_widget
+            .scaling(Scaling::Max)
+            .render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "███████  ██ █ ███████",
+                "█     █    ██ █     █",
+                "█ ███ █ ███ █ █ ███ █",
+                "█ ███ █ █     █ ███ █",
+                "█ ███ █ ██  █ █ ███ █",
+                "█     █ ████  █     █",
+                "███████ █ █ █ ███████",
+                "        ██           ",
+                "█ █████  ███  █████  ",
+                "   █ █ █  █████  █ █ ",
+                "      ████  █ ██     ",
+                "███    ██ █████  █ █ ",
+                "█ █ ███ █ █ █  █  █  ",
+                "        ███ █  █  █  ",
+                "███████  ███ █  █████",
+                "█     █ ███    ██ █ █",
+                "█ ███ █ ████ █  █████",
+                "█ ███ █ █ █████  █   ",
+                "█ ███ █ █   █ ██     ",
+                "█     █    ████  █   ",
+                "███████ █   █  █  █  ",
+            ])
+        );
+    }
+
+    /// The QR code is doubled vertically
+    ///
+    /// Note: this is an instance where the square aspect ratio of the QR code is not preserved
+    /// correctly. This doesn't align with the documentation of the qrcode crate.
+    #[rstest]
+    fn render_min_double_height(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 21, 21));
+        empty_widget
+            .scaling(Scaling::Min)
+            .render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "███████  ██ █ ███████",
+                "█     █    ██ █     █",
+                "█ ███ █ ███ █ █ ███ █",
+                "█ ███ █ █     █ ███ █",
+                "█ ███ █ ██  █ █ ███ █",
+                "█     █ ████  █     █",
+                "███████ █ █ █ ███████",
+                "        ██           ",
+                "█ █████  ███  █████  ",
+                "   █ █ █  █████  █ █ ",
+                "      ████  █ ██     ",
+                "███    ██ █████  █ █ ",
+                "█ █ ███ █ █ █  █  █  ",
+                "        ███ █  █  █  ",
+                "███████  ███ █  █████",
+                "█     █ ███    ██ █ █",
+                "█ ███ █ ████ █  █████",
+                "█ ███ █ █ █████  █   ",
+                "█ ███ █ █   █ ██     ",
+                "█     █    ████  █   ",
+                "███████ █   █  █  █  ",
+            ])
+        );
+    }
+
+    #[rstest]
+    fn render_exact_double_width(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 42, 11));
+        empty_widget.render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "█▀▀▀▀▀█  ▀▀▄█ █▀▀▀▀▀█                     ",
+                "█ ███ █ █▀▀ ▀ █ ███ █                     ",
+                "█ ▀▀▀ █ ██▄▄▀ █ ▀▀▀ █                     ",
+                "▀▀▀▀▀▀▀ █▄▀ ▀ ▀▀▀▀▀▀▀                     ",
+                "▀ ▀█▀█▀▄ ▀██▄▄█▀▀█▀▄                      ",
+                "▄▄▄   ▀██▀▄▄█▄█▀ ▄ ▄                      ",
+                "▀ ▀ ▀▀▀ █▄█ █  █  █                       ",
+                "█▀▀▀▀▀█ ▄██▀ ▀ ▄█▀█▀█                     ",
+                "█ ███ █ █▀██▄█▄ ▀█▀▀▀                     ",
+                "█ ▀▀▀ █ ▀  ▄█▄█▀ ▄                        ",
+                "▀▀▀▀▀▀▀ ▀   ▀  ▀  ▀                       ",
+            ])
+        );
+    }
+
+    /// The QR code is doubled horizontally as the max scaling means this needs to render at most
+    /// 42x10.5 but the buffer is 42x11
+    ///
+    /// Note: this is an instance where the square aspect ratio of the QR code is not preserved
+    /// correctly. This doesn't align with the documentation of the qrcode crate.
+    #[rstest]
+    fn render_max_double_width(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 42, 11));
+        empty_widget
+            .scaling(Scaling::Max)
+            .render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "██▀▀▀▀▀▀▀▀▀▀██    ▀▀▀▀▄▄██  ██▀▀▀▀▀▀▀▀▀▀██",
+                "██  ██████  ██  ██▀▀▀▀  ▀▀  ██  ██████  ██",
+                "██  ▀▀▀▀▀▀  ██  ████▄▄▄▄▀▀  ██  ▀▀▀▀▀▀  ██",
+                "▀▀▀▀▀▀▀▀▀▀▀▀▀▀  ██▄▄▀▀  ▀▀  ▀▀▀▀▀▀▀▀▀▀▀▀▀▀",
+                "▀▀  ▀▀██▀▀██▀▀▄▄  ▀▀████▄▄▄▄██▀▀▀▀██▀▀▄▄  ",
+                "▄▄▄▄▄▄      ▀▀████▀▀▄▄▄▄██▄▄██▀▀  ▄▄  ▄▄  ",
+                "▀▀  ▀▀  ▀▀▀▀▀▀  ██▄▄██  ██    ██    ██    ",
+                "██▀▀▀▀▀▀▀▀▀▀██  ▄▄████▀▀  ▀▀  ▄▄██▀▀██▀▀██",
+                "██  ██████  ██  ██▀▀████▄▄██▄▄  ▀▀██▀▀▀▀▀▀",
+                "██  ▀▀▀▀▀▀  ██  ▀▀    ▄▄██▄▄██▀▀  ▄▄      ",
+                "▀▀▀▀▀▀▀▀▀▀▀▀▀▀  ▀▀      ▀▀    ▀▀    ▀▀    ",
+            ])
+        );
+    }
+
+    /// Both the width and height are doubled because the min scaling means the QR code needs to be
+    /// at least 42x10.5 but the buffer is 42x11
+    #[rstest]
+    fn render_min_double_width(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 42, 11));
+        empty_widget
+            .scaling(Scaling::Min)
+            .render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "██████████████    ████  ██  ██████████████",
+                "██          ██        ████  ██          ██",
+                "██  ██████  ██  ██████  ██  ██  ██████  ██",
+                "██  ██████  ██  ██          ██  ██████  ██",
+                "██  ██████  ██  ████    ██  ██  ██████  ██",
+                "██          ██  ████████    ██          ██",
+                "██████████████  ██  ██  ██  ██████████████",
+                "                ████                      ",
+                "██  ██████████    ██████    ██████████    ",
+                "      ██  ██  ██    ██████████    ██  ██  ",
+                "            ████████    ██  ████          ",
+            ])
+        );
+    }
+
+    #[rstest]
+    fn render_inverted(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 21, 11));
+        empty_widget
+            .colors(Colors::Inverted)
+            .render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                " ▄▄▄▄▄ ██▄▄▀ █ ▄▄▄▄▄ ",
+                " █   █ █ ▄▄█▄█ █   █ ",
+                " █▄▄▄█ █  ▀▀▄█ █▄▄▄█ ",
+                "▄▄▄▄▄▄▄█ ▀▄█▄█▄▄▄▄▄▄▄",
+                "▄█▄ ▄ ▄▀█▄  ▀▀ ▄▄ ▄▀█",
+                "▀▀▀███▄  ▄▀▀ ▀ ▄█▀█▀█",
+                "▄█▄█▄▄▄█ ▀ █ ██ ██ ██",
+                " ▄▄▄▄▄ █▀  ▄█▄█▀ ▄ ▄ ",
+                " █   █ █ ▄  ▀ ▀█▄ ▄▄▄",
+                " █▄▄▄█ █▄██▀ ▀ ▄█▀███",
+                "       ▀ ▀▀▀ ▀▀ ▀▀ ▀▀",
+            ])
+        );
+    }
+
+    #[rstest]
+    fn render_with_quiet_zone(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 29, 15));
+        empty_widget
+            .quiet_zone(QuietZone::Enabled)
+            .render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "                             ",
+                "                             ",
+                "    █▀▀▀▀▀█  ▀▀▄█ █▀▀▀▀▀█    ",
+                "    █ ███ █ █▀▀ ▀ █ ███ █    ",
+                "    █ ▀▀▀ █ ██▄▄▀ █ ▀▀▀ █    ",
+                "    ▀▀▀▀▀▀▀ █▄▀ ▀ ▀▀▀▀▀▀▀    ",
+                "    ▀ ▀█▀█▀▄ ▀██▄▄█▀▀█▀▄     ",
+                "    ▄▄▄   ▀██▀▄▄█▄█▀ ▄ ▄     ",
+                "    ▀ ▀ ▀▀▀ █▄█ █  █  █      ",
+                "    █▀▀▀▀▀█ ▄██▀ ▀ ▄█▀█▀█    ",
+                "    █ ███ █ █▀██▄█▄ ▀█▀▀▀    ",
+                "    █ ▀▀▀ █ ▀  ▄█▄█▀ ▄       ",
+                "    ▀▀▀▀▀▀▀ ▀   ▀  ▀  ▀      ",
+                "                             ",
+                "                             ",
+            ])
+        );
+    }
+
+    #[rstest]
+    fn render_with_quiet_zone_and_inverted(empty_widget: QrCodeWidget) {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 29, 15));
+        empty_widget
+            .quiet_zone(QuietZone::Enabled)
+            .colors(Colors::Inverted)
+            .render(buf.area, &mut buf);
+        assert_eq!(
+            buf,
+            Buffer::with_lines([
+                "█████████████████████████████",
+                "█████████████████████████████",
+                "████ ▄▄▄▄▄ ██▄▄▀ █ ▄▄▄▄▄ ████",
+                "████ █   █ █ ▄▄█▄█ █   █ ████",
+                "████ █▄▄▄█ █  ▀▀▄█ █▄▄▄█ ████",
+                "████▄▄▄▄▄▄▄█ ▀▄█▄█▄▄▄▄▄▄▄████",
+                "████▄█▄ ▄ ▄▀█▄  ▀▀ ▄▄ ▄▀█████",
+                "████▀▀▀███▄  ▄▀▀ ▀ ▄█▀█▀█████",
+                "████▄█▄█▄▄▄█ ▀ █ ██ ██ ██████",
+                "████ ▄▄▄▄▄ █▀  ▄█▄█▀ ▄ ▄ ████",
+                "████ █   █ █ ▄  ▀ ▀█▄ ▄▄▄████",
+                "████ █▄▄▄█ █▄██▀ ▀ ▄█▀███████",
+                "████▄▄▄▄▄▄▄█▄███▄██▄██▄██████",
+                "█████████████████████████████",
+                "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀",
+            ])
+        );
     }
 }
