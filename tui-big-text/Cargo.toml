@@ -16,7 +16,11 @@ rust-version.workspace = true
 derive_builder.workspace = true
 font8x8 = "0.3.1"
 itertools.workspace = true
-ratatui = { workspace = true, features = ["crossterm"] }
+ratatui.workspace = true
+
+[features]
+default = ["crossterm"]
+crossterm = ["ratatui/crossterm"]
 
 [dev-dependencies]
 color-eyre.workspace = true
