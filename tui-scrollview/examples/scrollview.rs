@@ -1,15 +1,14 @@
 use std::io::{self};
 
 use color_eyre::Result;
-use ratatui::{
-    buffer::Buffer,
-    crossterm::event::{self, Event, KeyCode, KeyEventKind},
-    layout::{Constraint, Direction, Layout, Rect, Size},
-    style::{palette::tailwind, Color, Stylize},
-    text::{Line, Text},
-    widgets::*,
-    DefaultTerminal,
-};
+use ratatui::buffer::Buffer;
+use ratatui::crossterm::event::{self, Event, KeyCode, KeyEventKind};
+use ratatui::layout::{Constraint, Direction, Layout, Rect, Size};
+use ratatui::style::palette::tailwind;
+use ratatui::style::{Color, Stylize};
+use ratatui::text::{Line, Text};
+use ratatui::widgets::*;
+use ratatui::DefaultTerminal;
 use tui_scrollview::{ScrollView, ScrollViewState};
 
 fn main() -> Result<()> {

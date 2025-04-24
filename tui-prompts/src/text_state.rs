@@ -1,6 +1,7 @@
 use std::borrow::Cow;
 
-use crate::{prelude::*, State};
+use crate::prelude::*;
+use crate::State;
 
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
 pub struct TextState<'a> {

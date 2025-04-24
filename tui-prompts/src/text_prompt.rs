@@ -1,10 +1,9 @@
-use std::{borrow::Cow, vec};
+use std::borrow::Cow;
+use std::vec;
 
 use itertools::Itertools;
-use ratatui::{
-    prelude::*,
-    widgets::{Block, Paragraph, StatefulWidget, Widget},
-};
+use ratatui::prelude::*;
+use ratatui::widgets::{Block, Paragraph, StatefulWidget, Widget};
 
 use crate::prelude::*;
 
@@ -196,7 +195,8 @@ where
 
 #[cfg(test)]
 mod tests {
-    use ratatui::{backend::TestBackend, widgets::Borders};
+    use ratatui::backend::TestBackend;
+    use ratatui::widgets::Borders;
     use ratatui_macros::line;
     use rstest::{fixture, rstest};
 

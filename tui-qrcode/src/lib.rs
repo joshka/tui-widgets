@@ -25,7 +25,8 @@
 //!
 //! ```no_run
 //! use qrcode::QrCode;
-//! use ratatui::{crossterm::event, DefaultTerminal, Frame};
+//! use ratatui::crossterm::event;
+//! use ratatui::{DefaultTerminal, Frame};
 //! use tui_qrcode::{Colors, QrCodeWidget};
 //!
 //! fn main() -> color_eyre::Result<()> {
@@ -90,14 +91,13 @@
 //! [Changelog]: https://github.com/joshka/tui-widgets/blob/main/tui-qrcode/CHANGELOG.md
 //! [Contributing]: https://github.com/joshka/tui-widgets/blob/main/CONTRIBUTING.md
 
-use qrcode::{render::unicode::Dense1x2, QrCode};
-use ratatui::{
-    buffer::Buffer,
-    layout::{Rect, Size},
-    style::{Style, Styled},
-    text::Text,
-    widgets::Widget,
-};
+use qrcode::render::unicode::Dense1x2;
+use qrcode::QrCode;
+use ratatui::buffer::Buffer;
+use ratatui::layout::{Rect, Size};
+use ratatui::style::{Style, Styled};
+use ratatui::text::Text;
+use ratatui::widgets::Widget;
 
 /// A [Ratatui](ratatui) widget that renders a QR code.
 ///
@@ -120,10 +120,8 @@ use ratatui::{
 ///
 /// ```no_run
 /// use qrcode::QrCode;
-/// use ratatui::{
-///     style::{Style, Stylize},
-///     Frame,
-/// };
+/// use ratatui::style::{Style, Stylize};
+/// use ratatui::Frame;
 /// use tui_qrcode::{Colors, QrCodeWidget, QuietZone, Scaling};
 ///
 /// fn render(frame: &mut Frame) {

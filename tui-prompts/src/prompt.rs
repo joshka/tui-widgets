@@ -1,11 +1,9 @@
 use std::iter::once;
 
 use itertools::chain;
-use ratatui::{
-    crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers},
-    prelude::*,
-    widgets::StatefulWidget,
-};
+use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
+use ratatui::prelude::*;
+use ratatui::widgets::StatefulWidget;
 
 use crate::Status;
 

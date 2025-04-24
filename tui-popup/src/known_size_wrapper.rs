@@ -1,7 +1,9 @@
 use std::fmt::Debug;
 
 use derive_setters::Setters;
-use ratatui::{buffer::Buffer, layout::Rect, widgets::WidgetRef};
+use ratatui::buffer::Buffer;
+use ratatui::layout::Rect;
+use ratatui::widgets::WidgetRef;
 
 use crate::KnownSize;
 
@@ -55,7 +57,8 @@ impl<W> KnownSizeWrapper<W> {
 }
 #[cfg(test)]
 mod tests {
-    use ratatui::{buffer::Buffer, layout::Rect};
+    use ratatui::buffer::Buffer;
+    use ratatui::layout::Rect;
 
     use super::*;
 

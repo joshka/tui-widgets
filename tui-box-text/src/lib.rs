@@ -1,6 +1,10 @@
-use std::{collections::HashMap, iter::zip, sync::LazyLock};
+use std::collections::HashMap;
+use std::iter::zip;
+use std::sync::LazyLock;
 
-use ratatui::{buffer::Buffer, layout::Rect, widgets::Widget};
+use ratatui::buffer::Buffer;
+use ratatui::layout::Rect;
+use ratatui::widgets::Widget;
 
 pub struct BoxChar(char);
 

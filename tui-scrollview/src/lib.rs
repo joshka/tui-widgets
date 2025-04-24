@@ -17,7 +17,9 @@
 //! ```rust
 //! use std::iter;
 //!
-//! use ratatui::{layout::Size, prelude::*, widgets::*};
+//! use ratatui::layout::Size;
+//! use ratatui::prelude::*;
+//! use ratatui::widgets::*;
 //! use tui_scrollview::{ScrollView, ScrollViewState};
 //!
 //! struct MyScrollableWidget;

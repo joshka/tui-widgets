@@ -1,8 +1,6 @@
-use ratatui::{
-    buffer::Buffer,
-    layout::{Rect, Size},
-    widgets::{Scrollbar, ScrollbarOrientation, ScrollbarState, StatefulWidget, Widget},
-};
+use ratatui::buffer::Buffer;
+use ratatui::layout::{Rect, Size};
+use ratatui::widgets::{Scrollbar, ScrollbarOrientation, ScrollbarState, StatefulWidget, Widget};
 
 use crate::ScrollViewState;
 

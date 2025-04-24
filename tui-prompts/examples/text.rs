@@ -1,14 +1,13 @@
 mod tui;
 
-use std::{thread::sleep, time::Duration};
+use std::thread::sleep;
+use std::time::Duration;
 
 use clap::Parser;
 use color_eyre::Result;
-use ratatui::{
-    crossterm::event::{self, Event, KeyEvent, KeyModifiers},
-    prelude::*,
-    widgets::*,
-};
+use ratatui::crossterm::event::{self, Event, KeyEvent, KeyModifiers};
+use ratatui::prelude::*;
+use ratatui::widgets::*;
 use tui::Tui;
 use tui_prompts::prelude::*;
 

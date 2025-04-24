@@ -1,10 +1,9 @@
-use std::{
-    io::Stderr,
-    ops::{Deref, DerefMut},
-};
+use std::io::Stderr;
+use std::ops::{Deref, DerefMut};
 
 use color_eyre::Result;
-use ratatui::{crossterm, prelude::*};
+use ratatui::crossterm;
+use ratatui::prelude::*;
 
 /// A wrapper around the terminal that enables raw mode on creation and disables it on drop.
 pub struct Tui {

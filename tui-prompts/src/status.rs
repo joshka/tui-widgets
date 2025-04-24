@@ -1,4 +1,5 @@
-use ratatui::{style::Stylize, text::Span};
+use ratatui::style::Stylize;
+use ratatui::text::Span;
 
 /// The result of a prompt.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]

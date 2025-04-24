@@ -1,17 +1,15 @@
 mod tui;
 
-use std::{panic, thread::sleep, time::Duration};
+use std::panic;
+use std::thread::sleep;
+use std::time::Duration;
 
 use clap::Parser;
 use color_eyre::Result;
-use ratatui::{
-    crossterm::{
-        self,
-        event::{self, Event, KeyEvent},
-    },
-    prelude::*,
-    widgets::*,
-};
+use ratatui::crossterm::event::{self, Event, KeyEvent};
+use ratatui::crossterm::{self};
+use ratatui::prelude::*;
+use ratatui::widgets::*;
 use tui::Tui;
 use tui_prompts::prelude::*;
 

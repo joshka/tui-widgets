@@ -1,12 +1,10 @@
 use std::iter::zip;
 
 use color_eyre::eyre::Ok;
-use ratatui::{
-    crossterm::event::{self, Event, KeyCode},
-    layout::{Constraint, Layout, Rect},
-    text::Line,
-    DefaultTerminal, Frame,
-};
+use ratatui::crossterm::event::{self, Event, KeyCode};
+use ratatui::layout::{Constraint, Layout, Rect};
+use ratatui::text::Line;
+use ratatui::{DefaultTerminal, Frame};
 use tui_box_text::BoxChar;
 
 fn main() -> color_eyre::Result<()> {

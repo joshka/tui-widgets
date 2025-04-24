@@ -1,21 +1,18 @@
-use std::{
-    io::{self, Stdout},
-    time::{Duration, Instant},
-};
+use std::io::{self, Stdout};
+use std::time::{Duration, Instant};
 
-use color_eyre::{
-    eyre::{bail, Context},
-    Result,
-};
-use crossterm::{
-    event::{self, KeyCode},
-    execute,
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+use color_eyre::eyre::{bail, Context};
+use color_eyre::Result;
+use crossterm::event::{self, KeyCode};
+use crossterm::execute;
+use crossterm::terminal::{
+    disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen,
 };
 use futures::{FutureExt, StreamExt};
 // use futures::{select, FutureExt, StreamExt};
 use itertools::Itertools;
-use ratatui::{prelude::*, widgets::Paragraph};
+use ratatui::prelude::*;
+use ratatui::widgets::Paragraph;
 use strum::EnumIs;
 use tokio::select;
 use tui_big_text::BigText;

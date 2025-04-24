@@ -5,10 +5,8 @@
 //! # Example
 //!
 //! ```rust
-//! use ratatui::{
-//!     style::{Style, Stylize},
-//!     Frame,
-//! };
+//! use ratatui::style::{Style, Stylize};
+//! use ratatui::Frame;
 //! use tui_popup::Popup;
 //!
 //! fn render_popup(frame: &mut Frame) {
@@ -29,9 +27,7 @@ mod known_size_wrapper;
 mod popup;
 mod popup_state;
 
-pub use crate::{
-    known_size::KnownSize,
-    known_size_wrapper::KnownSizeWrapper,
-    popup::Popup,
-    popup_state::{DragState, PopupState},
-};
+pub use crate::known_size::KnownSize;
+pub use crate::known_size_wrapper::KnownSizeWrapper;
+pub use crate::popup::Popup;
+pub use crate::popup_state::{DragState, PopupState};

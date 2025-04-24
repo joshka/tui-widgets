@@ -3,10 +3,10 @@
 use std::io;
 
 use color_eyre::Result;
-use crossterm::{
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
-    ExecutableCommand,
+use crossterm::terminal::{
+    disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen,
 };
+use crossterm::ExecutableCommand;
 use ratatui::prelude::CrosstermBackend;
 
 /// A type alias for the terminal

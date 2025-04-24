@@ -43,7 +43,10 @@
 //! [Discord Badge]: https://img.shields.io/discord/1070692720437383208?label=ratatui+discord&logo=discord&style=for-the-badge
 
 use colorgrad::Gradient;
-use ratatui::{buffer::Buffer, layout::Rect, style::Color, widgets::Widget};
+use ratatui::buffer::Buffer;
+use ratatui::layout::Rect;
+use ratatui::style::Color;
+use ratatui::widgets::Widget;
 use strum::{Display, EnumString};
 
 // Each side (left/right) has 5 possible heights (0-4)

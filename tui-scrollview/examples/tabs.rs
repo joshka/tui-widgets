@@ -5,19 +5,20 @@
 //! created once and then reused across multiple frames. Each tab has some static lorem ipsum text,
 //! and we store the scroll state for each tab separately.
 
-use std::{collections::HashMap, fmt::Debug, io};
+use std::collections::HashMap;
+use std::fmt::Debug;
+use std::io;
 
 use color_eyre::Result;
 use lipsum::lipsum;
-use ratatui::{
-    buffer::Buffer,
-    crossterm::event::{self, Event, KeyCode, KeyEventKind},
-    layout::{Constraint, Layout, Rect, Size},
-    style::{palette::tailwind, Stylize},
-    text::Line,
-    widgets::{Paragraph, StatefulWidget, StatefulWidgetRef, Tabs, Widget, Wrap},
-    DefaultTerminal,
-};
+use ratatui::buffer::Buffer;
+use ratatui::crossterm::event::{self, Event, KeyCode, KeyEventKind};
+use ratatui::layout::{Constraint, Layout, Rect, Size};
+use ratatui::style::palette::tailwind;
+use ratatui::style::Stylize;
+use ratatui::text::Line;
+use ratatui::widgets::{Paragraph, StatefulWidget, StatefulWidgetRef, Tabs, Widget, Wrap};
+use ratatui::DefaultTerminal;
 use tui_scrollview::{ScrollView, ScrollViewState};
 
 fn main() -> Result<()> {

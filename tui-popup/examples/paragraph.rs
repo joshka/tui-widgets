@@ -1,11 +1,9 @@
 use color_eyre::Result;
 use lipsum::lipsum;
-use ratatui::{
-    crossterm::event::{self, Event, KeyCode},
-    prelude::{Rect, Span, Style, Stylize, Text},
-    widgets::{Paragraph, Wrap},
-    Frame,
-};
+use ratatui::crossterm::event::{self, Event, KeyCode};
+use ratatui::prelude::{Rect, Span, Style, Stylize, Text};
+use ratatui::widgets::{Paragraph, Wrap};
+use ratatui::Frame;
 use tui_popup::{KnownSizeWrapper, Popup};
 
 fn main() -> Result<()> {

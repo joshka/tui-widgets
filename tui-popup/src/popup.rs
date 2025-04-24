@@ -1,14 +1,13 @@
-use std::{cmp::min, fmt};
+use std::cmp::min;
+use std::fmt;
 
 use derive_setters::Setters;
-use ratatui::{
-    buffer::Buffer,
-    layout::Rect,
-    style::Style,
-    symbols::border::Set,
-    text::Line,
-    widgets::{Block, Borders, Clear, StatefulWidget, Widget, WidgetRef},
-};
+use ratatui::buffer::Buffer;
+use ratatui::layout::Rect;
+use ratatui::style::Style;
+use ratatui::symbols::border::Set;
+use ratatui::text::Line;
+use ratatui::widgets::{Block, Borders, Clear, StatefulWidget, Widget, WidgetRef};
 
 use crate::{KnownSize, PopupState};
 
@@ -20,7 +19,8 @@ use crate::{KnownSize, PopupState};
 /// # Example
 ///
 /// ```rust
-/// use ratatui::{prelude::*, symbols::border};
+/// use ratatui::prelude::*;
+/// use ratatui::symbols::border;
 /// use tui_popup::Popup;
 ///
 /// fn render_popup(frame: &mut Frame) {

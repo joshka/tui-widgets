@@ -1,12 +1,10 @@
 use std::io;
 
 use color_eyre::Result;
-use ratatui::{
-    crossterm::event::{self, Event, KeyCode, KeyEventKind},
-    layout::Size,
-    widgets::{Paragraph, Wrap},
-    DefaultTerminal,
-};
+use ratatui::crossterm::event::{self, Event, KeyCode, KeyEventKind};
+use ratatui::layout::Size;
+use ratatui::widgets::{Paragraph, Wrap};
+use ratatui::DefaultTerminal;
 use tui_scrollview::{ScrollView, ScrollViewState};
 
 fn main() -> Result<()> {
