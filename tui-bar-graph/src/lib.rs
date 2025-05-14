@@ -233,7 +233,9 @@ impl BarGraph {
                 .ceil() as usize;
 
             for (row_index, row) in column.rows().rev().enumerate().take(column_height) {
-                let value = f64::midpoint(left_value, right_value);
+                // TODO midpoint is stablized in 1.87 https://github.com/rust-lang/rust/pull/134340
+                // let value = f64::midpoint(left_value, right_value);
+                let value = (left_value + right_value) / 2.0;
                 let color = self.color_for(area, min, max, value, row_index);
 
                 let dots_below = row_index * DOTS_PER_ROW;
