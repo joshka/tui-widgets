@@ -1,7 +1,13 @@
-use clap::Parser;
+use clap::{Parser, ValueEnum};
+use colorgrad::Gradient;
 use crossterm::event::{self, Event, KeyEvent, KeyEventKind};
 use rand::Rng;
-use ratatui::{DefaultTerminal, Frame};
+use ratatui::style::palette::tailwind::SLATE;
+use ratatui::style::{Color, Stylize};
+use ratatui::text::Line;
+use ratatui::widgets::{Block, Borders};
+use ratatui::{symbols, DefaultTerminal, Frame};
+use strum::Display;
 use tui_bar_graph::{BarGraph, BarStyle, ColorMode};
 
 #[derive(Debug, Parser)]
@@ -9,6 +15,36 @@ struct Args {
     /// The style of bar to render (solid or braille)
     #[arg(default_value_t = BarStyle::Braille)]
     bar_style: BarStyle,
+
+    /// The color gradient preset to use
+    ///
+    /// This is a small selection of the color gradients available in the `colorgrad` crate.
+    #[arg(default_value_t = Preset::Rainbow)]
+    preset: Preset,
+}
+
+#[derive(Debug, Clone, ValueEnum, Display)]
+#[strum(serialize_all = "lowercase")]
+enum Preset {
+    Rainbow,
+    Sinebow,
+    Viridis,
+    Inferno,
+    Magma,
+    Plasma,
+}
+
+impl Preset {
+    pub fn to_gradient(&self) -> Box<dyn Gradient> {
+        match self {
+            Preset::Rainbow => Box::new(colorgrad::preset::rainbow()),
+            Preset::Sinebow => Box::new(colorgrad::preset::sinebow()),
+            Preset::Viridis => Box::new(colorgrad::preset::viridis()),
+            Preset::Inferno => Box::new(colorgrad::preset::inferno()),
+            Preset::Magma => Box::new(colorgrad::preset::magma()),
+            Preset::Plasma => Box::new(colorgrad::preset::plasma()),
+        }
+    }
 }
 
 fn main() -> color_eyre::Result<()> {
@@ -36,16 +72,40 @@ fn run(mut terminal: DefaultTerminal, args: &Args) -> color_eyre::Result<()> {
 }
 
 fn render(frame: &mut Frame, args: &Args) {
+    const TITLE_FG: Color = SLATE.c800;
+    const TITLE_BG: Color = SLATE.c100;
+    const BLOCK_FG: Color = SLATE.c100;
+    const BLOCK_BG: Color = SLATE.c900;
+
+    let title = format!(
+        "tui-bar-graph - BarStyle: {}, Preset: {}",
+        args.bar_style, args.preset
+    );
+    let block = Block::new()
+        .borders(Borders::TOP)
+        .border_set(symbols::border::FULL)
+        .border_style((TITLE_BG, TITLE_FG))
+        .style((BLOCK_FG, BLOCK_BG))
+        .title(
+            Line::from(title)
+                .centered()
+                .bg(TITLE_BG)
+                .fg(TITLE_FG)
+                .bold(),
+        );
+    frame.render_widget(&block, frame.area());
+
+    let area = block.inner(frame.area());
     let width = match args.bar_style {
-        BarStyle::Solid => frame.area().width as usize,
-        BarStyle::Braille => frame.area().width as usize * 2,
+        BarStyle::Solid => area.width as usize,
+        BarStyle::Braille => area.width as usize * 2,
     };
     let mut data = vec![0.0; width];
     rand::rng().fill(&mut data[..]);
-
+    let gradient = args.preset.to_gradient();
     let bar_graph = BarGraph::new(data)
-        .with_gradient(colorgrad::preset::turbo())
+        .with_gradient(gradient)
         .with_color_mode(ColorMode::VerticalGradient)
         .with_bar_style(args.bar_style);
-    frame.render_widget(bar_graph, frame.area());
+    frame.render_widget(bar_graph, area);
 }
