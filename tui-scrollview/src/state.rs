@@ -82,4 +82,14 @@ impl ScrollViewState {
             .map_or(u16::MAX, |size| size.height.saturating_sub(1));
         self.offset.y = bottom;
     }
+
+    /// True if the scroll view state is at the bottom of the buffer
+    /// Takes the pagesize into account
+    pub fn is_at_bottom(&self) -> bool {
+        let bottom = self
+            .size
+            .map_or(u16::MAX, |size| size.height.saturating_sub(1));
+        let page_size = self.page_size.map_or(0, |size| size.height);
+        self.offset.y + page_size >= bottom
+    }
 }
