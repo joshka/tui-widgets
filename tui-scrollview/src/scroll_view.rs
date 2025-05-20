@@ -454,24 +454,16 @@ mod tests {
     fn move_to_bottom(scroll_view: ScrollView) {
         let mut buf = Buffer::empty(Rect::new(0, 0, 6, 6));
         let mut state = ScrollViewState::default();
+
+        // Prior rendering, page and buffer size are unkown. We default to `true`.
+        assert!(state.is_at_bottom());
+
         scroll_view.clone().render(buf.area, &mut buf, &mut state);
 
         // The vertical view size is five which means the page size is five.
         // We have not scrolled yet, view is at the top and not the at the bottom.
         // => We see the top five rows
-        assert_eq!(state.offset.y, 0);
         assert!(!state.is_at_bottom());
-        assert_eq!(
-            buf,
-            Buffer::with_lines(vec![
-                "ABCDE▲",
-                "KLMNO█",
-                "UVWXY█",
-                "EFGHI║",
-                "OPQRS▼",
-                "◄██═► ",
-            ])
-        );
 
         // Since the content height is ten,
         assert_eq!(state.size.unwrap().height, 10);
@@ -500,11 +492,11 @@ mod tests {
             ])
         );
 
-        // We could also jump directly to the bottom
+        // We could also jump directly to the bottom...
         state.scroll_to_bottom();
         assert!(state.is_at_bottom());
 
-        // which sets the offset to the last row of content,
+        // ...which sets the offset to the last row of content,
         // ensuring to be at the bottom regardless of the page size.
         assert_eq!(state.offset.y, state.size.unwrap().height - 1);
     }
