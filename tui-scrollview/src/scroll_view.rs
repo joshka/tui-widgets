@@ -845,7 +845,7 @@ mod tests {
         let mut buf = Buffer::empty(Rect::new(0, 0, 7, 5));
         let mut state = ScrollViewState::default();
         let mut list_state = ListState::default();
-        let items: Vec<String> = (1..10).map(|i| format!("Item {}", i)).collect();
+        let items: Vec<String> = (1..=10).map(|i| format!("Item {}", i)).collect();
         let list = List::new(items);
         scroll_view.render_stateful_widget(list, scroll_view.area(), &mut list_state);
         scroll_view.clone().render(buf.area, &mut buf, &mut state);
