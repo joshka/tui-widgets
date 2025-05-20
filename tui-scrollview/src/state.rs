@@ -88,11 +88,12 @@ impl ScrollViewState {
 
     /// True if the scroll view state is at the bottom of the buffer
     ///
-    /// This takes the page size into account. It returns true if the current scroll offset
-    /// plus the page size matches or exceeds the buffer length.
-    /// The buffer and the page size are unkown until computed during the first rendering.
-    /// If the page size is not yet known, it won't be taken into account.
-    /// If the buffer is not yet known, this function always returns true.
+    /// This takes the page size into account. It returns true if the current scroll offset plus
+    /// the page size matches or exceeds the buffer length.
+    ///
+    /// The buffer and the page size are unknown until computed during the first rendering. If the
+    /// page size is not yet known, it won't be taken into account. If the buffer is not yet known,
+    /// this function always returns true.
     pub fn is_at_bottom(&self) -> bool {
         let bottom = self.size.map_or(0, |size| size.height.saturating_sub(1));
         let page_size = self.page_size.map_or(0, |size| size.height);
