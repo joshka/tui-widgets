@@ -14,7 +14,7 @@ keywords = ["cli", "console", "ratatui", "terminal", "tui"]
 
 [workspace.dependencies]
 clap = { version = "4.5.20", features = ["derive"] }
-color-eyre = "0.6.3"
+color-eyre = "0.6.5"
 # note that currently, the crossterm version must match the one used by ratatui. This will be fixed
 # in Ratatui 0.30
 crossterm = { version = "0.28" }
