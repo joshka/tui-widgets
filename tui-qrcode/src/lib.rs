@@ -216,7 +216,7 @@ impl QrCodeWidget {
     /// let widget = QrCodeWidget::new(qr_code).quiet_zone(QuietZone::Disabled);
     /// ```
     #[must_use]
-    pub fn quiet_zone(mut self, quiet_zone: QuietZone) -> Self {
+    pub const fn quiet_zone(mut self, quiet_zone: QuietZone) -> Self {
         self.quiet_zone = quiet_zone;
         self
     }
@@ -242,7 +242,7 @@ impl QrCodeWidget {
     /// let widget = QrCodeWidget::new(qr_code).scaling(Scaling::Max);
     /// ```
     #[must_use]
-    pub fn scaling(mut self, scaling: Scaling) -> Self {
+    pub const fn scaling(mut self, scaling: Scaling) -> Self {
         self.scaling = scaling;
         self
     }
@@ -266,7 +266,7 @@ impl QrCodeWidget {
     /// let widget = QrCodeWidget::new(qr_code).colors(Colors::Inverted);
     /// ```
     #[must_use]
-    pub fn colors(mut self, colors: Colors) -> Self {
+    pub const fn colors(mut self, colors: Colors) -> Self {
         self.colors = colors;
         self
     }

@@ -134,7 +134,7 @@ impl<'a> App<'a> {
 
     /// draw a debug string in the top right corner of the screen that shows the current state of
     /// the app.
-    fn draw_debug(&mut self, frame: &mut Frame, area: Rect) {
+    fn draw_debug(&self, frame: &mut Frame, area: Rect) {
         if !self.debug {
             return;
         }
@@ -147,7 +147,7 @@ impl<'a> App<'a> {
         );
     }
 
-    fn is_finished(&self) -> bool {
+    const fn is_finished(&self) -> bool {
         self.username_state.is_finished()
             && self.password_state.is_finished()
             && self.invisible_state.is_finished()
@@ -188,7 +188,7 @@ impl<'a> App<'a> {
         }
     }
 
-    fn next_field(&mut self) -> Field {
+    const fn next_field(&self) -> Field {
         match self.current_field {
             Field::Username => Field::Password,
             Field::Password => Field::Invisible,
@@ -196,7 +196,7 @@ impl<'a> App<'a> {
         }
     }
 
-    fn prev_field(&mut self) -> Field {
+    const fn prev_field(&self) -> Field {
         match self.current_field {
             Field::Username => Field::Invisible,
             Field::Password => Field::Username,

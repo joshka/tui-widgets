@@ -112,14 +112,8 @@ impl<'a> BigTextBuilder<'a> {
     /// Build the [`BigText`] widget.
     pub fn build(&self) -> BigText<'a> {
         BigText {
-            lines: match &self.lines {
-                Some(lines) => lines.clone(),
-                None => Vec::new(),
-            },
-            style: match &self.style {
-                Some(style) => *style,
-                None => Style::default(),
-            },
+            lines: self.lines.as_ref().cloned().unwrap_or_default(),
+            style: self.style.unwrap_or_default(),
             pixel_size: self.pixel_size.unwrap_or_default(),
             alignment: self.alignment.unwrap_or_default(),
         }

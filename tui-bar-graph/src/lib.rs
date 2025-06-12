@@ -188,7 +188,7 @@ impl<'g> BarGraph<'g> {
     ///
     /// - `Solid`: Each bar has a single color based on its value.
     /// - `Gradient`: Each bar is gradient-colored from bottom to top.
-    pub fn with_color_mode(mut self, color: ColorMode) -> Self {
+    pub const fn with_color_mode(mut self, color: ColorMode) -> Self {
         self.color_mode = color;
         self
     }
@@ -199,7 +199,7 @@ impl<'g> BarGraph<'g> {
     ///
     /// - `Solid`: Render bars using the full block character '█'.
     /// - `Braille`: Render bars using braille characters for more granular representation.
-    pub fn with_bar_style(mut self, style: BarStyle) -> Self {
+    pub const fn with_bar_style(mut self, style: BarStyle) -> Self {
         self.bar_style = style;
         self
     }
@@ -280,7 +280,9 @@ impl<'g> BarGraph<'g> {
     fn color_for(&self, area: Rect, min: f64, max: f64, value: f64, row: usize) -> Color {
         let color_value = match self.color_mode {
             ColorMode::Solid => value,
-            ColorMode::VerticalGradient => min + row as f64 / area.height as f64 * (max - min),
+            ColorMode::VerticalGradient => {
+                (row as f64 / area.height as f64).mul_add(max - min, min)
+            }
         };
         self.gradient
             .as_ref()
@@ -321,7 +323,7 @@ mod tests {
         let data = vec![0.0, 1.0, 2.0, 3.0, 4.0, 5.0];
         // check that we can use either a gradient or a boxed gradient
         let _graph = BarGraph::new(data.clone()).with_gradient(colorgrad::preset::turbo());
-        let _graph = BarGraph::new(data.clone()).with_gradient(colorgrad::preset::turbo().boxed());
+        let _graph = BarGraph::new(data).with_gradient(colorgrad::preset::turbo().boxed());
     }
 
     #[test]

@@ -59,7 +59,7 @@ fn render_popup(frame: &mut Frame, area: Rect, state: &mut PopupState) {
 /// Status bar at the bottom of the screen
 ///
 /// Must be called after rendering the popup widget as it relies on the popup area being set
-fn render_status_bar(frame: &mut Frame, area: Rect, state: &mut PopupState) {
+fn render_status_bar(frame: &mut Frame, area: Rect, state: &PopupState) {
     let popup_area = state.area().unwrap_or_default();
     let text = format!("Popup area: {popup_area:?}");
     let paragraph = Paragraph::new(text).style(Style::new().white().on_black());
@@ -69,11 +69,11 @@ fn render_status_bar(frame: &mut Frame, area: Rect, state: &mut PopupState) {
 fn handle_events(popup: &mut PopupState, exit: &mut bool) -> Result<()> {
     match event::read()? {
         Event::Key(event) if event.kind == KeyEventKind::Press => {
-            handle_key_event(event, popup, exit)
+            handle_key_event(event, popup, exit);
         }
         Event::Mouse(event) => popup.handle_mouse_event(event),
         _ => (),
-    };
+    }
     Ok(())
 }
 

@@ -102,7 +102,7 @@ impl StopwatchApp {
         self.splits.push(Instant::now());
     }
 
-    fn elapsed(&mut self) -> Duration {
+    fn elapsed(&self) -> Duration {
         if self.state.is_running() {
             self.splits.first().map_or(Duration::ZERO, Instant::elapsed)
         } else {
@@ -114,7 +114,7 @@ impl StopwatchApp {
         }
     }
 
-    fn draw(&mut self, tui: &mut Tui) -> Result<()> {
+    fn draw(&self, tui: &mut Tui) -> Result<()> {
         tui.draw(|frame| {
             let layout = layout(frame.area());
             frame.render_widget(Paragraph::new("Stopwatch Example"), layout[0]);
@@ -126,12 +126,12 @@ impl StopwatchApp {
         })
     }
 
-    fn fps_paragraph(&mut self) -> Paragraph<'_> {
+    fn fps_paragraph(&self) -> Paragraph<'_> {
         let fps = format!("{:.2} fps", self.fps_counter.fps);
         Paragraph::new(fps).dim().right_aligned()
     }
 
-    fn timer_paragraph(&mut self) -> BigText<'_> {
+    fn timer_paragraph(&self) -> BigText<'_> {
         let style = if self.state.is_running() {
             Style::new().green()
         } else {
@@ -148,8 +148,8 @@ impl StopwatchApp {
     /// #01 -- 00:00.693 -- 00:00.693
     /// #02 -- 00:00.719 -- 00:01.413
     /// ```
-    fn splits_paragraph(&mut self) -> Paragraph<'_> {
-        let start = *self.splits.first().unwrap_or(&Instant::now());
+    fn splits_paragraph(&self) -> Paragraph<'_> {
+        let start = self.splits.first().copied().unwrap_or_else(Instant::now);
         let mut splits = self
             .splits
             .iter()
@@ -162,7 +162,7 @@ impl StopwatchApp {
         Paragraph::new(splits)
     }
 
-    fn help_paragraph(&mut self) -> Paragraph<'_> {
+    fn help_paragraph(&self) -> Paragraph<'_> {
         let space_action = if self.state.is_stopped() {
             "start"
         } else {
@@ -302,7 +302,7 @@ struct Tui {
 }
 
 impl Tui {
-    fn init() -> Result<Tui> {
+    fn init() -> Result<Self> {
         let mut stdout = io::stdout();
         execute!(stdout, EnterAlternateScreen).wrap_err("failed to enter alternate screen")?;
         let backend = CrosstermBackend::new(stdout);

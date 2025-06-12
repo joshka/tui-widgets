@@ -168,7 +168,7 @@ impl App {
     }
 
     fn text(&self, index: usize) -> impl Widget {
-        let block = Block::bordered().title(format!("Text {}", index));
+        let block = Block::bordered().title(format!("Text {index}"));
         Paragraph::new(self.text[index].clone())
             .wrap(Wrap { trim: false })
             .block(block)

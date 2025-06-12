@@ -30,7 +30,7 @@ impl ScrollViewState {
     }
 
     /// Get the offset of the scroll view state
-    pub fn offset(&self) -> Position {
+    pub const fn offset(&self) -> Position {
         self.offset
     }
 
