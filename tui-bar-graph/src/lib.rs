@@ -248,7 +248,7 @@ impl<'g> BarGraph<'g> {
             .take(area.width as usize)
         {
             let left_value = chunk[0];
-            let right_value = chunk.get(1).unwrap_or(&min);
+            let right_value = chunk.get(1).copied().unwrap_or(min);
 
             let left_normalized = (left_value - min) / range;
             let right_normalized = (right_value - min) / range;
@@ -260,9 +260,7 @@ impl<'g> BarGraph<'g> {
                 .ceil() as usize;
 
             for (row_index, row) in column.rows().rev().enumerate().take(column_height) {
-                // TODO midpoint is stablized in 1.87 https://github.com/rust-lang/rust/pull/134340
-                // let value = f64::midpoint(left_value, right_value);
-                let value = (left_value + right_value) / 2.0;
+                let value = f64::midpoint(left_value, right_value);
                 let color = self.color_for(area, min, max, value, row_index);
 
                 let dots_below = row_index * dots_per_row;
