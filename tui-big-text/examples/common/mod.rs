@@ -38,7 +38,7 @@ fn install_panic_handler() {
     let hook = std::panic::take_hook();
     std::panic::set_hook(Box::new(move |panic_info| {
         if let Err(err) = restore() {
-            eprintln!("failed to restore terminal: {}", err);
+            eprintln!("failed to restore terminal: {err}");
         }
         hook(panic_info);
     }));

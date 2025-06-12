@@ -30,42 +30,42 @@ impl PixelSize {
     ///
     /// The first value is the number of pixels in the horizontal direction, the second value is
     /// the number of pixels in the vertical direction.
-    pub(crate) fn pixels_per_cell(self) -> (u16, u16) {
+    pub(crate) const fn pixels_per_cell(self) -> (u16, u16) {
         match self {
-            PixelSize::Full => (1, 1),
-            PixelSize::HalfHeight => (1, 2),
-            PixelSize::HalfWidth => (2, 1),
-            PixelSize::Quadrant => (2, 2),
-            PixelSize::ThirdHeight => (1, 3),
-            PixelSize::Sextant => (2, 3),
+            Self::Full => (1, 1),
+            Self::HalfHeight => (1, 2),
+            Self::HalfWidth => (2, 1),
+            Self::Quadrant => (2, 2),
+            Self::ThirdHeight => (1, 3),
+            Self::Sextant => (2, 3),
         }
     }
 
     /// Get a symbol/char that represents the pixels at the given position with the given pixel size
-    pub(crate) fn symbol_for_position(self, glyph: &[u8; 8], row: usize, col: i32) -> char {
+    pub(crate) const fn symbol_for_position(self, glyph: &[u8; 8], row: usize, col: i32) -> char {
         match self {
-            PixelSize::Full => match glyph[row] & (1 << col) {
+            Self::Full => match glyph[row] & (1 << col) {
                 0 => ' ',
                 _ => '█',
             },
-            PixelSize::HalfHeight => {
+            Self::HalfHeight => {
                 let top = glyph[row] & (1 << col);
                 let bottom = glyph[row + 1] & (1 << col);
                 get_symbol_half_height(top, bottom)
             }
-            PixelSize::HalfWidth => {
+            Self::HalfWidth => {
                 let left = glyph[row] & (1 << col);
                 let right = glyph[row] & (1 << (col + 1));
                 get_symbol_half_width(left, right)
             }
-            PixelSize::Quadrant => {
+            Self::Quadrant => {
                 let top_left = glyph[row] & (1 << col);
                 let top_right = glyph[row] & (1 << (col + 1));
                 let bottom_left = glyph[row + 1] & (1 << col);
                 let bottom_right = glyph[row + 1] & (1 << (col + 1));
                 get_symbol_quadrant_size(top_left, top_right, bottom_left, bottom_right)
             }
-            PixelSize::ThirdHeight => {
+            Self::ThirdHeight => {
                 let top = glyph[row] & (1 << col);
                 let is_middle_available = (row + 1) < glyph.len();
                 let middle = if is_middle_available {
@@ -81,7 +81,7 @@ impl PixelSize {
                 };
                 get_symbol_third_height(top, middle, bottom)
             }
-            PixelSize::Sextant => {
+            Self::Sextant => {
                 let top_left = glyph[row] & (1 << col);
                 let top_right = glyph[row] & (1 << (col + 1));
                 let is_middle_available = (row + 1) < glyph.len();
@@ -116,7 +116,7 @@ impl PixelSize {
 }
 
 /// Get the correct unicode symbol for two vertical "pixels"
-fn get_symbol_half_height(top: u8, bottom: u8) -> char {
+const fn get_symbol_half_height(top: u8, bottom: u8) -> char {
     match top {
         0 => match bottom {
             0 => ' ',
@@ -130,7 +130,7 @@ fn get_symbol_half_height(top: u8, bottom: u8) -> char {
 }
 
 /// Get the correct unicode symbol for two horizontal "pixels"
-fn get_symbol_half_width(left: u8, right: u8) -> char {
+const fn get_symbol_half_width(left: u8, right: u8) -> char {
     match left {
         0 => match right {
             0 => ' ',
@@ -144,7 +144,7 @@ fn get_symbol_half_width(left: u8, right: u8) -> char {
 }
 
 /// Get the correct unicode symbol for 2x2 "pixels"
-fn get_symbol_quadrant_size(
+const fn get_symbol_quadrant_size(
     top_left: u8,
     top_right: u8,
     bottom_left: u8,
@@ -167,12 +167,12 @@ fn get_symbol_quadrant_size(
 }
 
 /// Get the correct unicode symbol for 1x3 "pixels"
-fn get_symbol_third_height(top: u8, middle: u8, bottom: u8) -> char {
+const fn get_symbol_third_height(top: u8, middle: u8, bottom: u8) -> char {
     get_symbol_sextant_size(top, top, middle, middle, bottom, bottom)
 }
 
 /// Get the correct unicode symbol for 2x3 "pixels"
-fn get_symbol_sextant_size(
+const fn get_symbol_sextant_size(
     top_left: u8,
     top_right: u8,
     middle_left: u8,
@@ -234,6 +234,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::cognitive_complexity)]
     fn check_sextant_size_symbols() -> Result<()> {
         assert_eq!(get_symbol_sextant_size(0, 0, 0, 0, 0, 0), ' ');
         assert_eq!(get_symbol_sextant_size(1, 0, 0, 0, 0, 0), '🬀');

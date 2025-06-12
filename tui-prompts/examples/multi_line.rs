@@ -23,7 +23,7 @@ fn main() -> Result<()> {
     panic::set_hook(Box::new(|info| {
         crossterm::execute!(std::io::stderr(), crossterm::terminal::LeaveAlternateScreen)
             .expect("Failed to leave alternate screen");
-        eprintln!("Panic: {:?}", info);
+        eprintln!("Panic: {info:?}");
     }));
 
     let cli = Cli::parse();
@@ -39,7 +39,7 @@ struct App<'a> {
 }
 
 impl App<'_> {
-    pub fn new(cli: Cli) -> Self {
+    pub const fn new(cli: Cli) -> Self {
         Self {
             debug: cli.debug,
             state: TextState::new().with_focus(FocusState::Focused),
@@ -103,7 +103,7 @@ impl App<'_> {
 
     /// draw a debug string in the top right corner of the screen that shows the current state of
     /// the app.
-    fn draw_debug(&mut self, frame: &mut Frame, area: Rect) {
+    fn draw_debug(&self, frame: &mut Frame, area: Rect) {
         if !self.debug {
             return;
         }
@@ -111,7 +111,7 @@ impl App<'_> {
         frame.render_widget(Paragraph::new(debug).wrap(Wrap { trim: false }), area);
     }
 
-    fn is_finished(&self) -> bool {
+    const fn is_finished(&self) -> bool {
         self.state.is_finished()
     }
 

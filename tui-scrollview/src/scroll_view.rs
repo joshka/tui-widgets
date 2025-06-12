@@ -82,17 +82,17 @@ impl ScrollView {
     }
 
     /// The content size of the scroll view
-    pub fn size(&self) -> Size {
+    pub const fn size(&self) -> Size {
         self.size
     }
 
     /// The area of the buffer that is available to be scrolled
-    pub fn area(&self) -> Rect {
+    pub const fn area(&self) -> Rect {
         self.buf.area
     }
 
     /// The buffer containing the contents of the scroll view
-    pub fn buf(&self) -> &Buffer {
+    pub const fn buf(&self) -> &Buffer {
         &self.buf
     }
 
@@ -128,7 +128,7 @@ impl ScrollView {
     /// let mut scroll_view = ScrollView::new(Size::new(20, 20))
     ///     .vertical_scrollbar_visibility(ScrollbarVisibility::Always);
     /// ```
-    pub fn vertical_scrollbar_visibility(mut self, visibility: ScrollbarVisibility) -> Self {
+    pub const fn vertical_scrollbar_visibility(mut self, visibility: ScrollbarVisibility) -> Self {
         self.vertical_scrollbar_visibility = visibility;
         self
     }
@@ -148,7 +148,10 @@ impl ScrollView {
     /// let mut scroll_view = ScrollView::new(Size::new(20, 20))
     ///     .horizontal_scrollbar_visibility(ScrollbarVisibility::Never);
     /// ```
-    pub fn horizontal_scrollbar_visibility(mut self, visibility: ScrollbarVisibility) -> Self {
+    pub const fn horizontal_scrollbar_visibility(
+        mut self,
+        visibility: ScrollbarVisibility,
+    ) -> Self {
         self.horizontal_scrollbar_visibility = visibility;
         self
     }
@@ -168,7 +171,7 @@ impl ScrollView {
     /// let mut scroll_view =
     ///     ScrollView::new(Size::new(20, 20)).scrollbars_visibility(ScrollbarVisibility::Automatic);
     /// ```
-    pub fn scrollbars_visibility(mut self, visibility: ScrollbarVisibility) -> Self {
+    pub const fn scrollbars_visibility(mut self, visibility: ScrollbarVisibility) -> Self {
         self.vertical_scrollbar_visibility = visibility;
         self.horizontal_scrollbar_visibility = visibility;
         self
@@ -194,7 +197,6 @@ impl ScrollView {
     ///
     /// This should not be confused with the `render` method, which renders the visible area of the
     /// ScrollView into the main buffer.
-
     pub fn render_stateful_widget<W: StatefulWidget>(
         &mut self,
         widget: W,
@@ -256,26 +258,27 @@ impl ScrollView {
         let (show_horizontal, show_vertical) =
             self.visible_scrollbars(horizontal_space, vertical_space);
 
-        let mut new_width = area.width;
-        let mut new_height = area.height;
-
-        if show_horizontal {
+        let new_height = if show_horizontal {
             // if both bars are rendered, avoid the corner
             let width = area.width.saturating_sub(show_vertical as u16);
             let render_area = Rect { width, ..area };
             // render scrollbar, update available space
             self.render_horizontal_scrollbar(render_area, buf, state);
-            new_height = area.height.saturating_sub(1);
-        }
+            area.height.saturating_sub(1)
+        } else {
+            area.height
+        };
 
-        if show_vertical {
+        let new_width = if show_vertical {
             // if both bars are rendered, avoid the corner
             let height = area.height.saturating_sub(show_horizontal as u16);
             let render_area = Rect { height, ..area };
             // render scrollbar, update available space
             self.render_vertical_scrollbar(render_area, buf, state);
-            new_width = area.width.saturating_sub(1);
-        }
+            area.width.saturating_sub(1)
+        } else {
+            area.width
+        };
 
         Rect::new(state.offset.x, state.offset.y, new_width, new_height)
     }
@@ -288,7 +291,7 @@ impl ScrollView {
     /// The space arguments are the difference between the scrollview size and the available area.
     ///
     /// Returns a bool tuple with (horizontal, vertical) resolutions.
-    fn visible_scrollbars(&self, horizontal_space: i32, vertical_space: i32) -> (bool, bool) {
+    const fn visible_scrollbars(&self, horizontal_space: i32, vertical_space: i32) -> (bool, bool) {
         type V = crate::scroll_view::ScrollbarVisibility;
 
         match (
@@ -787,7 +790,7 @@ mod tests {
         let mut buf = Buffer::empty(Rect::new(0, 0, 7, 5));
         let mut state = ScrollViewState::default();
         let mut list_state = ListState::default();
-        let items: Vec<String> = (1..=10).map(|i| format!("Item {}", i)).collect();
+        let items: Vec<String> = (1..=10).map(|i| format!("Item {i}")).collect();
         let list = List::new(items);
         scroll_view.render_stateful_widget(list, scroll_view.area(), &mut list_state);
         scroll_view.render(buf.area, &mut buf, &mut state);

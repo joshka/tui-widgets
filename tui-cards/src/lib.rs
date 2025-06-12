@@ -70,7 +70,7 @@ pub enum Suit {
 }
 
 impl Card {
-    pub fn new(rank: Rank, suit: Suit) -> Self {
+    pub const fn new(rank: Rank, suit: Suit) -> Self {
         Self { rank, suit }
     }
 
@@ -84,45 +84,45 @@ impl Card {
 }
 
 impl Rank {
-    pub fn as_symbol(self) -> char {
+    pub const fn as_symbol(self) -> char {
         match self {
-            Rank::Ace => 'A',
-            Rank::Two => '2',
-            Rank::Three => '3',
-            Rank::Four => '4',
-            Rank::Five => '5',
-            Rank::Six => '6',
-            Rank::Seven => '7',
-            Rank::Eight => '8',
-            Rank::Nine => '9',
-            Rank::Ten => 'T',
-            Rank::Jack => 'J',
-            Rank::Queen => 'Q',
-            Rank::King => 'K',
+            Self::Ace => 'A',
+            Self::Two => '2',
+            Self::Three => '3',
+            Self::Four => '4',
+            Self::Five => '5',
+            Self::Six => '6',
+            Self::Seven => '7',
+            Self::Eight => '8',
+            Self::Nine => '9',
+            Self::Ten => 'T',
+            Self::Jack => 'J',
+            Self::Queen => 'Q',
+            Self::King => 'K',
         }
     }
 }
 
 impl Suit {
-    pub fn color(self) -> Color {
+    pub const fn color(self) -> Color {
         match self {
-            Suit::Clubs => Color::Green,
-            Suit::Diamonds => Color::Blue,
-            Suit::Hearts => Color::Red,
-            Suit::Spades => Color::Black,
+            Self::Clubs => Color::Green,
+            Self::Diamonds => Color::Blue,
+            Self::Hearts => Color::Red,
+            Self::Spades => Color::Black,
         }
     }
 
-    pub fn as_symbol(self) -> char {
+    pub const fn as_symbol(self) -> char {
         match self {
-            Suit::Clubs => '♣',
-            Suit::Diamonds => '♦',
-            Suit::Hearts => '♥',
-            Suit::Spades => '♠',
+            Self::Clubs => '♣',
+            Self::Diamonds => '♦',
+            Self::Hearts => '♥',
+            Self::Spades => '♠',
         }
     }
 
-    pub fn as_colored_symbol(self) -> &'static str {
+    pub const fn as_colored_symbol(self) -> &'static str {
         match self {
             Self::Clubs => "\u{2663}\u{FE0F}",
             Self::Diamonds => "\u{2666}\u{FE0F}",
@@ -131,7 +131,7 @@ impl Suit {
         }
     }
 
-    pub fn as_four_color_symbol(self) -> &'static str {
+    pub const fn as_four_color_symbol(self) -> &'static str {
         match self {
             Self::Clubs => "\u{2618}\u{FE0F}",     // shamrock
             Self::Diamonds => "\u{1F537}\u{FE0F}", // blue diamond
@@ -142,9 +142,9 @@ impl Suit {
 }
 
 impl Rank {
-    pub fn template(self) -> &'static str {
+    pub const fn template(self) -> &'static str {
         match self {
-            Rank::Ace => indoc! {"
+            Self::Ace => indoc! {"
                 ╭────────────╮
                 │ A          │
                 │            │
@@ -154,7 +154,7 @@ impl Rank {
                 │            │
                 │          A │
                 ╰────────────╯"},
-            Rank::Two => indoc! {"
+            Self::Two => indoc! {"
                 ╭────────────╮
                 │ 2   xx     │
                 │            │
@@ -164,7 +164,7 @@ impl Rank {
                 │            │
                 │     xx   2 │
                 ╰────────────╯"},
-            Rank::Three => indoc! {"
+            Self::Three => indoc! {"
                 ╭────────────╮
                 │ 3   xx     │
                 │            │
@@ -174,7 +174,7 @@ impl Rank {
                 │            │
                 │     xx   3 │
                 ╰────────────╯"},
-            Rank::Four => indoc! {"
+            Self::Four => indoc! {"
                 ╭────────────╮
                 │ 4xx    xx  │
                 │            │
@@ -184,7 +184,7 @@ impl Rank {
                 │            │
                 │  xx    xx4 │
                 ╰────────────╯"},
-            Rank::Five => indoc! {"
+            Self::Five => indoc! {"
                 ╭────────────╮
                 │ 5xx    xx  │
                 │            │
@@ -194,7 +194,7 @@ impl Rank {
                 │            │
                 │  xx    xx5 │
                 ╰────────────╯"},
-            Rank::Six => indoc! {"
+            Self::Six => indoc! {"
                 ╭────────────╮
                 │ 6xx    xx  │
                 │            │
@@ -204,7 +204,7 @@ impl Rank {
                 │            │
                 │  xx    xx6 │
                 ╰────────────╯"},
-            Rank::Seven => indoc! {"
+            Self::Seven => indoc! {"
                 ╭────────────╮
                 │ 7xx    xx  │
                 │            │
@@ -214,7 +214,7 @@ impl Rank {
                 │            │
                 │  xx    xx7 │
                 ╰────────────╯"},
-            Rank::Eight => indoc! {"
+            Self::Eight => indoc! {"
                 ╭────────────╮
                 │ 8xx    xx  │
                 │            │
@@ -224,7 +224,7 @@ impl Rank {
                 │            │
                 │  xx    xx8 │
                 ╰────────────╯"},
-            Rank::Nine => indoc! {"
+            Self::Nine => indoc! {"
                 ╭────────────╮
                 │ 9xx    xx  │
                 │            │
@@ -235,7 +235,7 @@ impl Rank {
                 │  xx    xx9 │
                 ╰────────────╯
                 "},
-            Rank::Ten => indoc! {"
+            Self::Ten => indoc! {"
                 ╭────────────╮
                 │10xx    xx  │
                 │     xx     │
@@ -245,7 +245,7 @@ impl Rank {
                 │     xx     │
                 │  xx    xx10│
                 ╰────────────╯"},
-            Rank::Jack => indoc! {"
+            Self::Jack => indoc! {"
                 ╭────────────╮
                 │ Jxx        │
                 │       JJ   │
@@ -255,7 +255,7 @@ impl Rank {
                 │   JJJJJ    │
                 │        xxJ │
                 ╰────────────╯"},
-            Rank::Queen => indoc! {"
+            Self::Queen => indoc! {"
                 ╭────────────╮
                 │ Qxx        │
                 │   QQQQQ    │
@@ -266,7 +266,7 @@ impl Rank {
                 │        xxQ │
                 ╰────────────╯
             "},
-            Rank::King => indoc! {"
+            Self::King => indoc! {"
                 ╭────────────╮
                 │ Kxx        │
                 │  KK    KK  │

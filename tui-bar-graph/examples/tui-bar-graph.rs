@@ -37,12 +37,12 @@ enum Preset {
 impl Preset {
     pub fn to_gradient(&self) -> Box<dyn Gradient> {
         match self {
-            Preset::Rainbow => Box::new(colorgrad::preset::rainbow()),
-            Preset::Sinebow => Box::new(colorgrad::preset::sinebow()),
-            Preset::Viridis => Box::new(colorgrad::preset::viridis()),
-            Preset::Inferno => Box::new(colorgrad::preset::inferno()),
-            Preset::Magma => Box::new(colorgrad::preset::magma()),
-            Preset::Plasma => Box::new(colorgrad::preset::plasma()),
+            Self::Rainbow => Box::new(colorgrad::preset::rainbow()),
+            Self::Sinebow => Box::new(colorgrad::preset::sinebow()),
+            Self::Viridis => Box::new(colorgrad::preset::viridis()),
+            Self::Inferno => Box::new(colorgrad::preset::inferno()),
+            Self::Magma => Box::new(colorgrad::preset::magma()),
+            Self::Plasma => Box::new(colorgrad::preset::plasma()),
         }
     }
 }

@@ -9,7 +9,7 @@ use ratatui::widgets::Widget;
 pub struct BoxChar(char);
 
 impl BoxChar {
-    pub fn new(c: char) -> Self {
+    pub const fn new(c: char) -> Self {
         Self(c)
     }
 }

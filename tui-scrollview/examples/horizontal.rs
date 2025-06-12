@@ -30,8 +30,8 @@ enum AppState {
 }
 
 impl App {
-    fn new() -> App {
-        App {
+    fn new() -> Self {
+        Self {
             text: lipsum::lipsum(10_000),
             ..Default::default()
         }
