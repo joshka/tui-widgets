@@ -99,6 +99,7 @@ fn render(frame: &mut Frame, args: &Args) {
     let width = match args.bar_style {
         BarStyle::Solid => area.width as usize,
         BarStyle::Braille => area.width as usize * 2,
+        BarStyle::Quadrant => area.width as usize * 4,
     };
     let mut data = vec![0.0; width];
     rand::rng().fill(&mut data[..]);

@@ -4,6 +4,7 @@
 //!
 //! ![Braille Rainbow](https://vhs.charm.sh/vhs-1sx9Ht6NzU6e28Cl51jJVv.gif)
 //! ![Solid Plasma](https://vhs.charm.sh/vhs-7pWuLtZpzrz1OVD04cMt1a.gif)
+//! ![Quadrant Magma](https://vhs.charm.sh/vhs-1rx6XQ9mLiO8qybSBXRGwn.gif)
 //!
 //! <details><summary>More examples</summary>
 //!
@@ -57,18 +58,19 @@ use ratatui::style::Color;
 use ratatui::widgets::Widget;
 use strum::{Display, EnumString};
 
-// Each side (left/right) has 5 possible heights (0-4)
 const BRAILLE_PATTERNS: [[&str; 5]; 5] = [
-    // Right height 0-4 (columns) for left height 0 (row)
     ["⠀", "⢀", "⢠", "⢰", "⢸"],
-    // Right height 0-4 (columns) for left height 1 (row)
     ["⡀", "⣀", "⣠", "⣰", "⣸"],
-    // Right height 0-4 (columns) for left height 2 (row)
     ["⡄", "⣄", "⣤", "⣴", "⣼"],
-    // Right height 0-4 (columns) for left height 3 (row)
     ["⡆", "⣆", "⣦", "⣶", "⣾"],
-    // Right height 0-4 (columns) for left height 4 (row)
     ["⡇", "⣇", "⣧", "⣷", "⣿"],
+];
+
+#[rustfmt::skip]
+const QUADRANT_PATTERNS: [[&str; 3]; 3]= [
+    [" ", "▗", "▐"],
+    ["▖", "▄", "▟"],
+    ["▌", "▙", "█"],
 ];
 
 /// A widget for displaying a bar graph.
@@ -130,11 +132,13 @@ pub enum ColorMode {
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, EnumString, Display)]
 #[strum(serialize_all = "snake_case")]
 pub enum BarStyle {
-    /// Render bars using the full block character '█'.
-    Solid,
     /// Render bars using braille characters for more granular representation.
     #[default]
     Braille,
+    /// Render bars using the full block character '█'.
+    Solid,
+    /// Render bars using the quadrant block characters `▖`,`▗`, `▘`, and `▝` for a more granular representation.
+    Quadrant,
 }
 
 impl<'g> BarGraph<'g> {
@@ -215,10 +219,27 @@ impl<'g> BarGraph<'g> {
 
     /// Renders the graph using braille characters.
     fn render_braille(&self, area: Rect, buf: &mut Buffer, min: f64, max: f64) {
+        self.render_pattern(area, buf, min, max, 4, &BRAILLE_PATTERNS);
+    }
+
+    /// Renders the graph using quadrant blocks.
+    fn render_quadrant(&self, area: Rect, buf: &mut Buffer, min: f64, max: f64) {
+        self.render_pattern(area, buf, min, max, 2, &QUADRANT_PATTERNS);
+    }
+
+    /// Common rendering logic for pattern-based bar styles.
+    fn render_pattern<const N: usize, const M: usize>(
+        &self,
+        area: Rect,
+        buf: &mut Buffer,
+        min: f64,
+        max: f64,
+        dots_per_row: usize,
+        patterns: &[[&str; N]; M],
+    ) {
         let range = max - min;
-        const DOTS_PER_ROW: usize = 4;
         let row_count = area.height;
-        let total_dots = row_count as usize * DOTS_PER_ROW;
+        let total_dots = row_count as usize * dots_per_row;
 
         for (chunk, column) in self
             .data
@@ -226,8 +247,8 @@ impl<'g> BarGraph<'g> {
             .zip(area.columns())
             .take(area.width as usize)
         {
-            let left_value = chunk.get(0).cloned().unwrap_or(min);
-            let right_value = chunk.get(1).cloned().unwrap_or(min);
+            let left_value = chunk[0];
+            let right_value = chunk.get(1).unwrap_or(&min);
 
             let left_normalized = (left_value - min) / range;
             let right_normalized = (right_value - min) / range;
@@ -235,7 +256,7 @@ impl<'g> BarGraph<'g> {
             let left_total_dots = (left_normalized * total_dots as f64).round() as usize;
             let right_total_dots = (right_normalized * total_dots as f64).round() as usize;
 
-            let column_height = (left_total_dots.max(right_total_dots) as f64 / DOTS_PER_ROW as f64)
+            let column_height = (left_total_dots.max(right_total_dots) as f64 / dots_per_row as f64)
                 .ceil() as usize;
 
             for (row_index, row) in column.rows().rev().enumerate().take(column_height) {
@@ -244,11 +265,13 @@ impl<'g> BarGraph<'g> {
                 let value = (left_value + right_value) / 2.0;
                 let color = self.color_for(area, min, max, value, row_index);
 
-                let dots_below = row_index * DOTS_PER_ROW;
-                let left_dots = left_total_dots.saturating_sub(dots_below).min(4);
-                let right_dots = right_total_dots.saturating_sub(dots_below).min(4);
+                let dots_below = row_index * dots_per_row;
+                let left_dots = left_total_dots.saturating_sub(dots_below).min(dots_per_row);
+                let right_dots = right_total_dots
+                    .saturating_sub(dots_below)
+                    .min(dots_per_row);
 
-                let symbol = BRAILLE_PATTERNS[left_dots][right_dots];
+                let symbol = patterns[left_dots][right_dots];
                 buf[row].set_symbol(symbol).set_fg(color);
             }
         }
@@ -282,8 +305,9 @@ impl Widget for BarGraph<'_> {
             .unwrap_or_else(|| self.data.iter().copied().fold(f64::NEG_INFINITY, f64::max));
         let max = max.max(min + f64::EPSILON); // avoid division by zero if min == max
         match self.bar_style {
-            BarStyle::Solid => self.render_solid(area, buf, min, max),
             BarStyle::Braille => self.render_braille(area, buf, min, max),
+            BarStyle::Solid => self.render_solid(area, buf, min, max),
+            BarStyle::Quadrant => self.render_quadrant(area, buf, min, max),
         }
     }
 }
@@ -301,26 +325,79 @@ mod tests {
     }
 
     #[test]
-    fn test_render() {
-        let data = vec![0.0, 1.0, 2.0, 3.0, 4.0, 5.0];
+    fn braille() {
+        let data = (0..=40).map(|i| i as f64 * 0.125).collect();
         let bar_graph = BarGraph::new(data);
 
-        let mut buf = Buffer::empty(Rect::new(0, 0, 10, 10));
-        bar_graph.render(Rect::new(0, 0, 10, 10), &mut buf);
+        let mut buf = Buffer::empty(Rect::new(0, 0, 21, 10));
+        bar_graph.render(buf.area, &mut buf);
 
         assert_eq!(
             buf,
             Buffer::with_lines(vec![
-                "  ⢸       ",
-                "  ⢸       ",
-                "  ⣿       ",
-                "  ⣿       ",
-                " ⢸⣿       ",
-                " ⢸⣿       ",
-                " ⣿⣿       ",
-                " ⣿⣿       ",
-                "⢸⣿⣿       ",
-                "⢸⣿⣿       ",
+                "                  ⢀⣴⡇",
+                "                ⢀⣴⣿⣿⡇",
+                "              ⢀⣴⣿⣿⣿⣿⡇",
+                "            ⢀⣴⣿⣿⣿⣿⣿⣿⡇",
+                "          ⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⡇",
+                "        ⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇",
+                "      ⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇",
+                "    ⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇",
+                "  ⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇",
+                "⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇",
+            ])
+        );
+    }
+
+    #[test]
+    fn solid() {
+        let data = vec![0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
+        let bar_graph = BarGraph::new(data).with_bar_style(BarStyle::Solid);
+
+        let mut buf = Buffer::empty(Rect::new(0, 0, 11, 10));
+        bar_graph.render(buf.area, &mut buf);
+
+        assert_eq!(
+            buf,
+            Buffer::with_lines(vec![
+                "          █",
+                "         ██",
+                "        ███",
+                "       ████",
+                "      █████",
+                "     ██████",
+                "    ███████",
+                "   ████████",
+                "  █████████",
+                " ██████████",
+            ])
+        );
+    }
+
+    #[test]
+    fn quadrant() {
+        let data = vec![
+            0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75,
+            4.0, 4.25, 4.5, 4.75, 5.0,
+        ];
+        let bar_graph = BarGraph::new(data).with_bar_style(BarStyle::Quadrant);
+
+        let mut buf = Buffer::empty(Rect::new(0, 0, 11, 10));
+        bar_graph.render(buf.area, &mut buf);
+
+        assert_eq!(
+            buf,
+            Buffer::with_lines(vec![
+                "         ▗▌",
+                "        ▗█▌",
+                "       ▗██▌",
+                "      ▗███▌",
+                "     ▗████▌",
+                "    ▗█████▌",
+                "   ▗██████▌",
+                "  ▗███████▌",
+                " ▗████████▌",
+                "▗█████████▌",
             ])
         );
     }
