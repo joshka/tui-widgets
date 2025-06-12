@@ -204,7 +204,7 @@ impl<'a> App<'a> {
         }
     }
 
-    fn current_state(&mut self) -> &mut TextState<'a> {
+    const fn current_state(&mut self) -> &mut TextState<'a> {
         match self.current_field {
             Field::Username => &mut self.username_state,
             Field::Password => &mut self.password_state,

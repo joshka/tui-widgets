@@ -69,11 +69,11 @@ impl App {
         Ok(())
     }
 
-    fn scroll_up(&mut self) {
+    const fn scroll_up(&mut self) {
         self.scroll = self.scroll.saturating_sub(1);
     }
 
-    fn scroll_down(&mut self) {
+    const fn scroll_down(&mut self) {
         self.scroll = self.scroll.saturating_add(1);
     }
 }

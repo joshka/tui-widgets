@@ -56,7 +56,7 @@ impl PopupState {
     }
 
     /// Move the popup to the given position.
-    pub fn move_to(&mut self, x: u16, y: u16) {
+    pub const fn move_to(&mut self, x: u16, y: u16) {
         if let Some(area) = self.area {
             self.area.replace(Rect { x, y, ..area });
         }
@@ -75,12 +75,12 @@ impl PopupState {
     }
 
     /// Set the state to not dragging
-    pub fn mouse_up(&mut self, _col: u16, _row: u16) {
+    pub const fn mouse_up(&mut self, _col: u16, _row: u16) {
         self.drag_state = DragState::NotDragging;
     }
 
     /// Move the popup if the state is dragging
-    pub fn mouse_drag(&mut self, col: u16, row: u16) {
+    pub const fn mouse_drag(&mut self, col: u16, row: u16) {
         if let DragState::Dragging {
             col_offset,
             row_offset,
