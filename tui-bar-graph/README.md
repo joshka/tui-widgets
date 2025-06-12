@@ -8,6 +8,7 @@ Uses the [Colorgrad] crate for gradient coloring.
 
 ![Braille Rainbow](https://vhs.charm.sh/vhs-1sx9Ht6NzU6e28Cl51jJVv.gif)
 ![Solid Plasma](https://vhs.charm.sh/vhs-7pWuLtZpzrz1OVD04cMt1a.gif)
+![Quadrant Magma](https://vhs.charm.sh/vhs-1rx6XQ9mLiO8qybSBXRGwn.gif)
 
 <details><summary>More examples</summary>
 
@@ -26,7 +27,7 @@ Uses the [Colorgrad] crate for gradient coloring.
 ## Installation
 
 ```shell
-cargo add colorgrad ratatui tui-bar-graph
+cargo add ratatui tui-bar-graph
 ```
 
 ## Example
