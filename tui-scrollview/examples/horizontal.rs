@@ -49,7 +49,7 @@ impl App {
         self.state == AppState::Running
     }
 
-    fn quit(&mut self) {
+    const fn quit(&mut self) {
         self.state = AppState::Quit;
     }
 

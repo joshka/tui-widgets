@@ -109,7 +109,7 @@ impl ScrollView {
     /// let mut scroll_view = ScrollView::new(Size::new(20, 20));
     /// Line::raw("Hello, world!").render(Rect::new(0, 0, 20, 1), scroll_view.buf_mut());
     /// ```
-    pub fn buf_mut(&mut self) -> &mut Buffer {
+    pub const fn buf_mut(&mut self) -> &mut Buffer {
         &mut self.buf
     }
 

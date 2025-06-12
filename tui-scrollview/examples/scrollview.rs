@@ -80,7 +80,7 @@ impl App {
         Ok(())
     }
 
-    fn quit(&mut self) {
+    const fn quit(&mut self) {
         self.state = AppState::Quit;
     }
 }

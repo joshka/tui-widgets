@@ -25,7 +25,7 @@ impl ScrollViewState {
     }
 
     /// Set the offset of the scroll view state
-    pub fn set_offset(&mut self, offset: Position) {
+    pub const fn set_offset(&mut self, offset: Position) {
         self.offset = offset;
     }
 
@@ -35,12 +35,12 @@ impl ScrollViewState {
     }
 
     /// Move the scroll view state up by one row
-    pub fn scroll_up(&mut self) {
+    pub const fn scroll_up(&mut self) {
         self.offset.y = self.offset.y.saturating_sub(1);
     }
 
     /// Move the scroll view state down by one row
-    pub fn scroll_down(&mut self) {
+    pub const fn scroll_down(&mut self) {
         self.offset.y = self.offset.y.saturating_add(1);
     }
 
@@ -59,18 +59,18 @@ impl ScrollViewState {
     }
 
     /// Move the scroll view state left by one column
-    pub fn scroll_left(&mut self) {
+    pub const fn scroll_left(&mut self) {
         self.offset.x = self.offset.x.saturating_sub(1);
     }
 
     /// Move the scroll view state right by one column
-    pub fn scroll_right(&mut self) {
+    pub const fn scroll_right(&mut self) {
         self.offset.x = self.offset.x.saturating_add(1);
     }
 
     /// Move the scroll view state to the top of the buffer
-    pub fn scroll_to_top(&mut self) {
-        self.offset = (0, 0).into();
+    pub const fn scroll_to_top(&mut self) {
+        self.offset = Position::ORIGIN;
     }
 
     /// Move the scroll view state to the bottom of the buffer

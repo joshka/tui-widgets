@@ -85,7 +85,7 @@ impl StopwatchApp {
         self.fps_counter.tick()
     }
 
-    fn quit(&mut self) {
+    const fn quit(&mut self) {
         self.state = AppState::Quitting
     }
 
