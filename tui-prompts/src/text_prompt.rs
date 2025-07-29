@@ -431,7 +431,7 @@ mod tests {
     #[case::position_1(1, (13, 0))]
     #[case::position_2(2, (15, 0))]
     #[case::position_3(3, (0, 1))]
-    fn draw_unwrapped_position_fullwidth<'a>(
+    fn draw_wrapped_position_fullwidth<'a>(
         #[case] position: usize,
         #[case] expected_cursor: (u16, u16),
         mut terminal: Terminal<impl Backend>,
@@ -454,7 +454,7 @@ mod tests {
     #[case::position_2(2, (0, 1))]
     #[ignore]
     #[case::position_3(3, (2, 1))]
-    fn draw_unwrapped_position_fullwidth_shift_by_one<'a>(
+    fn draw_wrapped_position_fullwidth_shift_by_one<'a>(
         #[case] position: usize,
         #[case] expected_cursor: (u16, u16),
         mut terminal: Terminal<impl Backend>,
@@ -477,6 +477,7 @@ mod tests {
     #[case::position_6(6, (0, 1))] // first character of the second line
     #[case::position_7(7, (1, 1))] // second character of the second line
     #[case::position_11(10, (4, 1))] // last character of the value
+    #[case::position_12(11, (5, 1))] // one character beyond the value
     fn draw_wrapped_position<'a>(
         #[case] position: usize,
         #[case] expected_cursor: (u16, u16),
