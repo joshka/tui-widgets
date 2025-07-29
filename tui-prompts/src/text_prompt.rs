@@ -1,5 +1,6 @@
 use std::borrow::Cow;
 use std::vec;
+use unicode_width::UnicodeWidthStr;
 
 use itertools::Itertools;
 use ratatui::prelude::*;
@@ -88,7 +89,7 @@ impl<'a> StatefulWidget for TextPrompt<'a> {
         let width = area.width as usize;
         let height = area.height as usize;
         let value = self.render_style.render(state);
-        let value_length = value.chars().count();
+        let value_length: usize = value.width_cjk();
 
         let line = Line::from(vec![
             state.status().symbol(),
@@ -97,11 +98,16 @@ impl<'a> StatefulWidget for TextPrompt<'a> {
             " › ".cyan().dim(),
             Span::raw(value),
         ]);
-        let prompt_length = line.width() - value_length;
+        let prompt_length: usize = line
+            .iter()
+            .map(|x| x.content.to_string().width_cjk())
+            .sum::<usize>()
+            - value_length;
         let lines = wrap(line, width).take(height).collect_vec();
 
         // constrain the position to the area
-        let position = (state.position() + prompt_length).min(area.area() as usize - 1);
+        let position =
+            (state.width_to_pos(state.position()) + prompt_length).min(area.area() as usize - 1);
         let row = position / width;
         let column = position % width;
         *state.cursor_mut() = (area.x + column as u16, area.y + row as u16);
@@ -160,15 +166,18 @@ fn line_split_at(line: Line, mid: usize) -> (Line, Line) {
 /// splits a span into two spans at the given position.
 ///
 /// TODO: move this into the `Span` type.
-/// TODO: fix this so that it operates on multi-width characters.
 fn span_split_at(span: Span, mid: usize) -> (Span, Span) {
-    let (first, second) = span.content.split_at(mid);
+    let mut first_s = String::new();
+    let mut second_s = span.content.to_string();
+    while first_s.width_cjk() < mid {
+        first_s.push(second_s.remove(0));
+    }
     let first = Span {
-        content: Cow::Owned(first.into()),
+        content: Cow::Owned(first_s),
         style: span.style,
     };
     let second = Span {
-        content: Cow::Owned(second.into()),
+        content: Cow::Owned(second_s),
         style: span.style,
     };
     (first, second)
@@ -396,10 +405,6 @@ mod tests {
     #[case::position_3(2, (13, 0))] // middle of value
     #[case::position_4(4, (15, 0))] // last character of value
     #[case::position_5(5, (16, 0))] // one character beyond the value
-    #[case::position_6(6, (0, 1))] // FIXME: should not go beyond the value
-    #[case::position_7(7, (1, 1))] // FIXME: should not go beyond the value
-    #[case::position_22(22, (16, 1))] // FIXME: should not go beyond the value
-    #[case::position_99(99, (16, 1))] // FIXME: should not go beyond the value
     fn draw_unwrapped_position<'a>(
         #[case] position: usize,
         #[case] expected_cursor: (u16, u16),
@@ -422,20 +427,40 @@ mod tests {
     }
 
     #[rstest]
-    #[ignore]
     #[case::position_0(0, (11, 0))]
-    #[ignore]
     #[case::position_1(1, (13, 0))]
-    #[ignore]
     #[case::position_2(2, (15, 0))]
-    #[case::position_3(3, (0, 1))] // one character beyond the value
+    #[case::position_3(3, (0, 1))]
     fn draw_unwrapped_position_fullwidth<'a>(
         #[case] position: usize,
         #[case] expected_cursor: (u16, u16),
         mut terminal: Terminal<impl Backend>,
     ) -> Result<()> {
         let prompt = TextPrompt::from("prompt");
-        let mut state = TextState::new().with_value("ほげほ");
+        let mut state = TextState::new().with_value("ほげほげほげ");
+        state.focus();
+        *state.position_mut() = position;
+        let _ = terminal.draw(|frame| prompt.clone().draw(frame, frame.area(), &mut state))?;
+        assert_eq!(state.cursor(), expected_cursor);
+        assert_eq!(terminal.get_cursor_position()?, expected_cursor.into());
+
+        Ok(())
+    }
+
+    #[rstest]
+    #[case::position_0(0, (12, 0))]
+    #[case::position_1(1, (14, 0))]
+    #[ignore]
+    #[case::position_2(2, (0, 1))]
+    #[ignore]
+    #[case::position_3(3, (2, 1))]
+    fn draw_unwrapped_position_fullwidth_shift_by_one<'a>(
+        #[case] position: usize,
+        #[case] expected_cursor: (u16, u16),
+        mut terminal: Terminal<impl Backend>,
+    ) -> Result<()> {
+        let prompt = TextPrompt::from("prompt2");
+        let mut state = TextState::new().with_value("ほげほげほげ");
         state.focus();
         *state.position_mut() = position;
         let _ = terminal.draw(|frame| prompt.clone().draw(frame, frame.area(), &mut state))?;
@@ -452,10 +477,6 @@ mod tests {
     #[case::position_6(6, (0, 1))] // first character of the second line
     #[case::position_7(7, (1, 1))] // second character of the second line
     #[case::position_11(10, (4, 1))] // last character of the value
-    #[case::position_12(12, (6, 1))] // one character beyond the value
-    #[case::position_13(13, (7, 1))] // FIXME: should not go beyond the value
-    #[case::position_22(22, (16, 1))] // FIXME: should not go beyond the value
-    #[case::position_99(99, (16, 1))] // FIXME: should not go beyond the value
     fn draw_wrapped_position<'a>(
         #[case] position: usize,
         #[case] expected_cursor: (u16, u16),

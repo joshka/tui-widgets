@@ -1,4 +1,5 @@
 use std::iter::once;
+use unicode_width::UnicodeWidthChar;
 
 use itertools::chain;
 use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
@@ -195,6 +196,15 @@ pub trait State {
             .collect();
         }
         *self.position_mut() = self.position().saturating_add(1);
+    }
+
+    /// The character width of the stored value up to the position pos.
+    fn width_to_pos(&self, pos: usize) -> usize {
+        self.value()
+            .chars()
+            .take(pos)
+            .map(|x| x.width_cjk().unwrap())
+            .sum()
     }
 }
 
