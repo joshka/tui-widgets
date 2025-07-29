@@ -49,7 +49,7 @@ pub trait StateCommon {
     /// The focus state of the prompt.
     fn focus_state(&self) -> FocusState;
 
-    /// The focus state of the prompt.
+    /// Whether the value is valid as defined by a per-type rule.
     fn is_valid_value(&self) -> bool;
 
     /// Sets the focus state of the prompt to [`Focus::Focused`].
