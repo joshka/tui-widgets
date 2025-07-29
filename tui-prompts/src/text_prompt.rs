@@ -422,6 +422,30 @@ mod tests {
     }
 
     #[rstest]
+    #[ignore]
+    #[case::position_0(0, (11, 0))]
+    #[ignore]
+    #[case::position_1(1, (13, 0))]
+    #[ignore]
+    #[case::position_2(2, (15, 0))]
+    #[case::position_3(3, (0, 1))] // one character beyond the value
+    fn draw_unwrapped_position_fullwidth<'a>(
+        #[case] position: usize,
+        #[case] expected_cursor: (u16, u16),
+        mut terminal: Terminal<impl Backend>,
+    ) -> Result<()> {
+        let prompt = TextPrompt::from("prompt");
+        let mut state = TextState::new().with_value("ほげほ");
+        state.focus();
+        *state.position_mut() = position;
+        let _ = terminal.draw(|frame| prompt.clone().draw(frame, frame.area(), &mut state))?;
+        assert_eq!(state.cursor(), expected_cursor);
+        assert_eq!(terminal.get_cursor_position()?, expected_cursor.into());
+
+        Ok(())
+    }
+
+    #[rstest]
     #[case::position_0(0, (11, 0))] // start of value
     #[case::position_1(3, (14, 0))] // middle of value
     #[case::position_5(5, (16, 0))] // end of line
