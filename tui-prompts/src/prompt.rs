@@ -203,7 +203,8 @@ pub trait State {
         self.value()
             .chars()
             .take(pos)
-            .map(|x| x.width_cjk().expect("cannot handle control characters"))
+            // assign a width of zero to control characters
+            .map(|x| x.width().unwrap_or(0))
             .sum()
     }
 }

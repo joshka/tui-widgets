@@ -88,26 +88,22 @@ impl<'a> StatefulWidget for TextPrompt<'a> {
 
         let width = area.width as usize;
         let height = area.height as usize;
-        let value = self.render_style.render(state);
-        let value_length: usize = value.width_cjk();
+        let value = Span::raw(self.render_style.render(state));
+        let value_width = value.width();
 
         let line = Line::from(vec![
             state.status().symbol(),
             " ".into(),
             self.message.bold(),
             " › ".cyan().dim(),
-            Span::raw(value),
+            value,
         ]);
-        let prompt_length: usize = line
-            .iter()
-            .map(|x| x.content.to_string().width_cjk())
-            .sum::<usize>()
-            - value_length;
+        let prompt_width = line.width() - value_width;
         let lines = wrap(line, width).take(height).collect_vec();
 
         // constrain the position to the area
         let position =
-            (state.width_to_pos(state.position()) + prompt_length).min(area.area() as usize - 1);
+            (state.width_to_pos(state.position()) + prompt_width).min(area.area() as usize - 1);
         let row = position / width;
         let column = position % width;
         *state.cursor_mut() = (area.x + column as u16, area.y + row as u16);
@@ -169,7 +165,7 @@ fn line_split_at(line: Line, mid: usize) -> (Line, Line) {
 fn span_split_at(span: Span, mid: usize) -> (Span, Span) {
     let mut first_s = String::new();
     let mut second_s = span.content.to_string();
-    while first_s.width_cjk() < mid {
+    while first_s.width() < mid {
         first_s.push(second_s.remove(0));
     }
     let first = Span {
