@@ -1,7 +1,6 @@
 use std::borrow::Cow;
 
 use crate::prelude::*;
-use crate::State;
 
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
 pub struct TextState<'a> {
@@ -48,7 +47,11 @@ impl<'a> TextState<'a> {
     }
 }
 
-impl State for TextState<'_> {
+impl StateCommon for TextState<'_> {
+    fn final_position(&self) -> usize {
+        self.value().chars().count()
+    }
+
     fn status(&self) -> Status {
         self.status
     }
@@ -73,12 +76,24 @@ impl State for TextState<'_> {
         &mut self.position
     }
 
+    fn is_valid_value(&self) -> bool {
+        true
+    }
+}
+
+impl CursorControl for TextState<'_> {
     fn cursor(&self) -> (u16, u16) {
         self.cursor
     }
 
     fn cursor_mut(&mut self) -> &mut (u16, u16) {
         &mut self.cursor
+    }
+}
+
+impl TextualState for TextState<'_> {
+    fn len(&self) -> usize {
+        self.value.len()
     }
 
     fn value(&self) -> &str {
@@ -88,11 +103,15 @@ impl State for TextState<'_> {
     fn value_mut(&mut self) -> &mut String {
         self.value.to_mut()
     }
+
+    fn is_valid_char(&self, _c: char) -> bool {
+        true
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::{State, TextState};
+    use crate::{StateCommon, TextState, TextualState};
 
     #[test]
     fn insert_multibyte_start() {

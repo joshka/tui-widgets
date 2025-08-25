@@ -14,12 +14,22 @@ rust-version.workspace = true
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+chrono = { version = "0.4.41", optional = true, default-features = false, features = ["std", "clock"] }
 itertools.workspace = true
+num = { version = "0.4.3", optional = true }
 ratatui = { workspace = true, features = ["crossterm"] }
 ratatui-macros.workspace = true
+strum.workspace = true
 
 [dev-dependencies]
 clap.workspace = true
 color-eyre.workspace = true
 indoc.workspace = true
 rstest.workspace = true
+
+[features]
+datetime = ["dep:chrono", "dep:num"]
+
+[[example]]
+name = "utc_time"
+required-features = [ "datetime" ]
