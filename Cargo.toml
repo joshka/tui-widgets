@@ -20,7 +20,7 @@ color-eyre = "0.6"
 crossterm = { version = "0.28" }
 derive_builder = "0.20"
 derive-getters = "0.5"
-derive_setters = "0.1"
+derive_setters = "0.1.8"
 document-features = "0.2"
 futures = "0.3"
 itertools = "0.14"
