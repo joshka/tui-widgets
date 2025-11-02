@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.3] - 2025-11-02
+
+### 🐛 Bug Fixes
+
+- Clippy lints ([#81](https://github.com/joshka/tui-widgets/issues/81))
+  > Fixes a bunch of lints that are in beta / nursery. A lot of these are
+  > opinionated enough that they're not enabled by default, but I figure
+  > they generally lead to nicer code, so are worth fixing.
+
+- More clippy lints ([#84](https://github.com/joshka/tui-widgets/issues/84))
+
+### 🎨 Styling
+
+- Format doc comments
+
+- Add rustfmt and reformat code
+
+### ⚙️ Miscellaneous Tasks
+
+- Remove leftover github workflow files ([#73](https://github.com/joshka/tui-widgets/issues/73))
+
+- Use semver compatible dependency versions ([#77](https://github.com/joshka/tui-widgets/issues/77))
+  > Use 0.x and x.y instead of 0.x.y and x.y.z for deps to reduce
+  > incompatibilities
+
+### Other
+
+- Added render_stateful_widget method to ScrollView ([#65](https://github.com/joshka/tui-widgets/issues/65))
+
+
 ## [0.5.2] - 2025-11-02
 
 ### 🐛 Bug Fixes
