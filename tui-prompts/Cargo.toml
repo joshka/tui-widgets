@@ -17,6 +17,7 @@ rust-version.workspace = true
 itertools.workspace = true
 ratatui = { workspace = true, features = ["crossterm"] }
 ratatui-macros.workspace = true
+unicode-width = "0.2.0"
 
 [dev-dependencies]
 clap.workspace = true
