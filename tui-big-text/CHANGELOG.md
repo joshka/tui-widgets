@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.2] - 2025-11-02
+
+### 🐛 Bug Fixes
+
+- Clippy lints ([#81](https://github.com/joshka/tui-widgets/issues/81))
+  > Fixes a bunch of lints that are in beta / nursery. A lot of these are
+  > opinionated enough that they're not enabled by default, but I figure
+  > they generally lead to nicer code, so are worth fixing.
+
+- More clippy lints ([#84](https://github.com/joshka/tui-widgets/issues/84))
+
+### 🎨 Styling
+
+- Format doc comments
+
+- Add rustfmt and reformat code
+
+### ⚙️ Miscellaneous Tasks
+
+- *(tui-big-text)* Support disabling crossterm ([#70](https://github.com/joshka/tui-widgets/issues/70))
+
+
 ## [0.6.1] - 2024-10-20
 
 ### 🐛 Bug Fixes
