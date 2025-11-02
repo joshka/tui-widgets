@@ -1,10 +1,10 @@
 use std::borrow::Cow;
 use std::vec;
-use unicode_width::UnicodeWidthStr;
 
 use itertools::Itertools;
 use ratatui::prelude::*;
 use ratatui::widgets::{Block, Paragraph, StatefulWidget, Widget};
+use unicode_width::UnicodeWidthStr;
 
 use crate::prelude::*;
 
@@ -102,8 +102,8 @@ impl<'a> StatefulWidget for TextPrompt<'a> {
         let lines = wrap(line, width).take(height).collect_vec();
 
         // constrain the position to the area
-        let position =
-            (state.width_to_pos(state.position()) + prompt_width).min(area.area() as usize - 1);
+        let position = state.width_to_pos(state.position()) + prompt_width;
+        let position = position.min(area.area() as usize - 1);
         let row = position / width;
         let column = position % width;
         *state.cursor_mut() = (area.x + column as u16, area.y + row as u16);
@@ -159,24 +159,19 @@ fn line_split_at(line: Line, mid: usize) -> (Line, Line) {
     (first, second)
 }
 
-/// splits a span into two spans at the given position.
+/// Splits a span into two spans at the given character width
 ///
 /// TODO: move this into the `Span` type.
 fn span_split_at(span: Span, mid: usize) -> (Span, Span) {
-    let mut first_s = String::new();
-    let mut second_s = span.content.to_string();
-    while first_s.width() < mid {
-        first_s.push(second_s.remove(0));
+    let mut first = String::new();
+    let mut second = span.content.to_string();
+    while first.width() < mid {
+        first.push(second.remove(0));
     }
-    let first = Span {
-        content: Cow::Owned(first_s),
-        style: span.style,
-    };
-    let second = Span {
-        content: Cow::Owned(second_s),
-        style: span.style,
-    };
-    (first, second)
+    (
+        Span::styled(first, span.style),
+        Span::styled(second, span.style),
+    )
 }
 
 impl TextPrompt<'_> {
