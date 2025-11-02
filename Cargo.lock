@@ -1341,7 +1341,7 @@ dependencies = [
 
 [[package]]
 name = "tui-bar-graph"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "clap",
  "color-eyre",
@@ -1354,7 +1354,7 @@ dependencies = [
 
 [[package]]
 name = "tui-big-text"
-version = "0.7.1"
+version = "0.7.2"
 dependencies = [
  "color-eyre",
  "crossterm",
@@ -1370,7 +1370,7 @@ dependencies = [
 
 [[package]]
 name = "tui-box-text"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "color-eyre",
  "indoc",
@@ -1379,7 +1379,7 @@ dependencies = [
 
 [[package]]
 name = "tui-cards"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "color-eyre",
  "indoc",
@@ -1390,7 +1390,7 @@ dependencies = [
 
 [[package]]
 name = "tui-popup"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "color-eyre",
  "derive-getters",
@@ -1403,7 +1403,7 @@ dependencies = [
 
 [[package]]
 name = "tui-prompts"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "clap",
  "color-eyre",
@@ -1417,7 +1417,7 @@ dependencies = [
 
 [[package]]
 name = "tui-qrcode"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "color-eyre",
  "qrcode",
@@ -1427,7 +1427,7 @@ dependencies = [
 
 [[package]]
 name = "tui-scrollview"
-version = "0.5.1"
+version = "0.5.2"
 dependencies = [
  "color-eyre",
  "indoc",
@@ -1438,7 +1438,7 @@ dependencies = [
 
 [[package]]
 name = "tui-widgets"
-version = "0.4.1"
+version = "0.5.0"
 dependencies = [
  "document-features",
  "ratatui",
