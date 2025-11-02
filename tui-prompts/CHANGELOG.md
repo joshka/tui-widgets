@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.2] - 2025-11-02
+
+### 🐛 Bug Fixes
+
+- Clippy lints ([#81](https://github.com/joshka/tui-widgets/issues/81))
+  > Fixes a bunch of lints that are in beta / nursery. A lot of these are
+  > opinionated enough that they're not enabled by default, but I figure
+  > they generally lead to nicer code, so are worth fixing.
+
+- More clippy lints ([#84](https://github.com/joshka/tui-widgets/issues/84))
+
+- *(tui-prompts)* Full-width character input in non-multiline prompt ([#93](https://github.com/joshka/tui-widgets/issues/93)) ([#94](https://github.com/joshka/tui-widgets/issues/94))
+
+### 🎨 Styling
+
+- Add rustfmt and reformat code
+
+### ⚙️ Miscellaneous Tasks
+
+- Remove needless lifetimes ([#60](https://github.com/joshka/tui-widgets/issues/60))
+
+- Remove leftover github workflow files ([#73](https://github.com/joshka/tui-widgets/issues/73))
+
+
 ## [0.5.1] - 2025-11-02
 
 ### 🐛 Bug Fixes
