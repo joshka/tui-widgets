@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.1] - 2025-11-29
+
+### 📚 Documentation
+
+- Add AGENTS.md repository guidelines ([#108](https://github.com/joshka/tui-widgets/issues/108))
+
+### ⚙️ Miscellaneous Tasks
+
+- Enable trusted publishing via release-plz ([#110](https://github.com/joshka/tui-widgets/issues/110))
+
+
 ## [0.5.0] - 2025-11-02
 
 ### 🚀 Features
