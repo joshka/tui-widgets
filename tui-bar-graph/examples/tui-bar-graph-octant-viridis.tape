@@ -1,0 +1,16 @@
+# VHS Tape (see https://github.com/charmbracelet/vhs)
+Output "target/tui-bar-graph-octant-viridis.gif"
+Set Theme "Aardvark Blue"
+Set FontSize 20
+Set FontFamily "Iosevka"
+Set Width 1200
+Set Height 600
+Hide
+Type@0 "cargo run --quiet -p tui-bar-graph --example tui-bar-graph octant viridis"
+Enter
+Sleep 2s
+Show
+Screenshot "target/tui-bar-graph-octant-viridis.png"
+Sleep 1s
+Hide
+Escape

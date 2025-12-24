@@ -895,6 +895,186 @@ mod tests {
     }
 
     #[test]
+    fn render_quarter_height_single_line() {
+        let big_text = BigText::builder()
+            .pixel_size(PixelSize::QuarterHeight)
+            .lines(vec![Line::from("SingleLine")])
+            .build();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 80, 2));
+        big_text.render(buf.area, &mut buf);
+        let expected = Buffer::with_lines(vec![
+            "𜴳█𜷝𜶮▀𜴆   𜴧𜷝𜷝    ▄▄𜴧𜴧▄▂  ▂▄𜴧𜴧▂▄𜴧  🮂██    ▂▄𜴧𜴧▄▂  🮂██🮂     𜴧𜷝𜷝    ▄▄𜴧𜴧▄▂  ▂▄𜴧𜴧▄▂  ",
+            "𜴆𜴳𜴧𜴪🮅▀   𜴧🮅🮅𜴧   🮅🮅  🮅🮅  𜶮𜶺𜶷𜶷█🮅   𜴧🮅🮅𜴧   ▀🮅𜴪𜴪𜴪🮂  𜴧🮅🮅𜴧𜴧𜴳🮅  𜴧🮅🮅𜴧   🮅🮅  🮅🮅  ▀🮅𜴪𜴪𜴪🮂  ",
+        ]);
+        assert_eq!(buf, expected);
+    }
+
+    #[test]
+    fn render_quarter_height_truncated() {
+        let big_text = BigText::builder()
+            .pixel_size(PixelSize::QuarterHeight)
+            .lines(vec![Line::from("Truncated")])
+            .build();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 70, 1));
+        big_text.render(buf.area, &mut buf);
+        let expected = Buffer::with_lines(vec![
+            "▀🮂██🮂▀  𜴧▄▂▄𜴧▄▂ ▄▄  ▄▄  ▄▄𜴧𜴧▄▂  ▂▄𜴧𜴧▄▂   𜴧𜴧𜴧▄▂   𜴧▆█𜴧𜴧  ▂▄𜴧𜴧▄▂   ▂▂𜶮██",
+        ]);
+        assert_eq!(buf, expected);
+    }
+
+    #[test]
+    fn render_quarter_height_multiple_lines() {
+        let big_text = BigText::builder()
+            .pixel_size(PixelSize::QuarterHeight)
+            .lines(vec![Line::from("Multi"), Line::from("Lines")])
+            .build();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 40, 4));
+        big_text.render(buf.area, &mut buf);
+        let expected = Buffer::with_lines(vec![
+            "██▆▄▆██ ▄▄  ▄▄   🮂██     𜴧▆█𜴧𜴧   𜴧𜷝𜷝    ",
+            "🮅🮅 🮂 🮅🮅 ▀🮅𜴧𜴧▀🮅𜴧  𜴧🮅🮅𜴧     ▀🮅𜴧𜴆   𜴧🮅🮅𜴧   ",
+            "🮂██🮂     𜴧𜷝𜷝    ▄▄𜴧𜴧▄▂  ▂▄𜴧𜴧▄▂  ▂▄𜴧𜴧𜴧𜴧  ",
+            "𜴧🮅🮅𜴧𜴧𜴳🮅  𜴧🮅🮅𜴧   🮅🮅  🮅🮅  ▀🮅𜴪𜴪𜴪🮂  𜴧𜴪𜴪𜴪🮅𜴆  ",
+        ]);
+        assert_eq!(buf, expected);
+    }
+
+    #[test]
+    fn render_quarter_height_widget_style() {
+        let big_text = BigText::builder()
+            .pixel_size(PixelSize::QuarterHeight)
+            .lines(vec![Line::from("Styled")])
+            .style(Style::new().bold())
+            .build();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 48, 2));
+        big_text.render(buf.area, &mut buf);
+        let mut expected = Buffer::with_lines(vec![
+            "𜴳█𜷝𜶮▀𜴆   𜴧▆█𜴧𜴧  ▄▄  ▄▄   🮂██    ▂▄𜴧𜴧▄▂   ▂▂𜶮██  ",
+            "𜴆𜴳𜴧𜴪🮅▀    ▀🮅𜴧𜴆  𜶮𜶺𜶷𜶷█🮅   𜴧🮅🮅𜴧   ▀🮅𜴪𜴪𜴪🮂  ▀🮅𜴧𜴧▀🮅𜴧 ",
+        ]);
+        expected.set_style(Rect::new(0, 0, 48, 2), Style::new().bold());
+        assert_eq!(buf, expected);
+    }
+
+    #[test]
+    fn render_quarter_height_line_style() {
+        let big_text = BigText::builder()
+            .pixel_size(PixelSize::QuarterHeight)
+            .lines(vec![
+                Line::from("Red".red()),
+                Line::from("Green".green()),
+                Line::from("Blue".blue()),
+            ])
+            .build();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 40, 6));
+        big_text.render(buf.area, &mut buf);
+        let mut expected = Buffer::with_lines(vec![
+            "🮂██𜶮𜶮█𜴳 ▂▄𜴧𜴧▄▂   ▂▂𜶮██                  ",
+            "𜴧🮅🮅 🮂🮅𜴳 ▀🮅𜴪𜴪𜴪🮂  ▀🮅𜴧𜴧▀🮅𜴧                 ",
+            "▄▆▀🮂🮂▀𜴆 𜴧▄▂▄𜴧▄▂ ▂▄𜴧𜴧▄▂  ▂▄𜴧𜴧▄▂  ▄▄𜴧𜴧▄▂  ",
+            "🮂▀𜴳𜴧𜴪🮅🮅 𜴧🮅🮅𜴧 🮂🮂 ▀🮅𜴪𜴪𜴪🮂  ▀🮅𜴪𜴪𜴪🮂  🮅🮅  🮅🮅  ",
+            "🮂██𜶮𜶮█𜴳  🮂██    ▄▄  ▄▄  ▂▄𜴧𜴧▄▂          ",
+            "𜴧🮅🮅𜴧𜴧🮅▀  𜴧🮅🮅𜴧   ▀🮅𜴧𜴧▀🮅𜴧 ▀🮅𜴪𜴪𜴪🮂          ",
+        ]);
+        expected.set_style(Rect::new(0, 0, 24, 2), Style::new().red());
+        expected.set_style(Rect::new(0, 2, 40, 2), Style::new().green());
+        expected.set_style(Rect::new(0, 4, 32, 2), Style::new().blue());
+        assert_eq!(buf, expected);
+    }
+
+    #[test]
+    fn render_octant_size_single_line() {
+        let big_text = BigText::builder()
+            .pixel_size(PixelSize::Octant)
+            .lines(vec![Line::from("SingleLine")])
+            .build();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 40, 2));
+        big_text.render(buf.area, &mut buf);
+        let expected = Buffer::with_lines(vec![
+            "𜶪𜶾𜴇 𜴘𜷝  ▄𜴧𜶻 𜷋𜴧𜷋𜴉𜺫█  𜷋𜴧𜶻 𜶘𜵊  𜴘𜷝  ▄𜴧𜶻 𜷋𜴧𜶻 ",
+            "𜴣𜴩𜴗 𜴘🮅𜴉 🮅 🮅 𜶶𜶷𜵰 𜴘🮅𜴉 𜴦𜴪𜴌 𜴱𜴬𜴯𜴍𜴘🮅𜴉 🮅 🮅 𜴦𜴪𜴌 ",
+        ]);
+        assert_eq!(buf, expected);
+    }
+
+    #[test]
+    #[rustfmt::skip]
+    fn render_octant_size_truncated() {
+        let big_text = BigText::builder()
+            .pixel_size(PixelSize::Octant)
+            .lines(vec![Line::from("Truncated")])
+            .build();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 35, 1));
+        big_text.render(buf.area, &mut buf);
+        let expected = Buffer::with_lines(vec![
+            "𜴂█𜴅 𜶜𜷋𜶜𜺣▄ ▄ ▄𜴧𜶻 𜷋𜴧𜶻 𜴘𜴧𜶻 𜴘𜷥𜴧 𜷋𜴧𜶻 𜺠𜶭█",
+        ]);
+        assert_eq!(buf, expected);
+    }
+
+    #[test]
+    fn render_octant_size_multiple_lines() {
+        let big_text = BigText::builder()
+            .pixel_size(PixelSize::Octant)
+            .lines(vec![Line::from("Multi"), Line::from("Lines")])
+            .build();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 20, 4));
+        big_text.render(buf.area, &mut buf);
+        let expected = Buffer::with_lines(vec![
+            "█𜷞𜷥▌▄ ▄ 𜺫█  𜴘𜷥𜴧 𜴘𜷝  ",
+            "🮅𜺫𜴡𜴍𜴦𜴧𜴦𜴉𜴘🮅𜴉  𜴦𜴐 𜴘🮅𜴉 ",
+            "𜶘𜵊  𜴘𜷝  ▄𜴧𜶻 𜷋𜴧𜶻 𜷋𜴧𜴧 ",
+            "𜴱𜴬𜴯𜴍𜴘🮅𜴉 🮅 🮅 𜴦𜴪𜴌 𜴩𜴪𜴕 ",
+        ]);
+        assert_eq!(buf, expected);
+    }
+
+    #[test]
+    #[rustfmt::skip]
+    fn render_octant_size_widget_style() {
+        let big_text = BigText::builder()
+            .pixel_size(PixelSize::Octant)
+            .lines(vec![Line::from("Styled")])
+            .style(Style::new().bold())
+            .build();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 24, 2));
+        big_text.render(buf.area, &mut buf);
+        let mut expected = Buffer::with_lines(vec![
+            "𜶪𜶾𜴇 𜴘𜷥𜴧 ▄ ▄ 𜺫█  𜷋𜴧𜶻 𜺠𜶭█ ",
+            "𜴣𜴩𜴗  𜴦𜴐 𜶶𜶷𜵰 𜴘🮅𜴉 𜴦𜴪𜴌 𜴦𜴧𜴦𜴉",
+        ]);
+        expected.set_style(Rect::new(0, 0, 24, 2), Style::new().bold());
+        assert_eq!(buf, expected);
+    }
+
+    #[test]
+    fn render_octant_size_line_style() {
+        let big_text = BigText::builder()
+            .pixel_size(PixelSize::Octant)
+            .lines(vec![
+                Line::from("Red".red()),
+                Line::from("Green".green()),
+                Line::from("Blue".blue()),
+            ])
+            .build();
+        let mut buf = Buffer::empty(Rect::new(0, 0, 20, 6));
+        big_text.render(buf.area, &mut buf);
+        let mut expected = Buffer::with_lines(vec![
+            "𜶘𜷂𜷖🯦𜷋𜴧𜶻 𜺠𜶭█         ",
+            "𜴱𜴍𜴢🯦𜴦𜴪𜴌 𜴦𜴧𜴦𜴉        ",
+            "𜷡𜴂𜴅𜴀𜶜𜷋𜶜𜺣𜷋𜴧𜶻 𜷋𜴧𜶻 ▄𜴧𜶻 ",
+            "𜴅𜴫𜴲𜴍𜴱𜴬𜺫𜺨𜴦𜴪𜴌 𜴦𜴪𜴌 🮅 🮅 ",
+            "𜶘𜷂𜷖🯦𜺫█  ▄ ▄ 𜷋𜴧𜶻     ",
+            "𜴱𜴬𜴱▘𜴘🮅𜴉 𜴦𜴧𜴦𜴉𜴦𜴪𜴌     ",
+        ]);
+        expected.set_style(Rect::new(0, 0, 12, 2), Style::new().red());
+        expected.set_style(Rect::new(0, 2, 20, 2), Style::new().green());
+        expected.set_style(Rect::new(0, 4, 16, 2), Style::new().blue());
+        assert_eq!(buf, expected);
+    }
+
+    #[test]
     fn render_alignment_left() {
         let big_text = BigText::builder()
             .pixel_size(PixelSize::Quadrant)

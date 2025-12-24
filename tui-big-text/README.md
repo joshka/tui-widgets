@@ -57,6 +57,8 @@ pixel of the 8x8 font. It has six variants:
 - `Quadrant` - Each pixel is represented by a quarter of a character cell.
 - `ThirdHeight` - Each pixel is represented by a third of the height of a character cell.
 - `Sextant` - Each pixel is represented by a sixth of a character cell.
+- `QuarterHeight` - Each pixel is represented by a quarter of the height of a character cell.
+- `Octant` - Each pixel is represented by an eighth of a character cell.
 
 ```rust
 BigText::builder().pixel_size(PixelSize::Full);
@@ -64,7 +66,7 @@ BigText::builder().pixel_size(PixelSize::HalfHeight);
 BigText::builder().pixel_size(PixelSize::Quadrant);
 ```
 
-![Pixel Size](https://vhs.charm.sh/vhs-2E84yH6UJuX1pF7mXYUXxs.gif)
+![Pixel Size](https://vhs.charm.sh/vhs-6xzOJiPofPMWtUypzw1tg7.gif)
 
 Text can be aligned to the Left / Right / Center using the `alignment` methods.
 

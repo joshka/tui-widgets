@@ -1,10 +1,10 @@
 use std::iter::once;
-use unicode_width::UnicodeWidthChar;
 
 use itertools::chain;
 use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use ratatui::prelude::*;
 use ratatui::widgets::StatefulWidget;
+use unicode_width::UnicodeWidthChar;
 
 use crate::Status;
 
