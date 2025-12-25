@@ -159,8 +159,12 @@ pub enum BarStyle {
     /// Render bars using the quadrant block characters `▖`, `▗`, `▘`, and `▝` for a more granular
     /// representation.
     Quadrant,
-    /// Renders bars using the octant block characters `𜺣`, `𜺠`, `𜴉`, `𜴘`, `𜴀`, `𜴃`, `𜺨`, and `𜺫`
+    /// Render bars using the octant block characters `𜺣`, `𜺠`, `𜴉`, `𜴘`, `𜴀`, `𜴃`, `𜺨`, and `𜺫`
     /// for a more granular representation.
+    ///
+    /// `Octant` uses characters from the [Symbols for Legacy Computing
+    /// Supplement](https://en.wikipedia.org/wiki/Symbols_for_Legacy_Computing_Supplement) block,
+    /// which is rendered correctly by a small but growing number of fonts.
     Octant,
 }
 
