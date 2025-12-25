@@ -12,7 +12,7 @@ use tui_bar_graph::{BarGraph, BarStyle, ColorMode};
 
 #[derive(Debug, Parser)]
 struct Args {
-    /// The style of bar to render (solid or braille)
+    /// The style of bar to render (solid, quadrant, octant, or braille)
     #[arg(default_value_t = BarStyle::Braille)]
     bar_style: BarStyle,
 
@@ -98,7 +98,7 @@ fn render(frame: &mut Frame, args: &Args) {
     let area = block.inner(frame.area());
     let width = match args.bar_style {
         BarStyle::Solid => area.width as usize,
-        BarStyle::Braille => area.width as usize * 2,
+        BarStyle::Octant | BarStyle::Braille => area.width as usize * 2,
         BarStyle::Quadrant => area.width as usize * 4,
     };
     let mut data = vec![0.0; width];

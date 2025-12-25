@@ -5,6 +5,7 @@
 //! ![Braille Rainbow](https://vhs.charm.sh/vhs-1sx9Ht6NzU6e28Cl51jJVv.gif)
 //! ![Solid Plasma](https://vhs.charm.sh/vhs-7pWuLtZpzrz1OVD04cMt1a.gif)
 //! ![Quadrant Magma](https://vhs.charm.sh/vhs-1rx6XQ9mLiO8qybSBXRGwn.gif)
+//! ![Octant Viridis](https://vhs.charm.sh/vhs-7BevtFvn5S7j8jcAJrxl1F.gif)
 //!
 //! <details><summary>More examples</summary>
 //!
@@ -12,6 +13,10 @@
 //! ![Braille Viridis](https://vhs.charm.sh/vhs-5ylsZAdKGPiHUYboOpZFZL.gif)
 //! ![Solid Inferno](https://vhs.charm.sh/vhs-4z1gbmJ50KGz2TPej3mnVf.gif)
 //! ![Solid Sinebow](https://vhs.charm.sh/vhs-63aAmMhcfMT8CnWCV20dsn.gif)
+//! ![Quadrant Plasma](https://vhs.charm.sh/vhs-5o8AfNgQZAT1U4hOaLtY7m.gif)
+//! ![Quadrant Sinebow](https://vhs.charm.sh/vhs-1zAyLkSvNGTKL1SGHRyZFD.gif)
+//! ![Octant Inferno](https://vhs.charm.sh/vhs-3bwxZkh1WcSFUkVzpBXWb9.gif)
+//! ![Octant Rainbow](https://vhs.charm.sh/vhs-6eDjdEbRK4xWNtVpHuTkIh.gif)
 //!
 //! </details>
 //!
@@ -64,6 +69,14 @@ const BRAILLE_PATTERNS: [[&str; 5]; 5] = [
     ["⡄", "⣄", "⣤", "⣴", "⣼"],
     ["⡆", "⣆", "⣦", "⣶", "⣾"],
     ["⡇", "⣇", "⣧", "⣷", "⣿"],
+];
+
+const OCTANT_PATTERNS: [[&str; 5]; 5] = [
+    ["⠀", "𜺠", "▗", "𜶖", "▐"],
+    ["𜺣", "▂", "𜷋", "𜷓", "𜷕"],
+    ["▖", "𜶻", "▄", "𜷡", "▟"],
+    ["𜵈", "𜶿", "𜷞", "▆", "𜷥"],
+    ["▌", "𜷀", "▙", "𜷤", "█"],
 ];
 
 #[rustfmt::skip]
@@ -127,18 +140,32 @@ pub enum ColorMode {
 
 /// The style of bar to render.
 ///
-/// - `Solid`: Render bars using the full block character '█'.
-/// - `Braille`: Render bars using braille characters for a more granular appearance.
+/// - `Solid`: Render bars using the full block character '`█`'.
+/// - `Quadrant`: Render bars using quadrant block characters for a more granular representation.
+/// - `Octant`: Render bars using octant block characters for a more granular representation.
+/// - `Braille`: Render bars using braille characters for a more granular representation.
+///
+/// `Octant` and `Braille` offer the same level of granularity, but `Braille` is more widely
+/// supported by fonts.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, EnumString, Display)]
 #[strum(serialize_all = "snake_case")]
 pub enum BarStyle {
-    /// Render bars using braille characters for more granular representation.
+    /// Render bars using braille characters `⡀`, `⢀`, `⠄`, `⠠`, `⠂`, `⠐`, `⠁`, and `⠈` for a more
+    /// granular representation.
     #[default]
     Braille,
-    /// Render bars using the full block character '█'.
+    /// Render bars using the full block character '`█`'.
     Solid,
-    /// Render bars using the quadrant block characters `▖`,`▗`, `▘`, and `▝` for a more granular representation.
+    /// Render bars using the quadrant block characters `▖`, `▗`, `▘`, and `▝` for a more granular
+    /// representation.
     Quadrant,
+    /// Render bars using the octant block characters `𜺣`, `𜺠`, `𜴉`, `𜴘`, `𜴀`, `𜴃`, `𜺨`, and `𜺫`
+    /// for a more granular representation.
+    ///
+    /// `Octant` uses characters from the [Symbols for Legacy Computing
+    /// Supplement](https://en.wikipedia.org/wiki/Symbols_for_Legacy_Computing_Supplement) block,
+    /// which is rendered correctly by a small but growing number of fonts.
+    Octant,
 }
 
 impl<'g> BarGraph<'g> {
@@ -197,8 +224,14 @@ impl<'g> BarGraph<'g> {
     ///
     /// The default is `BarStyle::Braille`.
     ///
-    /// - `Solid`: Render bars using the full block character '█'.
-    /// - `Braille`: Render bars using braille characters for more granular representation.
+    /// - `Solid`: Render bars using the full block character '`█`'.
+    /// - `Quadrant`: Render bars using quadrant block characters for a more granular
+    ///   representation.
+    /// - `Octant`: Render bars using octant block characters for a more granular representation.
+    /// - `Braille`: Render bars using braille characters for a more granular representation.
+    ///
+    /// `Octant` and `Braille` offer the same level of granularity, but `Braille` is more widely
+    /// supported by fonts.
     pub const fn with_bar_style(mut self, style: BarStyle) -> Self {
         self.bar_style = style;
         self
@@ -220,6 +253,11 @@ impl<'g> BarGraph<'g> {
     /// Renders the graph using braille characters.
     fn render_braille(&self, area: Rect, buf: &mut Buffer, min: f64, max: f64) {
         self.render_pattern(area, buf, min, max, 4, &BRAILLE_PATTERNS);
+    }
+
+    /// Renders the graph using octant blocks.
+    fn render_octant(&self, area: Rect, buf: &mut Buffer, min: f64, max: f64) {
+        self.render_pattern(area, buf, min, max, 4, &OCTANT_PATTERNS);
     }
 
     /// Renders the graph using quadrant blocks.
@@ -308,6 +346,7 @@ impl Widget for BarGraph<'_> {
             BarStyle::Braille => self.render_braille(area, buf, min, max),
             BarStyle::Solid => self.render_solid(area, buf, min, max),
             BarStyle::Quadrant => self.render_quadrant(area, buf, min, max),
+            BarStyle::Octant => self.render_octant(area, buf, min, max),
         }
     }
 }
@@ -398,6 +437,31 @@ mod tests {
                 "  ▗███████▌",
                 " ▗████████▌",
                 "▗█████████▌",
+            ])
+        );
+    }
+
+    #[test]
+    fn octant() {
+        let data = (0..=40).map(|i| i as f64 * 0.125).collect();
+        let bar_graph = BarGraph::new(data).with_bar_style(BarStyle::Octant);
+
+        let mut buf = Buffer::empty(Rect::new(0, 0, 21, 10));
+        bar_graph.render(buf.area, &mut buf);
+
+        assert_eq!(
+            buf,
+            Buffer::with_lines(vec![
+                "                  𜺠𜷡▌",
+                "                𜺠𜷡██▌",
+                "              𜺠𜷡████▌",
+                "            𜺠𜷡██████▌",
+                "          𜺠𜷡████████▌",
+                "        𜺠𜷡██████████▌",
+                "      𜺠𜷡████████████▌",
+                "    𜺠𜷡██████████████▌",
+                "  𜺠𜷡████████████████▌",
+                "𜺠𜷡██████████████████▌",
             ])
         );
     }

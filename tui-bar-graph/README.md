@@ -9,6 +9,7 @@ Uses the [Colorgrad] crate for gradient coloring.
 ![Braille Rainbow](https://vhs.charm.sh/vhs-1sx9Ht6NzU6e28Cl51jJVv.gif)
 ![Solid Plasma](https://vhs.charm.sh/vhs-7pWuLtZpzrz1OVD04cMt1a.gif)
 ![Quadrant Magma](https://vhs.charm.sh/vhs-1rx6XQ9mLiO8qybSBXRGwn.gif)
+![Octant Viridis](https://vhs.charm.sh/vhs-7BevtFvn5S7j8jcAJrxl1F.gif)
 
 <details><summary>More examples</summary>
 
@@ -16,6 +17,10 @@ Uses the [Colorgrad] crate for gradient coloring.
 ![Braille Viridis](https://vhs.charm.sh/vhs-5ylsZAdKGPiHUYboOpZFZL.gif)
 ![Solid Inferno](https://vhs.charm.sh/vhs-4z1gbmJ50KGz2TPej3mnVf.gif)
 ![Solid Sinebow](https://vhs.charm.sh/vhs-63aAmMhcfMT8CnWCV20dsn.gif)
+![Quadrant Plasma](https://vhs.charm.sh/vhs-5o8AfNgQZAT1U4hOaLtY7m.gif)
+![Quadrant Sinebow](https://vhs.charm.sh/vhs-1zAyLkSvNGTKL1SGHRyZFD.gif)
+![Octant Inferno](https://vhs.charm.sh/vhs-3bwxZkh1WcSFUkVzpBXWb9.gif)
+![Octant Rainbow](https://vhs.charm.sh/vhs-6eDjdEbRK4xWNtVpHuTkIh.gif)
 
 </details>
 
