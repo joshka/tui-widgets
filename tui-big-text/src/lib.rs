@@ -53,8 +53,6 @@
 //! - `Quadrant` - Each pixel is represented by a quarter of a character cell.
 //! - `ThirdHeight` - Each pixel is represented by a third of the height of a character cell.
 //! - `Sextant` - Each pixel is represented by a sixth of a character cell.
-//! - `QuarterHeight` - Each pixel is represented by a quarter of the height of a character cell.
-//! - `Octant` - Each pixel is represented by an eighth of a character cell.
 //!
 //! ```rust
 //! # use tui_big_text::*;
@@ -63,7 +61,7 @@
 //! BigText::builder().pixel_size(PixelSize::Quadrant);
 //! ```
 //!
-//! ![Pixel Size](https://vhs.charm.sh/vhs-6xzOJiPofPMWtUypzw1tg7.gif)
+//! ![Pixel Size](https://vhs.charm.sh/vhs-2E84yH6UJuX1pF7mXYUXxs.gif)
 //!
 //! Text can be aligned to the Left / Right / Center using the `alignment` methods.
 //!
