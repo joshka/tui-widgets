@@ -10,9 +10,10 @@
 
 ## Pixel Size
 
-![Pixel Size](https://vhs.charm.sh/vhs-2E84yH6UJuX1pF7mXYUXxs.gif)
+![Pixel Size](https://vhs.charm.sh/vhs-6xzOJiPofPMWtUypzw1tg7.gif)
 
-Note: Sextant characters are often rendered poorly in most / all fonts.
+Note: Sextant and octant block characters are often rendered poorly and may not be supported by all
+fonts.
 
 ## Stopwatch
 

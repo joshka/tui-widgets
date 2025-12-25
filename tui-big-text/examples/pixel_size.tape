@@ -1,8 +1,10 @@
 # VHS Tape (see https://github.com/charmbracelet/vhs)
 Output "target/pixel_size.gif"
 Set Theme "Aardvark Blue"
-Set Width 1020
-Set Height 860
+Set FontSize 20
+Set FontFamily "Iosevka"
+Set Width 800
+Set Height 960
 Hide
 Type@0 "cargo run -p tui-big-text --example pixel_size --quiet"
 Enter
