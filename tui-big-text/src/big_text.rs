@@ -73,11 +73,11 @@ pub struct BigText<'a> {
 
     /// The size of single glyphs
     ///
-    /// Defaults to `BigTextSize::default()` (=> BigTextSize::Full)
+    /// Defaults to `PixelSize::default()` (=> PixelSize::Full)
     #[builder(default)]
     pub pixel_size: PixelSize,
 
-    /// The horizontal alignmnet of the text
+    /// The horizontal alignment of the text
     ///
     /// Defaults to `Alignment::default()` (=> Alignment::Left)
     #[builder(default)]
