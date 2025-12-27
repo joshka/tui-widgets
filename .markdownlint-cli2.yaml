@@ -1,4 +1,5 @@
 config:
+  no-duplicate-heading: false
   no-inline-html:
     allowed_elements:
       - h1

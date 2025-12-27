@@ -33,10 +33,13 @@ jobs:
           cargo binstall --no-confirm cargo-rdme@1.5.0
       - name: Check READMEs
         run: |
+          set -euo pipefail
+          set -x
           cargo rdme --check --manifest-path Cargo.toml
           cargo rdme --check --manifest-path tui-bar-graph/Cargo.toml
           cargo rdme --check --manifest-path tui-big-text/Cargo.toml
           cargo rdme --check --manifest-path tui-cards/Cargo.toml
           cargo rdme --check --manifest-path tui-popup/Cargo.toml
           cargo rdme --check --manifest-path tui-qrcode/Cargo.toml
+          cargo rdme --check --manifest-path tui-scrollbar/Cargo.toml
           cargo rdme --check --manifest-path tui-scrollview/Cargo.toml

@@ -2102,6 +2102,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "tui-scrollbar"
+version = "0.1.0"
+dependencies = [
+ "color-eyre",
+ "crossterm",
+ "document-features",
+ "ratatui",
+ "ratatui-core",
+]
+
+[[package]]
 name = "tui-scrollview"
 version = "0.6.2"
 dependencies = [
@@ -2127,6 +2138,7 @@ dependencies = [
  "tui-popup",
  "tui-prompts",
  "tui-qrcode",
+ "tui-scrollbar",
  "tui-scrollview",
 ]
 

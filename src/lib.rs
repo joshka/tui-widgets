@@ -15,6 +15,7 @@
 //! - [tui-popup]
 //! - [tui-prompts]
 //! - [tui-qrcode]
+//! - [tui-scrollbar]
 //! - [tui-scrollview]
 //!
 //! The widget crates are also available as standalone crates.
@@ -61,6 +62,7 @@
 //! [tui-popup]: https://crates.io/crates/tui-popup
 //! [tui-prompts]: https://crates.io/crates/tui-prompts
 //! [tui-qrcode]: https://crates.io/crates/tui-qrcode
+//! [tui-scrollbar]: https://crates.io/crates/tui-scrollbar
 //! [tui-scrollview]: https://crates.io/crates/tui-scrollview
 #![doc = document_features::document_features!()]
 
@@ -85,6 +87,9 @@ pub use tui_prompts as prompts;
 #[cfg(feature = "qrcode")]
 #[doc(inline)]
 pub use tui_qrcode as qrcode;
+#[cfg(feature = "scrollbar")]
+#[doc(inline)]
+pub use tui_scrollbar as scrollbar;
 #[cfg(feature = "scrollview")]
 #[doc(inline)]
 pub use tui_scrollview as scrollview;

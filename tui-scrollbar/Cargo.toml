@@ -1,0 +1,35 @@
+[package]
+name = "tui-scrollbar"
+version = "0.1.0"
+description = "A Ratatui scrollbar widget with fractional thumb rendering"
+documentation = "https://docs.rs/tui-scrollbar"
+
+authors.workspace = true
+categories.workspace = true
+edition.workspace = true
+keywords.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+# see https://doc.rust-lang.org/nightly/rustdoc/scraped-examples.html
+cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]
+rustdoc-args = ["--cfg", "docsrs"]
+
+[dependencies]
+crossterm = { workspace = true, optional = true }
+document-features.workspace = true
+ratatui-core.workspace = true
+
+[features]
+crossterm = ["dep:crossterm"]
+
+[dev-dependencies]
+color-eyre.workspace = true
+ratatui = { workspace = true, default-features = true }
+
+[[example]]
+name = "scrollbar_mouse"
+required-features = ["crossterm"]

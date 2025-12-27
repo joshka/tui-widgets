@@ -34,6 +34,10 @@
   lifetimes, side effects, and feature-flag impacts.
 - Include runnable examples where feasible; prefer `///` doc tests that compile and demonstrate
   output.
+- Prefer `ratatui_core` types in widget crate docs/examples unless a user-facing example needs
+  `ratatui`.
+- Use reference-style links for external and internal types (e.g. `[`Rect`]` with a link ref at the
+  end of the doc comment).
 - Keep crate-level docs updated when adding widgets or major behaviors; link to examples for
   interactive flows.
 - Document safety/contracts for unsafe or performance-sensitive code; call out terminal assumptions
@@ -42,8 +46,8 @@
 ## Testing Guidelines
 
 - Use Rust’s built-in test framework; `rstest` is available for parameterized cases.
-- Co-locate unit tests with implementation; add integration tests under `tests/` within the affected
-  crate when behavior spans modules.
+- Co-locate unit tests with implementation (use a `mod tests` in the same module file).
+- Prefer verb-phrase test names that describe behavior (e.g., `clears_drag_on_pointer_up`).
 - Cover happy paths, edge cases (terminal sizing, empty data), and feature-flagged code paths.
 - Include examples under `examples/` when a widget or mode benefits from interactive demonstration
   (`cargo run -p tui-big-text --example <name>`).
