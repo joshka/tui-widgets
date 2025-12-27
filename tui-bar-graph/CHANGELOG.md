@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2025-12-27
+
+### 🚀 Features
+
+- *(tui-bar-graph)* [**breaking**] Add block octant characters ([#116](https://github.com/joshka/tui-widgets/issues/116))
+  > Since Unicode 16.0 was published on September 10, 2024, support for
+  > block octant characters (U+1CD00 to U+1CDE5,
+  > [PDF](https://www.unicode.org/charts/PDF/Unicode-16.0/U160-1CC00.pdf))
+  > has been improving in fonts. We should enable users of `tui-widgets` to
+  > use these characters in addition to existing options.
+
+- [**breaking**] Migrate to ratatui 0.30 ([#120](https://github.com/joshka/tui-widgets/issues/120))
+  > feat!: migrate to ratatui 0.30
+  >
+  > - Update workspace deps to ratatui 0.30, ratatui-core, ratatui-widgets,
+  > crossterm 0.29
+  > - Shift widget crates to ratatui-core/ratatui-widgets imports where
+  > needed
+  > - Update tui-popup/tui-prompts event handling to use crossterm types
+  > - Revise tui-popup rendering/ref semantics and docs to match reference
+  > rendering rules
+  > - Add rolling breaking changes doc and markdownlint config
+  > - Bump direct deps needed for minimal-versions and examples
+  > (document-features, colorgrad, unicode-width)
+
+
 ## [0.2.0] - 2025-11-02
 
 ### 🚀 Features
