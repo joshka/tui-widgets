@@ -61,12 +61,19 @@ jobs:
         uses: taiki-e/install-action@v2
         with:
           tool: release-plz@0.3.150,cargo-semver-checks@0.45
+      - name: Prepare release-plz config
+        run: |
+          cat > "release-plz.${{ matrix.package }}.toml" <<EOF
+          [workspace]
+          changelog_config = "cliff.toml"
+          pr_branch_prefix = "release-plz-${{ matrix.package }}-"
+          EOF
       - name: Run release-plz (release-pr)
         run: >
           release-plz release-pr
           --git-token "${{ secrets.GITHUB_TOKEN }}"
           --repo-url "https://github.com/${{ github.repository }}"
           --package "${{ matrix.package }}"
-          --config release-plz.toml
+          --config "release-plz.${{ matrix.package }}.toml"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
