@@ -22,10 +22,15 @@ jobs:
           fetch-depth: 0
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
-      - name: Install cargo-rdme
+      - name: Install cargo-binstall
         uses: taiki-e/install-action@v2
         with:
-          tool: cargo-rdme
+          tool: cargo-binstall
+      - name: Install cargo-rdme
+        run: |
+          # normally we use https://github.com/taiki-e/install-action, but cargo-rdme 1.5.0
+          # does not publish macOS binaries, so install-action blocks it
+          cargo binstall --no-confirm cargo-rdme@1.5.0
       - name: Check READMEs
         run: |
           cargo rdme --check --manifest-path Cargo.toml

@@ -1,12 +1,22 @@
+# tui-scrollview
+
 <!-- cargo-rdme start -->
 
-# Tui-scrollview
+A [Ratatui] widget to build smooth scrollable views. Part of the [tui-widgets] suite by [Joshka].
 
-[![Crates.io Badge]][Crate] [![License Badge]](#license) [![Docs.rs Badge]][API Docs]<br>
-[![Deps.rs Badge]][Dependencies] [![Codecov.io Badge]][Coverage] [![Discord Badge]][Ratatui
-Discord]
+![Demo](https://vhs.charm.sh/vhs-6PuT3pdwSTp4aTvKrCBx9F.gif)
 
-`tui-scrollview` is a library for creating scrollable views in [Ratatui].
+(Note: a github bug stops the example gif above being displayed, but you can view it at:
+<https://vhs.charm.sh/vhs-6PuT3pdwSTp4aTvKrCBx9F.gif>)
+
+[![Crate badge]][Crate]
+[![Docs Badge]][Docs]
+[![Deps Badge]][Dependency Status]
+[![License Badge]][License]
+[![Coverage Badge]][Coverage]
+[![Discord Badge]][Ratatui Discord]
+
+[GitHub Repository] · [API Docs] · [Examples] · [Changelog] · [Contributing]
 
 ## Installation
 
@@ -51,36 +61,44 @@ impl StatefulWidget for MyScrollableWidget {
 
 ## Full Example
 
-A full example can be found in the
-[examples directory](https://github.com/joshka/tui-widgets/tree/main/tui-scrollview/examples).
-[scrollview.rs](https://github.com/joshka/tui-widgets/tree/main/tui-scrollview/examples/scrollview.rs)
+A full example can be found in the [examples directory].
+[scrollview.rs]
 
 This example shows a scrollable view with two paragraphs of text, one for the line numbers and
 one for the text. On top of this a Gauge widget is rendered to show that this can be used in
 combination with any other widget.
 
-![Demo](https://vhs.charm.sh/vhs-6PuT3pdwSTp4aTvKrCBx9F.gif)
+## More widgets
 
-(Note: a github bug stops the example gif above being displayed, but you can view it at:
-<https://vhs.charm.sh/vhs-6PuT3pdwSTp4aTvKrCBx9F.gif>)
-
-[Crates.io Badge]: https://img.shields.io/crates/v/tui-scrollview?logo=rust&style=for-the-badge
-[License Badge]: https://img.shields.io/crates/l/tui-scrollview?style=for-the-badge
-[Docs.rs Badge]: https://img.shields.io/docsrs/tui-scrollview?logo=rust&style=for-the-badge
-[Deps.rs Badge]:
-    https://deps.rs/repo/github/joshka/tui-scrollview/status.svg?style=for-the-badge
-[Codecov.io Badge]:
-    https://img.shields.io/codecov/c/github/joshka/tui-scrollview?logo=codecov&style=for-the-badge&token=BAQ8SOKEST
-[Discord Badge]:
-    https://img.shields.io/discord/1070692720437383208?label=ratatui+discord&logo=discord&style=for-the-badge
+For the full suite of widgets, see [tui-widgets].
 
 [Crate]: https://crates.io/crates/tui-scrollview
-[API Docs]: https://docs.rs/crate/tui-scrollview/
-[Dependencies]: https://deps.rs/repo/github/joshka/tui-scrollview
-[Coverage]: https://app.codecov.io/gh/joshka/tui-scrollview
+[Docs]: https://docs.rs/tui-scrollview/
+[Dependency Status]: https://deps.rs/repo/github/joshka/tui-widgets
+[Coverage]: https://app.codecov.io/gh/joshka/tui-widgets
 [Ratatui Discord]: https://discord.gg/pMCEU9hNEj
+[Crate badge]: https://img.shields.io/crates/v/tui-scrollview?logo=rust&style=flat
+[Docs Badge]: https://img.shields.io/docsrs/tui-scrollview?logo=rust&style=flat
+[Deps Badge]: https://deps.rs/repo/github/joshka/tui-widgets/status.svg?style=flat
+[License Badge]: https://img.shields.io/crates/l/tui-scrollview?style=flat
+[License]: https://github.com/joshka/tui-widgets/blob/main/LICENSE-MIT
+[Coverage Badge]:
+    https://img.shields.io/codecov/c/github/joshka/tui-widgets?logo=codecov&style=flat
+[Discord Badge]: https://img.shields.io/discord/1070692720437383208?logo=discord&style=flat
+
+[GitHub Repository]: https://github.com/joshka/tui-widgets
+[API Docs]: https://docs.rs/tui-scrollview/
+[Examples]: https://github.com/joshka/tui-widgets/tree/main/tui-scrollview/examples
+[examples directory]: https://github.com/joshka/tui-widgets/tree/main/tui-scrollview/examples
+[scrollview.rs]:
+    https://github.com/joshka/tui-widgets/tree/main/tui-scrollview/examples/scrollview.rs
+[Changelog]: https://github.com/joshka/tui-widgets/blob/main/tui-scrollview/CHANGELOG.md
+[Contributing]: https://github.com/joshka/tui-widgets/blob/main/CONTRIBUTING.md
 
 [Ratatui]: https://crates.io/crates/ratatui
+
+[Joshka]: https://github.com/joshka
+[tui-widgets]: https://crates.io/crates/tui-widgets
 
 <!-- cargo-rdme end -->
 
@@ -100,8 +118,9 @@ This project is licensed under either of:
 
 at your option.
 
-[LICENSE-APACHE]: /LICENSE-APACHE
-[LICENSE-MIT]: /LICENSE-MIT
+[LICENSE-APACHE]: https://github.com/joshka/tui-widgets/blob/main/LICENSE-APACHE
+[LICENSE-MIT]: https://github.com/joshka/tui-widgets/blob/main/LICENSE-MIT
+[CONTRIBUTING.md]: https://github.com/joshka/tui-widgets/blob/main/CONTRIBUTING.md
 
 ## Contribution
 
@@ -109,4 +128,4 @@ Unless you explicitly state otherwise, any contribution intentionally submitted 
 work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any
 additional terms or conditions.
 
-See [CONTRIBUTING.md](/CONTRIBUTING.md).
+See [CONTRIBUTING.md].

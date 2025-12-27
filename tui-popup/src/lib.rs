@@ -1,14 +1,27 @@
-//! A popup widget for [Ratatui](https://ratatui.rs)
+//! A [Ratatui] widget to show a snappy popup overlay. Part of the [tui-widgets] suite by [Joshka].
 //!
-//! [![Crates.io badge]][tui-popup crate]
-//! [![License badge]](./LICENSE)
-//! [![Docs.rs badge]][tui-popup docs]
-//! [![Deps.rs badge]][Deps.rs Dependency status]
-//! [![Discord badge]][Ratatui Discord]
+//! ![demo](https://vhs.charm.sh/vhs-q5Kz0QP3zmrBlQ6dofjMh.gif)
 //!
 //! The popup widget is a simple widget that renders a popup in the center of the screen.
 //!
-//! # Example
+//! [![Crate badge]][Crate]
+//! [![Docs Badge]][Docs]
+//! [![Deps Badge]][Dependency Status]
+//! [![License Badge]][License]
+//! [![Coverage Badge]][Coverage]
+//! [![Discord Badge]][Ratatui Discord]
+//!
+//! [GitHub Repository] · [API Docs] · [Examples] · [Changelog] · [Contributing]
+//!
+//! # Installation
+//!
+//! ```shell
+//! cargo add tui-popup
+//! ```
+//!
+//! # Usage
+//!
+//! Build a `Popup` with content and render it over your frame.
 //!
 //! ```rust
 //! use ratatui::style::{Style, Stylize};
@@ -22,8 +35,6 @@
 //!     frame.render_widget(popup, frame.area());
 //! }
 //! ```
-//!
-//! ![demo](https://vhs.charm.sh/vhs-q5Kz0QP3zmrBlQ6dofjMh.gif)
 //!
 //! # State
 //!
@@ -87,8 +98,7 @@
 //!
 //! The popup also supports rendering arbitrary widgets by implementing [`KnownSize`] (or wrapping
 //! them with [`KnownSizeWrapper`]). This makes it possible to support wrapping and scrolling in a
-//! `Paragraph` widget, or scrolling any amount of widgets using
-//! [tui-scrollview](https://crates.io/crates/tui-scrollview).
+//! `Paragraph` widget, or scrolling any amount of widgets using [tui-scrollview].
 //!
 //! ```rust
 //! use ratatui::prelude::*;
@@ -127,18 +137,36 @@
 //! - [ ] add nicer styling of header etc.
 //! - [ ] configure text wrapping in body to conform to a specific size
 //!
+//! # More widgets
 //!
-//! [tui-popup crate]: https://crates.io/crates/tui-popup
-//! [tui-popup docs]: https://docs.rs/crate/tui-popup/
-//! [Deps.rs Dependency status]: https://deps.rs/repo/github/joshka/tui-popup
+//! For the full suite of widgets, see [tui-widgets].
+//!
+//!
+//! [Crate]: https://crates.io/crates/tui-popup
+//! [Docs]: https://docs.rs/tui-popup/
+//! [Dependency Status]: https://deps.rs/repo/github/joshka/tui-widgets
+//! [Coverage]: https://app.codecov.io/gh/joshka/tui-widgets
 //! [Ratatui Discord]: https://discord.gg/pMCEU9hNEj
-//! [Crates.io badge]: https://img.shields.io/crates/v/tui-popup?logo=rust&style=for-the-badge
-//! [License badge]: https://img.shields.io/crates/l/tui-popup?style=for-the-badge
-//! [Docs.rs badge]: https://img.shields.io/docsrs/tui-popup?logo=rust&style=for-the-badge
-//! [Deps.rs badge]: https://deps.rs/repo/github/joshka/tui-popup/status.svg?style=for-the-badge
-//! [Discord badge]: https://img.shields.io/discord/1070692720437383208?style=for-the-badge
+//! [Crate badge]: https://img.shields.io/crates/v/tui-popup?logo=rust&style=flat
+//! [Docs Badge]: https://img.shields.io/docsrs/tui-popup?logo=rust&style=flat
+//! [Deps Badge]: https://deps.rs/repo/github/joshka/tui-widgets/status.svg?style=flat
+//! [License Badge]: https://img.shields.io/crates/l/tui-popup?style=flat
+//! [License]: https://github.com/joshka/tui-widgets/blob/main/LICENSE-MIT
+//! [Coverage Badge]:
+//!     https://img.shields.io/codecov/c/github/joshka/tui-widgets?logo=codecov&style=flat
+//! [Discord Badge]: https://img.shields.io/discord/1070692720437383208?logo=discord&style=flat
+//!
+//! [GitHub Repository]: https://github.com/joshka/tui-widgets
+//! [API Docs]: https://docs.rs/tui-popup/
+//! [Examples]: https://github.com/joshka/tui-widgets/tree/main/tui-popup/examples
+//! [Changelog]: https://github.com/joshka/tui-widgets/blob/main/tui-popup/CHANGELOG.md
+//! [Contributing]: https://github.com/joshka/tui-widgets/blob/main/CONTRIBUTING.md
 //! [KnownSize]: https://docs.rs/tui-popup/latest/tui_popup/trait.KnownSize.html
 //! [KnownSizeWrapper]: https://docs.rs/tui-popup/latest/tui_popup/struct.KnownSizeWrapper.html
+//! [tui-scrollview]: https://crates.io/crates/tui-scrollview
+//!
+//! [Joshka]: https://github.com/joshka
+//! [tui-widgets]: https://crates.io/crates/tui-widgets
 #![cfg_attr(docsrs, doc = "\n# Feature flags\n")]
 #![cfg_attr(docsrs, doc = document_features::document_features!())]
 

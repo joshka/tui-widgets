@@ -1,6 +1,5 @@
-//! A [Ratatui] widget for displaying pretty bar graphs
-//!
-//! Uses the [Colorgrad] crate for gradient coloring.
+//! A [Ratatui] widget to render bold, colorful bar graphs. Part of the [tui-widgets] suite by
+//! [Joshka].
 //!
 //! ![Braille Rainbow](https://vhs.charm.sh/vhs-1sx9Ht6NzU6e28Cl51jJVv.gif)
 //! ![Solid Plasma](https://vhs.charm.sh/vhs-7pWuLtZpzrz1OVD04cMt1a.gif)
@@ -20,10 +19,16 @@
 //!
 //! </details>
 //!
+//! Uses the [Colorgrad] crate for gradient coloring.
+//!
 //! [![Crate badge]][Crate]
 //! [![Docs Badge]][Docs]
-//! [![License Badge]](./LICENSE-MIT)
-//! [![Discord Badge]][Discord]
+//! [![Deps Badge]][Dependency Status]
+//! [![License Badge]][License]
+//! [![Coverage Badge]][Coverage]
+//! [![Discord Badge]][Ratatui Discord]
+//!
+//! [GitHub Repository] · [API Docs] · [Examples] · [Changelog] · [Contributing]
 //!
 //! # Installation
 //!
@@ -31,7 +36,9 @@
 //! cargo add ratatui tui-bar-graph
 //! ```
 //!
-//! # Example
+//! # Usage
+//!
+//! Build a `BarGraph` with your data and render it in a widget area.
 //!
 //! ```rust
 //! use tui_bar_graph::{BarGraph, BarStyle, ColorMode};
@@ -46,15 +53,34 @@
 //! # }
 //! ```
 //!
+//! # More widgets
+//!
+//! For the full suite of widgets, see [tui-widgets].
+//!
 //! [Colorgrad]: https://crates.io/crates/colorgrad
 //! [Ratatui]: https://crates.io/crates/ratatui
 //! [Crate]: https://crates.io/crates/tui-bar-graph
-//! [Docs]: https://docs.rs/tui-bar-graph
-//! [Discord]: https://discord.gg/pMCEU9hNEj
-//! [Crate badge]: https://img.shields.io/crates/v/tui-bar-graph.svg?logo=rust&style=for-the-badge
-//! [Docs Badge]: https://img.shields.io/docsrs/tui-bar-graph?logo=rust&style=for-the-badge
-//! [License Badge]: https://img.shields.io/crates/l/tui-bar-graph.svg?style=for-the-badge
-//! [Discord Badge]: https://img.shields.io/discord/1070692720437383208?label=ratatui+discord&logo=discord&style=for-the-badge
+//! [Docs]: https://docs.rs/tui-bar-graph/
+//! [Dependency Status]: https://deps.rs/repo/github/joshka/tui-widgets
+//! [Coverage]: https://app.codecov.io/gh/joshka/tui-widgets
+//! [Ratatui Discord]: https://discord.gg/pMCEU9hNEj
+//! [Crate badge]: https://img.shields.io/crates/v/tui-bar-graph.svg?logo=rust&style=flat
+//! [Docs Badge]: https://img.shields.io/docsrs/tui-bar-graph?logo=rust&style=flat
+//! [Deps Badge]: https://deps.rs/repo/github/joshka/tui-widgets/status.svg?style=flat
+//! [License Badge]: https://img.shields.io/crates/l/tui-bar-graph.svg?style=flat
+//! [License]: https://github.com/joshka/tui-widgets/blob/main/LICENSE-MIT
+//! [Coverage Badge]:
+//!     https://img.shields.io/codecov/c/github/joshka/tui-widgets?logo=codecov&style=flat
+//! [Discord Badge]: https://img.shields.io/discord/1070692720437383208?logo=discord&style=flat
+//!
+//! [GitHub Repository]: https://github.com/joshka/tui-widgets
+//! [API Docs]: https://docs.rs/tui-bar-graph/
+//! [Examples]: https://github.com/joshka/tui-widgets/tree/main/tui-bar-graph/examples
+//! [Changelog]: https://github.com/joshka/tui-widgets/blob/main/tui-bar-graph/CHANGELOG.md
+//! [Contributing]: https://github.com/joshka/tui-widgets/blob/main/CONTRIBUTING.md
+//!
+//! [Joshka]: https://github.com/joshka
+//! [tui-widgets]: https://crates.io/crates/tui-widgets
 
 use colorgrad::Gradient;
 use ratatui_core::buffer::Buffer;
@@ -162,9 +188,11 @@ pub enum BarStyle {
     /// Render bars using the octant block characters `𜺣`, `𜺠`, `𜴉`, `𜴘`, `𜴀`, `𜴃`, `𜺨`, and `𜺫`
     /// for a more granular representation.
     ///
-    /// `Octant` uses characters from the [Symbols for Legacy Computing
-    /// Supplement](https://en.wikipedia.org/wiki/Symbols_for_Legacy_Computing_Supplement) block,
-    /// which is rendered correctly by a small but growing number of fonts.
+    /// `Octant` uses characters from the [Symbols for Legacy Computing Supplement] block, which
+    /// is rendered correctly by a small but growing number of fonts.
+    ///
+    /// [Symbols for Legacy Computing Supplement]:
+    ///     https://en.wikipedia.org/wiki/Symbols_for_Legacy_Computing_Supplement
     Octant,
 }
 

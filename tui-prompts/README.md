@@ -1,22 +1,28 @@
-<h1>
-<img src="https://user-images.githubusercontent.com/381361/252977280-49b9ff66-f78d-4e16-b5ed-29d771bfcab2.png"
-    alt="logo">
-</h1>
-
 # tui-prompts
 
-[![Crates.io](https://img.shields.io/crates/v/tui-prompts?logo=rust&style=for-the-badge)](https://crates.io/crates/tui-prompts)
-[![License](https://img.shields.io/crates/l/tui-prompts?style=for-the-badge)](./LICENSE)
-[![Docs.rs](https://img.shields.io/docsrs/tui-prompts?logo=rust&style=for-the-badge)](https://docs.rs/crate/tui-prompts/)
-[![Dependency Status](https://deps.rs/repo/github/joshka/tui-prompts/status.svg?style=for-the-badge)](https://deps.rs/repo/github/joshka/tui-prompts)
-[![Codecov](https://img.shields.io/codecov/c/github/joshka/tui-prompts?logo=codecov&style=for-the-badge&token=BAQ8SOKEST)](https://app.codecov.io/gh/joshka/tui-prompts)
-[![Discord](https://img.shields.io/discord/1070692720437383208?label=ratatui+discord&logo=discord&style=for-the-badge)](https://discord.gg/pMCEU9hNEj)
+<!-- cargo-rdme start -->
 
-`tui-prompts` is a Rust crate that provides prompt widgets for the Ratatui crate. It allows for easy
-creation of interactive command-line interfaces with various types of prompts. Inspired by
-<https://www.npmjs.com/package/prompts> and various other prompt libraries.
+A [Ratatui] widget set for friendly prompts and input flows. Part of the [tui-widgets] suite by
+[Joshka].
 
-## Examples
+[![Crate badge]][Crate]
+[![Docs Badge]][Docs]
+[![Deps Badge]][Dependency Status]
+[![License Badge]][License]
+[![Coverage Badge]][Coverage]
+[![Discord Badge]][Ratatui Discord]
+
+[GitHub Repository] · [API Docs] · [Examples] · [Changelog] · [Contributing]
+
+## Installation
+
+```shell
+cargo add ratatui tui-prompts crossterm
+```
+
+## Usage
+
+Pick a prompt type, keep its state, and render it inside your UI.
 
 ### Text Prompt
 
@@ -24,6 +30,10 @@ creation of interactive command-line interfaces with various types of prompts. I
 <summary>Code</summary>
 
 ```rust
+use ratatui::layout::{Constraint, Direction, Layout, Rect};
+use ratatui::Frame;
+use tui_prompts::{Prompt, TextPrompt, TextRenderStyle, TextState};
+
 struct App<'a> {
     username_state: TextState<'a>,
     password_state: TextState<'a>,
@@ -31,8 +41,8 @@ struct App<'a> {
 }
 
 impl<'a> App<'a> {
-    fn draw_ui<B: Backend>(&mut self, frame: &mut Frame<B>) {
-        let (username_area, password_area, invisible_area) = split_layout(frame.size())
+    fn draw_ui(&mut self, frame: &mut Frame) {
+        let (username_area, password_area, invisible_area) = split_layout(frame.area());
 
         TextPrompt::from("Username")
             .draw(frame, username_area, &mut self.username_state);
@@ -46,13 +56,25 @@ impl<'a> App<'a> {
             .draw(frame, invisible_area, &mut self.invisible_state);
     }
 }
+
+fn split_layout(area: Rect) -> (Rect, Rect, Rect) {
+    let rows = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Length(1),
+        ])
+        .split(area);
+    (rows[0], rows[1], rows[2])
+}
 ```
 
 </details>
 
 ![Text Prompt](https://vhs.charm.sh/vhs-7gLcGtWJWDlQZqcMlhrpRG.gif)
 
-See the [text example](./examples/text.rs) for more details.
+See the [text example] for more details.
 
 ### Soft Wrapping
 
@@ -60,7 +82,7 @@ Text is automatically character wrapped to fit in the render area.
 
 ![Multi-line](https://vhs.charm.sh/vhs-5zzgSyRXy6IjBahoe1esDi.gif)
 
-See the [multi line example](./examples/multi_line.rs) for more details.
+See the [multi line example] for more details.
 
 ## Features
 
@@ -88,34 +110,60 @@ See the [multi line example](./examples/multi_line.rs) for more details.
 - [ ] Custom style
 - [ ] Themes
 - [ ] Custom formatting
-- [ ] Backend agnostic keyboard event handling ([Termion](https://crates.io/crates/termion) and
-[Termwiz](https://crates.io/crates/termwiz))
+- [ ] Backend agnostic keyboard event handling
+  - [Termion]
+  - [Termwiz]
 - [ ] Customizable key bindings
-- [ ] Handle more advanced multi-key bindings e.g. `^[b` and `^[f` for start / end of line
+- [ ] Handle more advanced multi-key bindings e.g. `^[b` and `^[f`
 - [ ] Prompt chaining
-
-## Installation
-
-```shell
-cargo add ratatui tui-prompts crossterm
-```
-
-Or add the following to your `Cargo.toml` file:
 
 ## Key Bindings
 
-| Key | Action
-| --- | ---
-| Home, Ctrl+A | Move cursor to beginning of line
-| End, Ctrl+E | Move cursor to end of line
-| Left, Ctrl+B | Move cursor one character left
-| Right, Ctrl+F | Move cursor one character right
-| Backspace (Delete on Mac), Ctrl+H | Delete character before cursor
-| Delete (Fn+Delete on Mac), Ctrl+D | Delete character at cursor
-| Ctrl+K | Delete all characters from the cursor to the end of line
-| Ctrl+U | Delete the entire line
-| Enter | Complete the prompt
-| Escape, Ctrl+C | Abort the prompt
+| Key | Action |
+| --- | --- |
+| Home, Ctrl+A | Move cursor to beginning of line |
+| End, Ctrl+E | Move cursor to end of line |
+| Left, Ctrl+B | Move cursor one character left |
+| Right, Ctrl+F | Move cursor one character right |
+| Backspace (Delete on Mac), Ctrl+H | Delete character before cursor |
+| Delete (Fn+Delete on Mac), Ctrl+D | Delete character at cursor |
+| Ctrl+K | Delete all characters from the cursor to the end of line |
+| Ctrl+U | Delete the entire line |
+| Enter | Complete the prompt |
+| Escape, Ctrl+C | Abort the prompt |
+
+## More widgets
+
+For the full suite of widgets, see [tui-widgets].
+
+[Joshka]: https://github.com/joshka
+[tui-widgets]: https://crates.io/crates/tui-widgets
+[Crate]: https://crates.io/crates/tui-prompts
+[Docs]: https://docs.rs/tui-prompts/
+[Dependency Status]: https://deps.rs/repo/github/joshka/tui-widgets
+[Coverage]: https://app.codecov.io/gh/joshka/tui-widgets
+[Ratatui Discord]: https://discord.gg/pMCEU9hNEj
+[GitHub Repository]: https://github.com/joshka/tui-widgets
+[API Docs]: https://docs.rs/tui-prompts/
+[Examples]: https://github.com/joshka/tui-widgets/tree/main/tui-prompts/examples
+[text example]: https://github.com/joshka/tui-widgets/tree/main/tui-prompts/examples/text.rs
+[multi line example]: https://github.com/joshka/tui-widgets/tree/main/tui-prompts/examples/multi_line.rs
+[Changelog]: https://github.com/joshka/tui-widgets/blob/main/tui-prompts/CHANGELOG.md
+[Contributing]: https://github.com/joshka/tui-widgets/blob/main/CONTRIBUTING.md
+[Crate badge]: https://img.shields.io/crates/v/tui-prompts?logo=rust&style=flat
+[Docs Badge]: https://img.shields.io/docsrs/tui-prompts?logo=rust&style=flat
+[Deps Badge]: https://deps.rs/repo/github/joshka/tui-widgets/status.svg?style=flat
+[License Badge]: https://img.shields.io/crates/l/tui-prompts?style=flat
+[License]: https://github.com/joshka/tui-widgets/blob/main/LICENSE-MIT
+[Coverage Badge]:
+    https://img.shields.io/codecov/c/github/joshka/tui-widgets?logo=codecov&style=flat
+[Discord Badge]:
+    https://img.shields.io/discord/1070692720437383208?logo=discord&style=flat
+[Ratatui]: https://crates.io/crates/ratatui
+[Termion]: https://crates.io/crates/termion
+[Termwiz]: https://crates.io/crates/termwiz
+
+<!-- cargo-rdme end -->
 
 ## License
 
@@ -128,8 +176,9 @@ This project is licensed under either of:
 
 at your option.
 
-[LICENSE-APACHE]: /LICENSE-APACHE
-[LICENSE-MIT]: /LICENSE-MIT
+[LICENSE-APACHE]: https://github.com/joshka/tui-widgets/blob/main/LICENSE-APACHE
+[LICENSE-MIT]: https://github.com/joshka/tui-widgets/blob/main/LICENSE-MIT
+[CONTRIBUTING.md]: https://github.com/joshka/tui-widgets/blob/main/CONTRIBUTING.md
 
 ## Contribution
 
@@ -137,4 +186,4 @@ Unless you explicitly state otherwise, any contribution intentionally submitted 
 work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any
 additional terms or conditions.
 
-See [CONTRIBUTING.md](/CONTRIBUTING.md).
+See [CONTRIBUTING.md].
