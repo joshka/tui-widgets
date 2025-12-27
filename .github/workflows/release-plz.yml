@@ -39,7 +39,7 @@ jobs:
       contents: write
       pull-requests: write
     concurrency:
-      group: release-plz-${{ github.ref }}
+      group: release-plz-${{ github.ref }}-${{ matrix.package }}
       cancel-in-progress: false
     steps:
       - *checkout
