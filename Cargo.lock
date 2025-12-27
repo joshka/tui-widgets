@@ -2020,7 +2020,7 @@ dependencies = [
 
 [[package]]
 name = "tui-big-text"
-version = "0.8.0"
+version = "0.8.1"
 dependencies = [
  "color-eyre",
  "crossterm",
