@@ -2,6 +2,234 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.2] - 2025-12-27
+
+### 📚 Documentation
+
+- Refresh widget docs ([#148](https://github.com/joshka/tui-widgets/issues/148))
+  > Standardize widget crate docs and README layouts.
+  > Unify badges, links, and license references.
+  > Add consistent usage sections and link style updates.
+
+### ⚙️ Miscellaneous Tasks
+
+- *(tui-box-text)* Release v0.3.1 ([#149](https://github.com/joshka/tui-widgets/issues/149))
+  > ## 🤖 New release
+  >
+  > * `tui-box-text`: 0.3.0 -> 0.3.1 (✓ API compatible changes)
+  >
+  > <details><summary><i><b>Changelog</b></i></summary><p>
+  >
+  > <blockquote>
+  >
+  > ## [0.3.1] - 2025-12-27
+  >
+  > ### 📚 Documentation
+  >
+  > - Refresh widget docs
+  > ([#148](https://github.com/joshka/tui-widgets/issues/148))
+  >   > Standardize widget crate docs and README layouts.
+  >   > Unify badges, links, and license references.
+  >   > Add consistent usage sections and link style updates.
+  > </blockquote>
+  >
+  >
+  > </p></details>
+  >
+  > ---
+  > This PR was generated with
+  > [release-plz](https://github.com/release-plz/release-plz/).
+
+- *(tui-cards)* Release v0.3.1 ([#150](https://github.com/joshka/tui-widgets/issues/150))
+  > ## 🤖 New release
+  >
+  > * `tui-cards`: 0.3.0 -> 0.3.1 (✓ API compatible changes)
+  >
+  > <details><summary><i><b>Changelog</b></i></summary><p>
+  >
+  > <blockquote>
+  >
+  > ## [0.3.1] - 2025-12-27
+  >
+  > ### 📚 Documentation
+  >
+  > - Refresh widget docs
+  > ([#148](https://github.com/joshka/tui-widgets/issues/148))
+  >   > Standardize widget crate docs and README layouts.
+  >   > Unify badges, links, and license references.
+  >   > Add consistent usage sections and link style updates.
+  > </blockquote>
+  >
+  >
+  > </p></details>
+  >
+  > ---
+  > This PR was generated with
+  > [release-plz](https://github.com/release-plz/release-plz/).
+
+- *(tui-bar-graph)* Release v0.3.1 ([#151](https://github.com/joshka/tui-widgets/issues/151))
+  > ## 🤖 New release
+  >
+  > * `tui-bar-graph`: 0.3.0 -> 0.3.1 (✓ API compatible changes)
+  >
+  > <details><summary><i><b>Changelog</b></i></summary><p>
+  >
+  > <blockquote>
+  >
+  > ## [0.3.1] - 2025-12-27
+  >
+  > ### 📚 Documentation
+  >
+  > - Refresh widget docs
+  > ([#148](https://github.com/joshka/tui-widgets/issues/148))
+  >   > Standardize widget crate docs and README layouts.
+  >   > Unify badges, links, and license references.
+  >   > Add consistent usage sections and link style updates.
+  > </blockquote>
+  >
+  >
+  > </p></details>
+  >
+  > ---
+  > This PR was generated with
+  > [release-plz](https://github.com/release-plz/release-plz/).
+
+- *(tui-qrcode)* Release v0.2.2 ([#152](https://github.com/joshka/tui-widgets/issues/152))
+  > ## 🤖 New release
+  >
+  > * `tui-qrcode`: 0.2.1 -> 0.2.2 (✓ API compatible changes)
+  >
+  > <details><summary><i><b>Changelog</b></i></summary><p>
+  >
+  > <blockquote>
+  >
+  > ## [0.2.2] - 2025-12-27
+  >
+  > ### 📚 Documentation
+  >
+  > - Refresh widget docs
+  > ([#148](https://github.com/joshka/tui-widgets/issues/148))
+  >   > Standardize widget crate docs and README layouts.
+  >   > Unify badges, links, and license references.
+  >   > Add consistent usage sections and link style updates.
+  > </blockquote>
+  >
+  >
+  > </p></details>
+  >
+  > ---
+  > This PR was generated with
+  > [release-plz](https://github.com/release-plz/release-plz/).
+
+- *(tui-popup)* Release v0.7.2 ([#155](https://github.com/joshka/tui-widgets/issues/155))
+  > ## 🤖 New release
+  >
+  > * `tui-popup`: 0.7.1 -> 0.7.2 (✓ API compatible changes)
+  >
+  > <details><summary><i><b>Changelog</b></i></summary><p>
+  >
+  > <blockquote>
+  >
+  > ## [0.7.2] - 2025-12-27
+  >
+  > ### 📚 Documentation
+  >
+  > - Refresh widget docs
+  > ([#148](https://github.com/joshka/tui-widgets/issues/148))
+  >   > Standardize widget crate docs and README layouts.
+  >   > Unify badges, links, and license references.
+  >   > Add consistent usage sections and link style updates.
+  > </blockquote>
+  >
+  >
+  > </p></details>
+  >
+  > ---
+  > This PR was generated with
+  > [release-plz](https://github.com/release-plz/release-plz/).
+
+- *(tui-big-text)* Release v0.8.1 ([#154](https://github.com/joshka/tui-widgets/issues/154))
+  > ## 🤖 New release
+  >
+  > * `tui-big-text`: 0.8.0 -> 0.8.1 (✓ API compatible changes)
+  >
+  > <details><summary><i><b>Changelog</b></i></summary><p>
+  >
+  > <blockquote>
+  >
+  > ## [0.8.1] - 2025-12-27
+  >
+  > ### 📚 Documentation
+  >
+  > - Refresh widget docs
+  > ([#148](https://github.com/joshka/tui-widgets/issues/148))
+  >   > Standardize widget crate docs and README layouts.
+  >   > Unify badges, links, and license references.
+  >   > Add consistent usage sections and link style updates.
+  > </blockquote>
+  >
+  >
+  > </p></details>
+  >
+  > ---
+  > This PR was generated with
+  > [release-plz](https://github.com/release-plz/release-plz/).
+
+- *(tui-scrollview)* Release v0.6.2 ([#156](https://github.com/joshka/tui-widgets/issues/156))
+  > ## 🤖 New release
+  >
+  > * `tui-scrollview`: 0.6.1 -> 0.6.2 (✓ API compatible changes)
+  >
+  > <details><summary><i><b>Changelog</b></i></summary><p>
+  >
+  > <blockquote>
+  >
+  > ## [0.6.2] - 2025-12-27
+  >
+  > ### 📚 Documentation
+  >
+  > - Refresh widget docs
+  > ([#148](https://github.com/joshka/tui-widgets/issues/148))
+  >   > Standardize widget crate docs and README layouts.
+  >   > Unify badges, links, and license references.
+  >   > Add consistent usage sections and link style updates.
+  > </blockquote>
+  >
+  >
+  > </p></details>
+  >
+  > ---
+  > This PR was generated with
+  > [release-plz](https://github.com/release-plz/release-plz/).
+
+- *(tui-prompts)* Release v0.6.1 ([#161](https://github.com/joshka/tui-widgets/issues/161))
+  > ## 🤖 New release
+  >
+  > * `tui-prompts`: 0.6.0 -> 0.6.1 (✓ API compatible changes)
+  >
+  > <details><summary><i><b>Changelog</b></i></summary><p>
+  >
+  > <blockquote>
+  >
+  > ## [0.6.1] - 2025-12-27
+  >
+  > ### 📚 Documentation
+  >
+  > - Refresh widget docs
+  > ([#148](https://github.com/joshka/tui-widgets/issues/148))
+  >   > Standardize widget crate docs and README layouts.
+  >   > Unify badges, links, and license references.
+  >   > Add consistent usage sections and link style updates.
+  > </blockquote>
+  >
+  >
+  > </p></details>
+  >
+  > ---
+  > This PR was generated with
+  > [release-plz](https://github.com/release-plz/release-plz/).
+
+
 ## [0.6.1] - 2025-12-27
 
 ### ⚙️ Miscellaneous Tasks
