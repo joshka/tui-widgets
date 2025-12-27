@@ -32,7 +32,7 @@ fn render(frame: &mut Frame) {
         .title("tui-popup demo")
         .style(Style::new().white().on_blue());
     frame.render_widget(background, area);
-    frame.render_widget(&popup, area);
+    frame.render_widget(popup, area);
 }
 
 fn background(area: Rect) -> Paragraph<'static> {

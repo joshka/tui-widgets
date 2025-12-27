@@ -2,11 +2,11 @@ use std::cmp::min;
 
 use derive_builder::Builder;
 use font8x8::UnicodeFonts;
-use ratatui::buffer::Buffer;
-use ratatui::layout::{Alignment, Rect};
-use ratatui::style::Style;
-use ratatui::text::{Line, StyledGrapheme};
-use ratatui::widgets::Widget;
+use ratatui_core::buffer::Buffer;
+use ratatui_core::layout::{Alignment, Rect};
+use ratatui_core::style::Style;
+use ratatui_core::text::{Line, StyledGrapheme};
+use ratatui_core::widgets::Widget;
 
 use crate::PixelSize;
 
@@ -198,7 +198,7 @@ fn render_glyph(glyph: [u8; 8], area: Rect, buf: &mut Buffer, pixel_size: &Pixel
 
 #[cfg(test)]
 mod tests {
-    use ratatui::style::Stylize;
+    use ratatui_core::style::Stylize;
 
     use super::*;
 

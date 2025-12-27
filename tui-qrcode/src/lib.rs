@@ -93,13 +93,13 @@
 
 use qrcode::render::unicode::Dense1x2;
 use qrcode::QrCode;
-use ratatui::buffer::Buffer;
-use ratatui::layout::{Rect, Size};
-use ratatui::style::{Style, Styled};
-use ratatui::text::Text;
-use ratatui::widgets::Widget;
+use ratatui_core::buffer::Buffer;
+use ratatui_core::layout::{Rect, Size};
+use ratatui_core::style::{Style, Styled};
+use ratatui_core::text::Text;
+use ratatui_core::widgets::Widget;
 
-/// A [Ratatui](ratatui) widget that renders a QR code.
+/// A [Ratatui](https://crates.io/crates/ratatui) widget that renders a QR code.
 ///
 /// This widget can be used to render a QR code in a terminal. It uses the [qrcode] crate to
 /// generate the QR code.
@@ -115,8 +115,8 @@ use ratatui::widgets::Widget;
 /// ```
 ///
 /// The widget can be customized using the `quiet_zone`, `scaling`, `colors`, and `style` methods.
-/// Additionally, the widget implements the `Styled` trait, so all the methods from Ratatui's
-/// [Stylize](ratatui::style::Stylize) trait can be used.
+/// Additionally, the widget implements the [`Styled`] trait, so all the methods from Ratatui's
+/// [`ratatui_core::style::Stylize`] trait can be used.
 ///
 /// ```no_run
 /// use qrcode::QrCode;

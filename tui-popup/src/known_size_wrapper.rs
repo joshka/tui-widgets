@@ -1,16 +1,16 @@
 use std::fmt::Debug;
 
 use derive_setters::Setters;
-use ratatui::buffer::Buffer;
-use ratatui::layout::Rect;
-use ratatui::widgets::WidgetRef;
+use ratatui_core::buffer::Buffer;
+use ratatui_core::layout::Rect;
+use ratatui_core::widgets::Widget;
 
 use crate::KnownSize;
 
 /// The `KnownSizeWrapper` struct wraps a widget and provides a fixed size for it.
 ///
 /// This struct is used to wrap a widget and provide a fixed size for it. This is useful when you
-/// want to use a widget that does not implement `SizedWidgetRef` as the body of a popup.
+/// want to use a widget that does not implement [`KnownSize`] as the body of a popup.
 #[derive(Debug, Setters)]
 pub struct KnownSizeWrapper<W> {
     #[setters(skip)]
@@ -19,9 +19,18 @@ pub struct KnownSizeWrapper<W> {
     pub height: usize,
 }
 
-impl<W: WidgetRef> WidgetRef for KnownSizeWrapper<W> {
-    fn render_ref(&self, area: Rect, buf: &mut Buffer) {
-        self.inner.render_ref(area, buf);
+impl<W: Widget> Widget for KnownSizeWrapper<W> {
+    fn render(self, area: Rect, buf: &mut Buffer) {
+        self.inner.render(area, buf);
+    }
+}
+
+impl<W> Widget for &KnownSizeWrapper<W>
+where
+    for<'a> &'a W: Widget,
+{
+    fn render(self, area: Rect, buf: &mut Buffer) {
+        self.inner.render(area, buf);
     }
 }
 
@@ -57,16 +66,17 @@ impl<W> KnownSizeWrapper<W> {
 }
 #[cfg(test)]
 mod tests {
-    use ratatui::buffer::Buffer;
-    use ratatui::layout::Rect;
+    use ratatui_core::buffer::Buffer;
+    use ratatui_core::layout::Rect;
+    use ratatui_core::widgets::Widget;
 
     use super::*;
 
     struct TestWidget;
 
-    impl WidgetRef for TestWidget {
-        fn render_ref(&self, area: Rect, buf: &mut Buffer) {
-            "Hello".render_ref(area, buf);
+    impl Widget for TestWidget {
+        fn render(self, area: Rect, buf: &mut Buffer) {
+            "Hello".render(area, buf);
         }
     }
 
@@ -83,7 +93,7 @@ mod tests {
         let widget = TestWidget;
         let wrapper = KnownSizeWrapper::new(widget, 20, 5);
         let mut buffer = Buffer::empty(Rect::new(0, 0, 20, 5));
-        wrapper.render_ref(buffer.area, &mut buffer);
+        wrapper.render(buffer.area, &mut buffer);
         let expected = Buffer::with_lines([
             "Hello               ",
             "                    ",

@@ -15,21 +15,21 @@ keywords = ["cli", "console", "ratatui", "terminal", "tui"]
 [workspace.dependencies]
 clap = { version = "4.5", features = ["derive"] }
 color-eyre = "0.6"
-# note that currently, the crossterm version must match the one used by ratatui. This will be fixed
-# in Ratatui 0.30
-crossterm = { version = "0.28" }
+crossterm = { version = "0.29" }
 derive_builder = "0.20"
 derive-getters = "0.5"
 derive_setters = "0.1.8"
-document-features = "0.2"
+document-features = "0.2.11"
 futures = "0.3"
 itertools = "0.14"
 indoc = "2"
 lipsum = "0.9"
 pretty_assertions = "1.4"
 rand = "0.9"
-ratatui = { version = "0.29", default-features = false }
-ratatui-macros = "0.6"
+ratatui = { version = "0.30.0", default-features = false }
+ratatui-core = { version = "0.1" }
+ratatui-macros = "0.7.0"
+ratatui-widgets = { version = "0.3" }
 rstest = "0.26"
 strum = { version = "0.27", features = ["derive"] }
 tokio = { version = "1.48" }
@@ -89,7 +89,7 @@ scrollview = ["tui-scrollview"]
 
 [dependencies]
 document-features.workspace = true
-ratatui = { workspace = true }
+ratatui-core = { workspace = true }
 tui-bar-graph = { version = "0.2.0", path = "tui-bar-graph", optional = true }
 tui-big-text = { version = "0.7.3", path = "tui-big-text", optional = true }
 tui-box-text = { version = "0.2.2", path = "tui-box-text", optional = true }

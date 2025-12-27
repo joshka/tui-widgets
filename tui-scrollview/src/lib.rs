@@ -49,7 +49,8 @@
 //!
 //! ## Full Example
 //!
-//! A full example can be found in the [examples] directory.
+//! A full example can be found in the
+//! [examples directory](https://github.com/joshka/tui-widgets/tree/main/tui-scrollview/examples).
 //! [scrollview.rs](https://github.com/joshka/tui-widgets/tree/main/tui-scrollview/examples/scrollview.rs)
 //!
 //! This example shows a scrollable view with two paragraphs of text, one for the line numbers and
