@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2025-12-27
+
+### 🚀 Features
+
+- [**breaking**] Migrate to ratatui 0.30 ([#120](https://github.com/joshka/tui-widgets/issues/120))
+  > feat!: migrate to ratatui 0.30
+  >
+  > - Update workspace deps to ratatui 0.30, ratatui-core, ratatui-widgets,
+  > crossterm 0.29
+  > - Shift widget crates to ratatui-core/ratatui-widgets imports where
+  > needed
+  > - Update tui-popup/tui-prompts event handling to use crossterm types
+  > - Revise tui-popup rendering/ref semantics and docs to match reference
+  > rendering rules
+  > - Add rolling breaking changes doc and markdownlint config
+  > - Bump direct deps needed for minimal-versions and examples
+  > (document-features, colorgrad, unicode-width)
+
+
 ## [0.1.3] - 2025-11-02
 
 ### 🚀 Features
