@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.2] - 2025-12-27
+
+### 📚 Documentation
+
+- Refresh widget docs ([#148](https://github.com/joshka/tui-widgets/issues/148))
+  > Standardize widget crate docs and README layouts.
+  > Unify badges, links, and license references.
+  > Add consistent usage sections and link style updates.
+
+
 ## [0.6.1] - 2025-12-27
 
 ### ⚙️ Miscellaneous Tasks
