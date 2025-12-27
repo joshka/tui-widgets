@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2025-12-27
+
+### ⚙️ Miscellaneous Tasks
+
+- Refresh readmes and rdme check ([#140](https://github.com/joshka/tui-widgets/issues/140))
+  > Regenerate crate READMEs via cargo-rdme and add a CI check to keep
+  > workspace readmes in sync.
+
+
 ## [0.2.0] - 2025-12-27
 
 ### 🚀 Features
