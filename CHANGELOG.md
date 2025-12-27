@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.1] - 2025-12-27
+
+### ⚙️ Miscellaneous Tasks
+
+- Refresh readmes and rdme check ([#140](https://github.com/joshka/tui-widgets/issues/140))
+  > Regenerate crate READMEs via cargo-rdme and add a CI check to keep
+  > workspace readmes in sync.
+
+- *(tui-qrcode)* Release v0.2.1 ([#141](https://github.com/joshka/tui-widgets/issues/141))
+  > ## 🤖 New release
+  >
+  > * `tui-qrcode`: 0.2.0 -> 0.2.1 (✓ API compatible changes)
+  >
+  > <details><summary><i><b>Changelog</b></i></summary><p>
+  >
+  > <blockquote>
+  >
+  > ## [0.2.1] - 2025-12-27
+  >
+  > ### ⚙️ Miscellaneous Tasks
+  >
+  > - Refresh readmes and rdme check
+  > ([#140](https://github.com/joshka/tui-widgets/issues/140))
+  >   > Regenerate crate READMEs via cargo-rdme and add a CI check to keep
+  >   > workspace readmes in sync.
+  > </blockquote>
+  >
+  >
+  > </p></details>
+  >
+  > ---
+  > This PR was generated with
+  > [release-plz](https://github.com/release-plz/release-plz/).
+
+
 ## [0.6.0] - 2025-12-27
 
 ### 🚀 Features
