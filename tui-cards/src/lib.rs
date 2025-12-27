@@ -21,10 +21,10 @@
 use std::iter::zip;
 
 use indoc::indoc;
-use ratatui::buffer::Buffer;
-use ratatui::layout::Rect;
-use ratatui::style::{Color, Stylize};
-use ratatui::widgets::Widget;
+use ratatui_core::buffer::Buffer;
+use ratatui_core::layout::Rect;
+use ratatui_core::style::{Color, Stylize};
+use ratatui_core::widgets::Widget;
 use strum::{Display, EnumIter};
 
 /// A playing card.

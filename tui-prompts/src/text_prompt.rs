@@ -2,8 +2,14 @@ use std::borrow::Cow;
 use std::vec;
 
 use itertools::Itertools;
-use ratatui::prelude::*;
-use ratatui::widgets::{Block, Paragraph, StatefulWidget, Widget};
+use ratatui_core::buffer::Buffer;
+use ratatui_core::layout::Rect;
+use ratatui_core::style::Stylize;
+use ratatui_core::terminal::Frame;
+use ratatui_core::text::{Line, Span};
+use ratatui_core::widgets::{StatefulWidget, Widget};
+use ratatui_widgets::block::Block;
+use ratatui_widgets::paragraph::Paragraph;
 use unicode_width::UnicodeWidthStr;
 
 use crate::prelude::*;
@@ -195,9 +201,12 @@ where
 
 #[cfg(test)]
 mod tests {
-    use ratatui::backend::TestBackend;
-    use ratatui::widgets::Borders;
+    use ratatui_core::backend::{Backend, TestBackend};
+    use ratatui_core::layout::Position;
+    use ratatui_core::style::{Color, Modifier};
+    use ratatui_core::terminal::Terminal;
     use ratatui_macros::line;
+    use ratatui_widgets::borders::Borders;
     use rstest::{fixture, rstest};
 
     use super::*;
@@ -360,10 +369,10 @@ mod tests {
         Terminal::new(TestBackend::new(17, 2)).unwrap()
     }
 
-    type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
+    type Result<T> = std::result::Result<T, core::convert::Infallible>;
 
     #[rstest]
-    fn draw_not_focused<'a>(mut terminal: Terminal<impl Backend>) -> Result<()> {
+    fn draw_not_focused<'a>(mut terminal: Terminal<TestBackend>) -> Result<()> {
         let prompt = TextPrompt::from("prompt");
         let mut state = TextState::new().with_value("hello");
         // The cursor is not changed when the prompt is not focused.
@@ -377,7 +386,7 @@ mod tests {
     }
 
     #[rstest]
-    fn draw_focused<'a>(mut terminal: Terminal<impl Backend>) -> Result<()> {
+    fn draw_focused<'a>(mut terminal: Terminal<TestBackend>) -> Result<()> {
         let prompt = TextPrompt::from("prompt");
         let mut state = TextState::new().with_value("hello");
         // The cursor is changed when the prompt is focused.
@@ -399,7 +408,7 @@ mod tests {
     fn draw_unwrapped_position<'a>(
         #[case] position: usize,
         #[case] expected_cursor: (u16, u16),
-        mut terminal: Terminal<impl Backend>,
+        mut terminal: Terminal<TestBackend>,
     ) -> Result<()> {
         let prompt = TextPrompt::from("prompt");
         let mut state = TextState::new().with_value("hello");
@@ -425,7 +434,7 @@ mod tests {
     fn draw_wrapped_position_fullwidth<'a>(
         #[case] position: usize,
         #[case] expected_cursor: (u16, u16),
-        mut terminal: Terminal<impl Backend>,
+        mut terminal: Terminal<TestBackend>,
     ) -> Result<()> {
         let prompt = TextPrompt::from("prompt");
         let mut state = TextState::new().with_value("ほげほげほげ");
@@ -448,7 +457,7 @@ mod tests {
     fn draw_wrapped_position_fullwidth_shift_by_one<'a>(
         #[case] position: usize,
         #[case] expected_cursor: (u16, u16),
-        mut terminal: Terminal<impl Backend>,
+        mut terminal: Terminal<TestBackend>,
     ) -> Result<()> {
         let prompt = TextPrompt::from("prompt2");
         let mut state = TextState::new().with_value("ほげほげほげ");
@@ -472,7 +481,7 @@ mod tests {
     fn draw_wrapped_position<'a>(
         #[case] position: usize,
         #[case] expected_cursor: (u16, u16),
-        mut terminal: Terminal<impl Backend>,
+        mut terminal: Terminal<TestBackend>,
     ) -> Result<()> {
         let prompt = TextPrompt::from("prompt");
         let mut state = TextState::new().with_value("hello world");

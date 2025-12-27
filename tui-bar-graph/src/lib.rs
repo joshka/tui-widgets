@@ -57,10 +57,10 @@
 //! [Discord Badge]: https://img.shields.io/discord/1070692720437383208?label=ratatui+discord&logo=discord&style=for-the-badge
 
 use colorgrad::Gradient;
-use ratatui::buffer::Buffer;
-use ratatui::layout::Rect;
-use ratatui::style::Color;
-use ratatui::widgets::Widget;
+use ratatui_core::buffer::Buffer;
+use ratatui_core::layout::Rect;
+use ratatui_core::style::Color;
+use ratatui_core::widgets::Widget;
 use strum::{Display, EnumString};
 
 const BRAILLE_PATTERNS: [[&str; 5]; 5] = [

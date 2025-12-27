@@ -2,9 +2,9 @@ use std::collections::HashMap;
 use std::iter::zip;
 use std::sync::LazyLock;
 
-use ratatui::buffer::Buffer;
-use ratatui::layout::Rect;
-use ratatui::widgets::Widget;
+use ratatui_core::buffer::Buffer;
+use ratatui_core::layout::Rect;
+use ratatui_core::widgets::Widget;
 
 pub struct BoxChar(char);
 

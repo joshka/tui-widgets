@@ -1,9 +1,10 @@
 use std::iter::once;
 
+use crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use itertools::chain;
-use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
-use ratatui::prelude::*;
-use ratatui::widgets::StatefulWidget;
+use ratatui_core::layout::Rect;
+use ratatui_core::terminal::Frame;
+use ratatui_core::widgets::StatefulWidget;
 use unicode_width::UnicodeWidthChar;
 
 use crate::Status;
@@ -15,8 +16,8 @@ pub trait Prompt: StatefulWidget {
     /// This is in addition to the [`StatefulWidget`] trait implementation as we need the [`Frame`]
     /// to set the cursor position.
     ///
-    /// [`StatefulWidget`]: ratatui::widgets::StatefulWidget
-    /// [`Frame`]: ratatui::Frame
+    /// [`StatefulWidget`]: ratatui_core::widgets::StatefulWidget
+    /// [`Frame`]: ratatui_core::terminal::Frame
     fn draw(self, frame: &mut Frame, area: Rect, state: &mut Self::State);
 }
 
@@ -54,12 +55,12 @@ pub trait State {
     /// The focus state of the prompt.
     fn focus_state(&self) -> FocusState;
 
-    /// Sets the focus state of the prompt to [`Focus::Focused`].
+    /// Sets the focus state of the prompt to [`FocusState::Focused`].
     fn focus(&mut self) {
         *self.focus_state_mut() = FocusState::Focused;
     }
 
-    /// Sets the focus state of the prompt to [`Focus::Unfocused`].
+    /// Sets the focus state of the prompt to [`FocusState::Unfocused`].
     fn blur(&mut self) {
         *self.focus_state_mut() = FocusState::Unfocused;
     }
@@ -211,6 +212,8 @@ pub trait State {
 
 #[cfg(test)]
 mod tests {
+    use ratatui_core::style::Stylize;
+
     use super::*;
 
     #[test]
