@@ -12,3 +12,26 @@ jobs:
     uses: joshka/github-workflows/.github/workflows/rust-check.yml@main
     with:
       msrv: 1.87.0
+  readme:
+    name: Readme
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install cargo-rdme
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-rdme
+      - name: Check READMEs
+        run: |
+          cargo rdme --check --manifest-path Cargo.toml
+          cargo rdme --check --manifest-path tui-bar-graph/Cargo.toml
+          cargo rdme --check --manifest-path tui-big-text/Cargo.toml
+          cargo rdme --check --manifest-path tui-cards/Cargo.toml
+          cargo rdme --check --manifest-path tui-popup/Cargo.toml
+          cargo rdme --check --manifest-path tui-qrcode/Cargo.toml
+          cargo rdme --check --manifest-path tui-scrollview/Cargo.toml

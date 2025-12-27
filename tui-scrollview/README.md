@@ -19,7 +19,9 @@ cargo add tui-scrollview
 ```rust
 use std::iter;
 
-use ratatui::{layout::Size, prelude::*, widgets::*};
+use ratatui::layout::Size;
+use ratatui::prelude::*;
+use ratatui::widgets::*;
 use tui_scrollview::{ScrollView, ScrollViewState};
 
 struct MyScrollableWidget;
@@ -49,7 +51,8 @@ impl StatefulWidget for MyScrollableWidget {
 
 ## Full Example
 
-A full example can be found in the [examples] directory.
+A full example can be found in the
+[examples directory](https://github.com/joshka/tui-widgets/tree/main/tui-scrollview/examples).
 [scrollview.rs](https://github.com/joshka/tui-widgets/tree/main/tui-scrollview/examples/scrollview.rs)
 
 This example shows a scrollable view with two paragraphs of text, one for the line numbers and

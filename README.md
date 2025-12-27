@@ -9,12 +9,19 @@ A collection of useful widgets for building terminal user interfaces using [Rata
 This is a crate that combines multiple previously standalone crates into one in order simplify
 maintenance and to make it easier to use the widgets together.
 
-Includes the following widgets, which are also available as standalone crates:
+Workspace crates:
 
+- [tui-widgets](https://crates.io/crates/tui-widgets) (this crate)
+- [tui-bar-graph](https://crates.io/crates/tui-bar-graph)
 - [tui-big-text](https://crates.io/crates/tui-big-text)
+- [tui-box-text](https://crates.io/crates/tui-box-text)
+- [tui-cards](https://crates.io/crates/tui-cards)
 - [tui-popup](https://crates.io/crates/tui-popup)
 - [tui-prompts](https://crates.io/crates/tui-prompts)
+- [tui-qrcode](https://crates.io/crates/tui-qrcode)
 - [tui-scrollview](https://crates.io/crates/tui-scrollview)
+
+The widget crates are also available as standalone crates.
 
 <!-- cargo-rdme end -->
 

@@ -36,7 +36,8 @@ the exact API for this will likely change.
 
 ```rust
 use crossterm::event::{KeyCode, KeyEvent};
-use ratatui::prelude::*;
+use ratatui::style::{Style, Stylize};
+use ratatui::Frame;
 use tui_popup::{Popup, PopupState};
 
 fn render_stateful_popup(frame: &mut Frame, popup_state: &mut PopupState) {

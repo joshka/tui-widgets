@@ -29,7 +29,8 @@ This example can be found in the `examples` directory of the repository.
 
 ```rust
 use qrcode::QrCode;
-use ratatui::{crossterm::event, DefaultTerminal, Frame};
+use ratatui::crossterm::event;
+use ratatui::{DefaultTerminal, Frame};
 use tui_qrcode::{Colors, QrCodeWidget};
 
 fn main() -> color_eyre::Result<()> {
