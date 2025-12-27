@@ -94,7 +94,7 @@ tui-bar-graph = { version = "0.2.0", path = "tui-bar-graph", optional = true }
 tui-big-text = { version = "0.8.0", path = "tui-big-text", optional = true }
 tui-box-text = { version = "0.3.0", path = "tui-box-text", optional = true }
 tui-cards = { version = "0.3.0", path = "tui-cards", optional = true }
-tui-popup = { version = "0.6.2", path = "tui-popup", optional = true }
+tui-popup = { version = "0.7.0", path = "tui-popup", optional = true }
 tui-prompts = { version = "0.5.2", path = "tui-prompts", optional = true }
 tui-qrcode = { version = "0.1.3", path = "tui-qrcode", optional = true }
 tui-scrollview = { version = "0.5.3", path = "tui-scrollview", optional = true }
