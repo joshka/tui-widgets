@@ -2,6 +2,591 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2025-12-27
+
+### 🚀 Features
+
+- *(tui-bar-graph)* [**breaking**] Add block octant characters ([#116](https://github.com/joshka/tui-widgets/issues/116))
+  > Since Unicode 16.0 was published on September 10, 2024, support for
+  > block octant characters (U+1CD00 to U+1CDE5,
+  > [PDF](https://www.unicode.org/charts/PDF/Unicode-16.0/U160-1CC00.pdf))
+  > has been improving in fonts. We should enable users of `tui-widgets` to
+  > use these characters in addition to existing options.
+
+- *(tui-big-text)* [**breaking**] Add block octant characters ([#117](https://github.com/joshka/tui-widgets/issues/117))
+  > The changes in this PR add the following enum variants:
+  >
+  > * `PixelSize::QuarterHeight` and `PixelSize::Octant` to `PixelSize`
+  > found in the `tui-big-text` crate.
+  >
+  > Documentation and tests are included, and the examples (along with the
+  > VHS tapes and screenshots) have been updated to show the new
+  > **two-row-tall text** styles in action and how they compare to text
+  > rendered with other `PixelSize` settings.
+
+- [**breaking**] Migrate to ratatui 0.30 ([#120](https://github.com/joshka/tui-widgets/issues/120))
+  > feat!: migrate to ratatui 0.30
+  >
+  > - Update workspace deps to ratatui 0.30, ratatui-core, ratatui-widgets,
+  > crossterm 0.29
+  > - Shift widget crates to ratatui-core/ratatui-widgets imports where
+  > needed
+  > - Update tui-popup/tui-prompts event handling to use crossterm types
+  > - Revise tui-popup rendering/ref semantics and docs to match reference
+  > rendering rules
+  > - Add rolling breaking changes doc and markdownlint config
+  > - Bump direct deps needed for minimal-versions and examples
+  > (document-features, colorgrad, unicode-width)
+
+### 📚 Documentation
+
+- Add AGENTS.md repository guidelines ([#108](https://github.com/joshka/tui-widgets/issues/108))
+
+- *(tui-big-text)* Fix enum name in field details ([#119](https://github.com/joshka/tui-widgets/issues/119))
+
+### 🎨 Styling
+
+- *(tui-prompts)* Apply changes from cargo fmt ([#118](https://github.com/joshka/tui-widgets/issues/118))
+
+### ⚙️ Miscellaneous Tasks
+
+- Enable trusted publishing via release-plz ([#110](https://github.com/joshka/tui-widgets/issues/110))
+
+- Run release-plz per package ([#121](https://github.com/joshka/tui-widgets/issues/121))
+  > - Run release-plz release-pr in a per-crate matrix
+  > - Keep release job as a single workspace publish
+
+- *(tui-box-text)* Release v0.3.0 ([#106](https://github.com/joshka/tui-widgets/issues/106))
+  > ## 🤖 New release
+  >
+  > * `tui-box-text`: 0.2.2 -> 0.3.0 (✓ API compatible changes)
+  >
+  > <details><summary><i><b>Changelog</b></i></summary><p>
+  >
+  > <blockquote>
+  >
+  > ## [0.3.0] - 2025-12-27
+  >
+  > ### 🚀 Features
+  >
+  > - [**breaking**] Migrate to ratatui 0.30
+  > ([#120](https://github.com/joshka/tui-widgets/issues/120))
+  >   > feat!: migrate to ratatui 0.30
+  >   >
+  > > - Update workspace deps to ratatui 0.30, ratatui-core,
+  > ratatui-widgets,
+  >   > crossterm 0.29
+  >   > - Shift widget crates to ratatui-core/ratatui-widgets imports where
+  >   > needed
+  >   > - Update tui-popup/tui-prompts event handling to use crossterm types
+  > > - Revise tui-popup rendering/ref semantics and docs to match reference
+  >   > rendering rules
+  >   > - Add rolling breaking changes doc and markdownlint config
+  >   > - Bump direct deps needed for minimal-versions and examples
+  >   > (document-features, colorgrad, unicode-width)
+  > </blockquote>
+  >
+  >
+  > </p></details>
+  >
+  > ---
+  > This PR was generated with
+  > [release-plz](https://github.com/release-plz/release-plz/).
+
+- Fix release-plz matrix concurrency ([#123](https://github.com/joshka/tui-widgets/issues/123))
+  > Avoid matrix jobs canceling each other by including the package name in
+  > the concurrency group.
+
+- *(tui-big-text)* Release v0.8.0 ([#122](https://github.com/joshka/tui-widgets/issues/122))
+  > ## 🤖 New release
+  >
+  > * `tui-big-text`: 0.7.3 -> 0.8.0 (✓ API compatible changes)
+  >
+  > <details><summary><i><b>Changelog</b></i></summary><p>
+  >
+  > <blockquote>
+  >
+  > ## [0.8.0] - 2025-12-27
+  >
+  > ### 🚀 Features
+  >
+  > - *(tui-big-text)* [**breaking**] Add block octant characters
+  > ([#117](https://github.com/joshka/tui-widgets/issues/117))
+  >   > The changes in this PR add the following enum variants:
+  >   >
+  >   > * `PixelSize::QuarterHeight` and `PixelSize::Octant` to `PixelSize`
+  >   > found in the `tui-big-text` crate.
+  >   >
+  > > Documentation and tests are included, and the examples (along with the
+  >   > VHS tapes and screenshots) have been updated to show the new
+  >   > **two-row-tall text** styles in action and how they compare to text
+  >   > rendered with other `PixelSize` settings.
+  >
+  > - [**breaking**] Migrate to ratatui 0.30
+  > ([#120](https://github.com/joshka/tui-widgets/issues/120))
+  >   > feat!: migrate to ratatui 0.30
+  >   >
+  > > - Update workspace deps to ratatui 0.30, ratatui-core,
+  > ratatui-widgets,
+  >   > crossterm 0.29
+  >   > - Shift widget crates to ratatui-core/ratatui-widgets imports where
+  >   > needed
+  >   > - Update tui-popup/tui-prompts event handling to use crossterm types
+  > > - Revise tui-popup rendering/ref semantics and docs to match reference
+  >   > rendering rules
+  >   > - Add rolling breaking changes doc and markdownlint config
+  >   > - Bump direct deps needed for minimal-versions and examples
+  >   > (document-features, colorgrad, unicode-width)
+  >
+  > ### 📚 Documentation
+  >
+  > - *(tui-big-text)* Fix enum name in field details
+  > ([#119](https://github.com/joshka/tui-widgets/issues/119))
+  > </blockquote>
+  >
+  >
+  > </p></details>
+  >
+  > ---
+  > This PR was generated with
+  > [release-plz](https://github.com/release-plz/release-plz/).
+
+### 🛡️ Security
+
+- *(deps)* Bump indoc from 2.0.6 to 2.0.7 ([#115](https://github.com/joshka/tui-widgets/issues/115))
+  > Bumps [indoc](https://github.com/dtolnay/indoc) from 2.0.6 to 2.0.7.
+  > <details>
+  > <summary>Release notes</summary>
+  > <p><em>Sourced from <a
+  > href="https://github.com/dtolnay/indoc/releases">indoc's
+  > releases</a>.</em></p>
+  > <blockquote>
+  > <h2>2.0.7</h2>
+  > <ul>
+  > <li>Support C-string literals <code>indoc! {c&quot;...&quot;}</code>,
+  > <code>indoc! {cr&quot;...&quot;}</code> (<a
+  > href="https://redirect.github.com/dtolnay/indoc/issues/67">#67</a>)</li>
+  > </ul>
+  > </blockquote>
+  > </details>
+  > <details>
+  > <summary>Commits</summary>
+  > <ul>
+  > <li><a
+  > href="https://github.com/dtolnay/indoc/commit/8d78216b3f127f523d198475ea44090f8f6894d5"><code>8d78216</code></a>
+  > Release 2.0.7</li>
+  > <li><a
+  > href="https://github.com/dtolnay/indoc/commit/23472ff7f3d2523ea1f5b396c7ea135c02054ee2"><code>23472ff</code></a>
+  > Merge pull request <a
+  > href="https://redirect.github.com/dtolnay/indoc/issues/67">#67</a> from
+  > dtolnay/cstring</li>
+  > <li><a
+  > href="https://github.com/dtolnay/indoc/commit/8d05562cbe8fe71e15afe7e6da602c1265217fd7"><code>8d05562</code></a>
+  > Hide C-string tests from old toolchain versions</li>
+  > <li><a
+  > href="https://github.com/dtolnay/indoc/commit/7c92efb7180eeabde698c2db22c24d189f07ab31"><code>7c92efb</code></a>
+  > Recognize C-string literals</li>
+  > <li><a
+  > href="https://github.com/dtolnay/indoc/commit/fe39de460f2e30f3eaeea0891aec5cf412c65d72"><code>fe39de4</code></a>
+  > Generalize Error constructors</li>
+  > <li><a
+  > href="https://github.com/dtolnay/indoc/commit/27e015160e5aa8da3ce33af7ca7da2e0f2c13869"><code>27e0151</code></a>
+  > Add C-string tests</li>
+  > <li><a
+  > href="https://github.com/dtolnay/indoc/commit/57f6fbb4dab9277638bd4cbf358b31dab3a4512c"><code>57f6fbb</code></a>
+  > Sort tests</li>
+  > <li><a
+  > href="https://github.com/dtolnay/indoc/commit/170a0795587a3010785e05ee2240c98f49b02bf2"><code>170a079</code></a>
+  > Raise minimum tested compiler to rust 1.76</li>
+  > <li><a
+  > href="https://github.com/dtolnay/indoc/commit/2f6ef0452d0495c1a3abde4293934d293d9c2c5d"><code>2f6ef04</code></a>
+  > Opt in to generate-macro-expansion when building on docs.rs</li>
+  > <li><a
+  > href="https://github.com/dtolnay/indoc/commit/ce1bed41bb48d6071e2a15bf8dae8d801c500b92"><code>ce1bed4</code></a>
+  > Update ui test suite to nightly-2025-09-12</li>
+  > <li>Additional commits viewable in <a
+  > href="https://github.com/dtolnay/indoc/compare/2.0.6...2.0.7">compare
+  > view</a></li>
+  > </ul>
+  > </details>
+  > <br />
+  >
+  >
+  > [![Dependabot compatibility
+  > score](https://dependabot-badges.githubapp.com/badges/compatibility_score?dependency-name=indoc&package-manager=cargo&previous-version=2.0.6&new-version=2.0.7)](https://docs.github.com/en/github/managing-security-vulnerabilities/about-dependabot-security-updates#about-compatibility-scores)
+  >
+  > Dependabot will resolve any conflicts with this PR as long as you don't
+  > alter it yourself. You can also trigger a rebase manually by commenting
+  > `@dependabot rebase`.
+
+- *(deps)* Bump rstest from 0.25.0 to 0.26.1 ([#114](https://github.com/joshka/tui-widgets/issues/114))
+  > Bumps [rstest](https://github.com/la10736/rstest) from 0.25.0 to 0.26.1.
+  > <details>
+  > <summary>Release notes</summary>
+  > <p><em>Sourced from <a
+  > href="https://github.com/la10736/rstest/releases">rstest's
+  > releases</a>.</em></p>
+  > <blockquote>
+  > <h2>0.26.1</h2>
+  > <p>Fix Docs</p>
+  > <p><strong>Full Changelog</strong>: <a
+  > href="https://github.com/la10736/rstest/compare/v0.26.0...v0.26.1">https://github.com/la10736/rstest/compare/v0.26.0...v0.26.1</a></p>
+  > <h2>0.26.0</h2>
+  > <h2>What's Changed</h2>
+  > <ul>
+  > <li>docs: fix filemode examples by <a
+  > href="https://github.com/lucascool12"><code>@​lucascool12</code></a> in
+  > <a
+  > href="https://redirect.github.com/la10736/rstest/pull/301">la10736/rstest#301</a></li>
+  > <li>Issue <a
+  > href="https://redirect.github.com/la10736/rstest/issues/306">#306</a>.
+  > Ignore folders by <a
+  > href="https://github.com/Obito-git"><code>@​Obito-git</code></a> in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/307">la10736/rstest#307</a></li>
+  > <li>Hide generated items in documentation by <a
+  > href="https://github.com/wiktor-k"><code>@​wiktor-k</code></a> in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/309">la10736/rstest#309</a></li>
+  > <li>313_fix by <a
+  > href="https://github.com/la10736"><code>@​la10736</code></a> in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/314">la10736/rstest#314</a></li>
+  > <li>fix: do not depend by default on <code>async-std</code> by <a
+  > href="https://github.com/coriolinus"><code>@​coriolinus</code></a> in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/311">la10736/rstest#311</a></li>
+  > <li>Add permission for empty_structs_with_brackets in fixture by <a
+  > href="https://github.com/bugRanger"><code>@​bugRanger</code></a> in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/317">la10736/rstest#317</a></li>
+  > <li>Touch up indentation used for examples in the README by <a
+  > href="https://github.com/fgimian"><code>@​fgimian</code></a> in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/318">la10736/rstest#318</a></li>
+  > <li>Make #[files(...)] work on Windows by <a
+  > href="https://github.com/twz123"><code>@​twz123</code></a> in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/322">la10736/rstest#322</a></li>
+  > <li>Finalize <a
+  > href="https://redirect.github.com/la10736/rstest/issues/311">#311</a> by
+  > <a href="https://github.com/la10736"><code>@​la10736</code></a> in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/323">la10736/rstest#323</a></li>
+  > <li>Make clippy happy by <a
+  > href="https://github.com/la10736"><code>@​la10736</code></a> in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/324">la10736/rstest#324</a></li>
+  > </ul>
+  > <h2>New Contributors</h2>
+  > <ul>
+  > <li><a href="https://github.com/Obito-git"><code>@​Obito-git</code></a>
+  > made their first contribution in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/307">la10736/rstest#307</a></li>
+  > <li><a href="https://github.com/wiktor-k"><code>@​wiktor-k</code></a>
+  > made their first contribution in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/309">la10736/rstest#309</a></li>
+  > <li><a
+  > href="https://github.com/coriolinus"><code>@​coriolinus</code></a> made
+  > their first contribution in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/311">la10736/rstest#311</a></li>
+  > <li><a href="https://github.com/bugRanger"><code>@​bugRanger</code></a>
+  > made their first contribution in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/317">la10736/rstest#317</a></li>
+  > <li><a href="https://github.com/fgimian"><code>@​fgimian</code></a> made
+  > their first contribution in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/318">la10736/rstest#318</a></li>
+  > <li><a href="https://github.com/twz123"><code>@​twz123</code></a> made
+  > their first contribution in <a
+  > href="https://redirect.github.com/la10736/rstest/pull/322">la10736/rstest#322</a></li>
+  > </ul>
+  > <p><strong>Full Changelog</strong>: <a
+  > href="https://github.com/la10736/rstest/compare/v0.25.0...v0.26.0">https://github.com/la10736/rstest/compare/v0.25.0...v0.26.0</a></p>
+  > </blockquote>
+  > </details>
+  > <details>
+  > <summary>Changelog</summary>
+  > <p><em>Sourced from <a
+  > href="https://github.com/la10736/rstest/blob/master/CHANGELOG.md">rstest's
+  > changelog</a>.</em></p>
+  > <blockquote>
+  > <h2>[0.26.1] 2025/7/27</h2>
+  > <h3>Fixed</h3>
+  > <ul>
+  > <li>Docs</li>
+  > </ul>
+  > <h2>[0.26.0] 2025/7/26</h2>
+  > <h3>Changed</h3>
+  > <ul>
+  > <li>The <code>#[files(...)]</code> attribute now ignores matched
+  > directory paths by default.
+  > See <a
+  > href="https://redirect.github.com/la10736/rstest/pull/306">#306</a>
+  > thanks to <a
+  > href="https://github.com/Obito-git"><code>@​Obito-git</code></a>.</li>
+  > </ul>
+  > <h3>Add</h3>
+  > <ul>
+  > <li>Introduced the <code>#[dirs]</code> attribute, which can be used
+  > with <code>#[files(...)]</code> to explicitly include directory paths.
+  > See <a
+  > href="https://redirect.github.com/la10736/rstest/pull/306">#306</a>
+  > thanks to <a
+  > href="https://github.com/Obito-git"><code>@​Obito-git</code></a>.</li>
+  > <li>The CI now runs builds and tests on Windows, as well.</li>
+  > <li><code>#[test_attr]</code> to define test attribute explicit and also
+  > enable the use of
+  > <code>#[macro_rules_attribute::apply(&lt;macro&gt;)]</code>: naw also
+  > <code>smol</code> works. See
+  > <a href="https://redirect.github.com/la10736/rstest/pull/303">#303</a>
+  > <a href="https://redirect.github.com/la10736/rstest/pull/311">#311</a>
+  > <a href="https://redirect.github.com/la10736/rstest/pull/315">#315</a>
+  > thanks to <a
+  > href="https://github.com/coriolinus"><code>@​coriolinus</code></a>.</li>
+  > </ul>
+  > <h3>Fixed</h3>
+  > <ul>
+  > <li>Removed unsued trait and impl spotted out on
+  > <code>1.89.0-nightly</code></li>
+  > <li>Add missed tests about ignore attribute's args in
+  > <code>rstest</code> expansion.
+  > See <a
+  > href="https://redirect.github.com/la10736/rstest/pull/313">#313</a></li>
+  > <li>The <code>#[files(...)]</code> attribute now works reliably on
+  > Windows.</li>
+  > <li>Now global attributes can go everywhere in the list also where case
+  > is used</li>
+  > </ul>
+  > </blockquote>
+  > </details>
+  > <details>
+  > <summary>Commits</summary>
+  > <ul>
+  > <li><a
+  > href="https://github.com/la10736/rstest/commit/7a326c87e882d2da1f3f97c40e6b04757f085679"><code>7a326c8</code></a>
+  > Should rollback version used to test</li>
+  > <li><a
+  > href="https://github.com/la10736/rstest/commit/a16a8025817ba001853687879ce95729b5f4a487"><code>a16a802</code></a>
+  > Should rollback version used to test</li>
+  > <li><a
+  > href="https://github.com/la10736/rstest/commit/98e886756fa687cd807380c347debda1f2b5422b"><code>98e8867</code></a>
+  > Merge remote-tracking branch 'origin/master'</li>
+  > <li><a
+  > href="https://github.com/la10736/rstest/commit/f4447880ce1ab1468430fbbd41313e2079008b5b"><code>f444788</code></a>
+  > Bump version 0.26.1</li>
+  > <li><a
+  > href="https://github.com/la10736/rstest/commit/5eab9ac46128e23c366929c5e9180e19b3380140"><code>5eab9ac</code></a>
+  > Bump version 0.26.1</li>
+  > <li><a
+  > href="https://github.com/la10736/rstest/commit/971f6ad05232b1fc3ca5a7b0e2830d476d683307"><code>971f6ad</code></a>
+  > Bump version 0.26.1</li>
+  > <li><a
+  > href="https://github.com/la10736/rstest/commit/edfdd89b3ecd8f5d2172308b3e10bcf831db4772"><code>edfdd89</code></a>
+  > Fixed docs and readme</li>
+  > <li><a
+  > href="https://github.com/la10736/rstest/commit/ab24b5bc03e93e6dd7c334db1c21e6a8249f4ccd"><code>ab24b5b</code></a>
+  > Bump version 0.26.0-dev</li>
+  > <li><a
+  > href="https://github.com/la10736/rstest/commit/e18375bfd4c639ab88f0a7a8b0f47149c347b5c3"><code>e18375b</code></a>
+  > Bump Version 0.26.0</li>
+  > <li><a
+  > href="https://github.com/la10736/rstest/commit/dcea54f01a8a8b498f4c7d47e6dfc29fa3f282cf"><code>dcea54f</code></a>
+  > Make clippy happy</li>
+  > <li>Additional commits viewable in <a
+  > href="https://github.com/la10736/rstest/compare/v0.25.0...v0.26.1">compare
+  > view</a></li>
+  > </ul>
+  > </details>
+  > <br />
+  >
+  >
+  > [![Dependabot compatibility
+  > score](https://dependabot-badges.githubapp.com/badges/compatibility_score?dependency-name=rstest&package-manager=cargo&previous-version=0.25.0&new-version=0.26.1)](https://docs.github.com/en/github/managing-security-vulnerabilities/about-dependabot-security-updates#about-compatibility-scores)
+  >
+  > Dependabot will resolve any conflicts with this PR as long as you don't
+  > alter it yourself. You can also trigger a rebase manually by commenting
+  > `@dependabot rebase`.
+
+- *(deps)* Bump document-features from 0.2.11 to 0.2.12 ([#113](https://github.com/joshka/tui-widgets/issues/113))
+  > Bumps [document-features](https://github.com/slint-ui/document-features)
+  > from 0.2.11 to 0.2.12.
+  > <details>
+  > <summary>Changelog</summary>
+  > <p><em>Sourced from <a
+  > href="https://github.com/slint-ui/document-features/blob/master/CHANGELOG.md">document-features's
+  > changelog</a>.</em></p>
+  > <blockquote>
+  > <h2>0.2.12 - 2025-10-24</h2>
+  > <ul>
+  > <li>Update litrs dependency to 1.0.0</li>
+  > </ul>
+  > </blockquote>
+  > </details>
+  > <details>
+  > <summary>Commits</summary>
+  > <ul>
+  > <li><a
+  > href="https://github.com/slint-ui/document-features/commit/721e708012254b81760bd2befdae0970e7a2615e"><code>721e708</code></a>
+  > Prepare for release</li>
+  > <li><a
+  > href="https://github.com/slint-ui/document-features/commit/21ec1eb99cb96ced6892a5e41c5ffbd683f6f1e6"><code>21ec1eb</code></a>
+  > Update MSRV</li>
+  > <li><a
+  > href="https://github.com/slint-ui/document-features/commit/1c70d0aa83ee9da30be3e3c91a3b89b881aa3f0b"><code>1c70d0a</code></a>
+  > chore: fix wrong test function name (<a
+  > href="https://redirect.github.com/slint-ui/document-features/issues/35">#35</a>)</li>
+  > <li><a
+  > href="https://github.com/slint-ui/document-features/commit/21cdfeccbcfcba8ec61b9d56efce082c214b8c41"><code>21cdfec</code></a>
+  > Update litrs dependency to v1.0</li>
+  > <li><a
+  > href="https://github.com/slint-ui/document-features/commit/bb0dea8b10c642978c1f797c6942dcc72cfd5eac"><code>bb0dea8</code></a>
+  > Fix typo in CHANGELOG.md</li>
+  > <li>See full diff in <a
+  > href="https://github.com/slint-ui/document-features/compare/v0.2.11...v0.2.12">compare
+  > view</a></li>
+  > </ul>
+  > </details>
+  > <br />
+  >
+  >
+  > [![Dependabot compatibility
+  > score](https://dependabot-badges.githubapp.com/badges/compatibility_score?dependency-name=document-features&package-manager=cargo&previous-version=0.2.11&new-version=0.2.12)](https://docs.github.com/en/github/managing-security-vulnerabilities/about-dependabot-security-updates#about-compatibility-scores)
+  >
+  > Dependabot will resolve any conflicts with this PR as long as you don't
+  > alter it yourself. You can also trigger a rebase manually by commenting
+  > `@dependabot rebase`.
+
+- *(deps)* Bump clap from 4.5.48 to 4.5.53 ([#111](https://github.com/joshka/tui-widgets/issues/111))
+  > Bumps [clap](https://github.com/clap-rs/clap) from 4.5.48 to 4.5.53.
+  > <details>
+  > <summary>Release notes</summary>
+  > <p><em>Sourced from <a
+  > href="https://github.com/clap-rs/clap/releases">clap's
+  > releases</a>.</em></p>
+  > <blockquote>
+  > <h2>v4.5.53</h2>
+  > <h2>[4.5.53] - 2025-11-19</h2>
+  > <h3>Features</h3>
+  > <ul>
+  > <li>Add <code>default_values_if</code>,
+  > <code>default_values_ifs</code></li>
+  > </ul>
+  > <h2>v4.5.52</h2>
+  > <h2>[4.5.52] - 2025-11-17</h2>
+  > <h3>Fixes</h3>
+  > <ul>
+  > <li>Don't panic when <code>args_conflicts_with_subcommands</code>
+  > conflicts with an <code>ArgGroup</code></li>
+  > </ul>
+  > <h2>v4.5.51</h2>
+  > <h2>[4.5.51] - 2025-10-29</h2>
+  > <h3>Fixes</h3>
+  > <ul>
+  > <li><em>(help)</em> Correctly calculate padding for short flags that
+  > take a value</li>
+  > <li><em>(help)</em> Don't panic on short flags using
+  > <code>ArgAction::Count</code></li>
+  > </ul>
+  > <h2>v4.5.50</h2>
+  > <h2>[4.5.50] - 2025-10-20</h2>
+  > <h3>Features</h3>
+  > <ul>
+  > <li>Accept <code>Cow</code> where <code>String</code> and
+  > <code>&amp;str</code> are accepted</li>
+  > </ul>
+  > </blockquote>
+  > </details>
+  > <details>
+  > <summary>Changelog</summary>
+  > <p><em>Sourced from <a
+  > href="https://github.com/clap-rs/clap/blob/master/CHANGELOG.md">clap's
+  > changelog</a>.</em></p>
+  > <blockquote>
+  > <h2>[4.5.53] - 2025-11-19</h2>
+  > <h3>Features</h3>
+  > <ul>
+  > <li>Add <code>default_values_if</code>,
+  > <code>default_values_ifs</code></li>
+  > </ul>
+  > <h2>[4.5.52] - 2025-11-17</h2>
+  > <h3>Fixes</h3>
+  > <ul>
+  > <li>Don't panic when <code>args_conflicts_with_subcommands</code>
+  > conflicts with an <code>ArgGroup</code></li>
+  > </ul>
+  > <h2>[4.5.51] - 2025-10-29</h2>
+  > <h3>Fixes</h3>
+  > <ul>
+  > <li><em>(help)</em> Correctly calculate padding for short flags that
+  > take a value</li>
+  > <li><em>(help)</em> Don't panic on short flags using
+  > <code>ArgAction::Count</code></li>
+  > </ul>
+  > <h2>[4.5.50] - 2025-10-20</h2>
+  > <h3>Features</h3>
+  > <ul>
+  > <li>Accept <code>Cow</code> where <code>String</code> and
+  > <code>&amp;str</code> are accepted</li>
+  > </ul>
+  > <h2>[4.5.49] - 2025-10-13</h2>
+  > <h3>Fixes</h3>
+  > <ul>
+  > <li><em>(help)</em> Correctly wrap when ANSI escape codes are
+  > present</li>
+  > </ul>
+  > </blockquote>
+  > </details>
+  > <details>
+  > <summary>Commits</summary>
+  > <ul>
+  > <li><a
+  > href="https://github.com/clap-rs/clap/commit/3716f9f4289594b43abec42b2538efd1a90ff897"><code>3716f9f</code></a>
+  > chore: Release</li>
+  > <li><a
+  > href="https://github.com/clap-rs/clap/commit/613b69a6b7bff729b7a363fa0c91fd03f48d12c3"><code>613b69a</code></a>
+  > docs: Update changelog</li>
+  > <li><a
+  > href="https://github.com/clap-rs/clap/commit/d117f7acdeedebaf5fd7847debb15c834423f159"><code>d117f7a</code></a>
+  > Merge pull request <a
+  > href="https://redirect.github.com/clap-rs/clap/issues/6028">#6028</a>
+  > from epage/arg</li>
+  > <li><a
+  > href="https://github.com/clap-rs/clap/commit/cb8255d2f3c7f12ebf07ec1c55ac98b6848599a9"><code>cb8255d</code></a>
+  > feat(builder): Allow quoted id's for arg macro</li>
+  > <li><a
+  > href="https://github.com/clap-rs/clap/commit/1036060f1319412d3d50d821a7b39a0a0122f0f7"><code>1036060</code></a>
+  > Merge pull request <a
+  > href="https://redirect.github.com/clap-rs/clap/issues/6025">#6025</a>
+  > from AldaronLau/typos-in-faq</li>
+  > <li><a
+  > href="https://github.com/clap-rs/clap/commit/2fcafc0aee6380e1f0c44a3e927cef1bfc88930e"><code>2fcafc0</code></a>
+  > docs: Fix minor grammar issues in FAQ</li>
+  > <li><a
+  > href="https://github.com/clap-rs/clap/commit/a380b65fe9eceade90bce8aeb13c205265fcceee"><code>a380b65</code></a>
+  > Merge pull request <a
+  > href="https://redirect.github.com/clap-rs/clap/issues/6023">#6023</a>
+  > from epage/template</li>
+  > <li><a
+  > href="https://github.com/clap-rs/clap/commit/4d7ab1483cd0f0849668d274aa2fb6358872eca9"><code>4d7ab14</code></a>
+  > chore: Update from _rust/main template</li>
+  > <li><a
+  > href="https://github.com/clap-rs/clap/commit/b8a7ea49d973a35bb6b3f43506b8319f340a20a4"><code>b8a7ea4</code></a>
+  > chore(deps): Update Rust Stable to v1.87 (<a
+  > href="https://redirect.github.com/clap-rs/clap/issues/18">#18</a>)</li>
+  > <li><a
+  > href="https://github.com/clap-rs/clap/commit/f9842b3b3f920ef64c5fc06298b4762018d88809"><code>f9842b3</code></a>
+  > chore: Avoid MSRV problems out of the box</li>
+  > <li>Additional commits viewable in <a
+  > href="https://github.com/clap-rs/clap/compare/clap_complete-v4.5.48...clap_complete-v4.5.53">compare
+  > view</a></li>
+  > </ul>
+  > </details>
+  > <br />
+  >
+  >
+  > [![Dependabot compatibility
+  > score](https://dependabot-badges.githubapp.com/badges/compatibility_score?dependency-name=clap&package-manager=cargo&previous-version=4.5.48&new-version=4.5.53)](https://docs.github.com/en/github/managing-security-vulnerabilities/about-dependabot-security-updates#about-compatibility-scores)
+  >
+  > Dependabot will resolve any conflicts with this PR as long as you don't
+  > alter it yourself. You can also trigger a rebase manually by commenting
+  > `@dependabot rebase`.
+
+### Other
+
+- *(deps)* Bump tokio from 1.47.1 to 1.48.0 ([#112](https://github.com/joshka/tui-widgets/issues/112))
+
+
 ## [0.5.0] - 2025-11-02
 
 ### 🚀 Features
