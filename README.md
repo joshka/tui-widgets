@@ -19,6 +19,7 @@ Workspace crates:
 - [tui-popup]
 - [tui-prompts]
 - [tui-qrcode]
+- [tui-scrollbar]
 - [tui-scrollview]
 
 The widget crates are also available as standalone crates.
@@ -65,6 +66,7 @@ The widget crates are also available as standalone crates.
 [tui-popup]: https://crates.io/crates/tui-popup
 [tui-prompts]: https://crates.io/crates/tui-prompts
 [tui-qrcode]: https://crates.io/crates/tui-qrcode
+[tui-scrollbar]: https://crates.io/crates/tui-scrollbar
 [tui-scrollview]: https://crates.io/crates/tui-scrollview
 
 <!-- cargo-rdme end -->

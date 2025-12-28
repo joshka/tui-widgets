@@ -68,6 +68,7 @@ default = [
     "popup",
     "prompts",
     "qrcode",
+    "scrollbar",
     "scrollview",
 ]
 ## Enables the [`bar_graph`] widget
@@ -84,6 +85,8 @@ popup = ["tui-popup"]
 prompts = ["tui-prompts"]
 ## Enables the [`qrcode`] widget
 qrcode = ["tui-qrcode"]
+## Enables the [`scrollbar`] widget
+scrollbar = ["tui-scrollbar"]
 ## Enables the [`scrollview`] widget
 scrollview = ["tui-scrollview"]
 
@@ -97,4 +100,5 @@ tui-cards = { version = "0.3.1", path = "tui-cards", optional = true }
 tui-popup = { version = "0.7.2", path = "tui-popup", optional = true }
 tui-prompts = { version = "0.6.1", path = "tui-prompts", optional = true }
 tui-qrcode = { version = "0.2.2", path = "tui-qrcode", optional = true }
+tui-scrollbar = { version = "0.1.0", path = "tui-scrollbar", optional = true }
 tui-scrollview = { version = "0.6.2", path = "tui-scrollview", optional = true }

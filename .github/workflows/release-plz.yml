@@ -47,6 +47,7 @@ jobs:
           - tui-popup
           - tui-prompts
           - tui-qrcode
+          - tui-scrollbar
           - tui-scrollview
     permissions:
       contents: write
