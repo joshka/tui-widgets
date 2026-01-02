@@ -43,6 +43,7 @@ impl ScrollBar {
 
     /// Renders arrow endcaps into the buffer before the thumb/track.
     fn render_arrows(&self, layout: &ArrowLayout, buf: &mut Buffer) {
+        let arrow_style = self.arrow_style.unwrap_or(self.track_style);
         if let Some((x, y)) = layout.start {
             let glyph = match self.orientation {
                 ScrollBarOrientation::Vertical => self.glyph_set.arrow_vertical_start,
@@ -50,7 +51,7 @@ impl ScrollBar {
             };
             let cell = &mut buf[(x, y)];
             cell.set_char(glyph);
-            cell.set_style(self.track_style);
+            cell.set_style(arrow_style);
         }
         if let Some((x, y)) = layout.end {
             let glyph = match self.orientation {
@@ -59,7 +60,7 @@ impl ScrollBar {
             };
             let cell = &mut buf[(x, y)];
             cell.set_char(glyph);
-            cell.set_style(self.track_style);
+            cell.set_style(arrow_style);
         }
     }
 
@@ -154,7 +155,11 @@ mod tests {
         .offset(1);
         let mut buf = Buffer::empty(Rect::new(0, 0, 1, 4));
         (&scrollbar).render(buf.area, &mut buf);
-        assert_eq!(buf, Buffer::with_lines(vec!["▅", "▀", "│", "│"]));
+        let mut expected = Buffer::with_lines(vec!["▅", "▀", "│", "│"]);
+        expected.set_style(expected.area, scrollbar.track_style);
+        expected[(0, 0)].set_style(scrollbar.thumb_style);
+        expected[(0, 1)].set_style(scrollbar.thumb_style);
+        assert_eq!(buf, expected);
     }
 
     #[test]
@@ -167,7 +172,11 @@ mod tests {
         .offset(1);
         let mut buf = Buffer::empty(Rect::new(0, 0, 4, 1));
         (&scrollbar).render(buf.area, &mut buf);
-        assert_eq!(buf, Buffer::with_lines(vec!["🮉▌──"]));
+        let mut expected = Buffer::with_lines(vec!["🮉▌──"]);
+        expected.set_style(expected.area, scrollbar.track_style);
+        expected[(0, 0)].set_style(scrollbar.thumb_style);
+        expected[(1, 0)].set_style(scrollbar.thumb_style);
+        assert_eq!(buf, expected);
     }
 
     #[test]
@@ -179,7 +188,9 @@ mod tests {
         .arrows(ScrollBarArrows::None);
         let mut buf = Buffer::empty(Rect::new(0, 0, 1, 3));
         (&scrollbar).render(buf.area, &mut buf);
-        assert_eq!(buf, Buffer::with_lines(vec!["█", "█", "█"]));
+        let mut expected = Buffer::with_lines(vec!["█", "█", "█"]);
+        expected.set_style(expected.area, scrollbar.thumb_style);
+        assert_eq!(buf, expected);
     }
 
     #[test]
@@ -190,7 +201,11 @@ mod tests {
         });
         let mut buf = Buffer::empty(Rect::new(0, 0, 1, 3));
         (&scrollbar).render(buf.area, &mut buf);
-        assert_eq!(buf, Buffer::with_lines(vec!["▲", "█", "▼"]));
+        let mut expected = Buffer::with_lines(vec!["▲", "█", "▼"]);
+        expected[(0, 0)].set_style(scrollbar.arrow_style.unwrap_or(scrollbar.track_style));
+        expected[(0, 1)].set_style(scrollbar.thumb_style);
+        expected[(0, 2)].set_style(scrollbar.arrow_style.unwrap_or(scrollbar.track_style));
+        assert_eq!(buf, expected);
     }
 
     #[test]
@@ -201,6 +216,10 @@ mod tests {
         });
         let mut buf = Buffer::empty(Rect::new(0, 0, 3, 1));
         (&scrollbar).render(buf.area, &mut buf);
-        assert_eq!(buf, Buffer::with_lines(vec!["◄█►"]));
+        let mut expected = Buffer::with_lines(vec!["◀█▶"]);
+        expected[(0, 0)].set_style(scrollbar.arrow_style.unwrap_or(scrollbar.track_style));
+        expected[(1, 0)].set_style(scrollbar.thumb_style);
+        expected[(2, 0)].set_style(scrollbar.arrow_style.unwrap_or(scrollbar.track_style));
+        assert_eq!(buf, expected);
     }
 }

@@ -1,6 +1,6 @@
 //! Smooth, fractional scrollbars for Ratatui. Part of the [tui-widgets] suite by [Joshka].
 //!
-//! ![ScrollBar demo](https://vhs.charm.sh/vhs-7c6j0GG4Up47YEHK5XLKoR.gif)
+//! ![ScrollBar demo](https://vhs.charm.sh/vhs-21HzyozMOar6SYjVDBrpOb.gif)
 //!
 //! [![Crate badge]][Crate]
 //! [![Docs Badge]][Docs]

@@ -36,8 +36,8 @@ use ratatui::text::Line;
 use ratatui::widgets::{Block, Borders, Paragraph};
 use ratatui::DefaultTerminal;
 use tui_scrollbar::{
-    ScrollBar, ScrollBarArrows, ScrollBarInteraction, ScrollCommand, ScrollLengths, ScrollMetrics,
-    SUBCELL,
+    GlyphSet, ScrollBar, ScrollBarArrows, ScrollBarInteraction, ScrollCommand, ScrollLengths,
+    ScrollMetrics, SUBCELL,
 };
 
 const KEY_STEP: usize = 1;
@@ -45,6 +45,10 @@ const TITLE_FG: Color = Color::Rgb(196, 206, 224);
 const TITLE_BG: Color = Color::Rgb(32, 43, 64);
 const BLOCK_FG: Color = Color::Rgb(196, 206, 224);
 const BLOCK_BG: Color = Color::Rgb(13, 23, 38);
+const SCROLLBAR_TRACK_BG: Color = Color::Rgb(40, 40, 40);
+const SCROLLBAR_THUMB_BG: Color = SCROLLBAR_TRACK_BG;
+const SCROLLBAR_THUMB_FG: Color = Color::Rgb(224, 224, 224);
+const SCROLLBAR_ARROW_FG: Color = Color::Rgb(224, 224, 224);
 
 fn main() -> Result<()> {
     color_eyre::install()?;
@@ -187,10 +191,22 @@ impl App {
             content_len: h_metrics.content_len(),
             viewport_len: h_metrics.viewport_len(),
         };
+        let track_style = Style::new().bg(SCROLLBAR_TRACK_BG);
+        let thumb_style = Style::new().fg(SCROLLBAR_THUMB_FG).bg(SCROLLBAR_THUMB_BG);
+        let arrow_style = Style::new().fg(SCROLLBAR_ARROW_FG).bg(SCROLLBAR_TRACK_BG);
+        let glyphs = GlyphSet {
+            track_vertical: ' ',
+            track_horizontal: ' ',
+            ..GlyphSet::default()
+        };
         let horizontal = ScrollBar::horizontal(horizontal_lengths)
             .arrows(ScrollBarArrows::Both)
             .offset(self.horizontal_offset)
-            .scroll_step(SUBCELL);
+            .scroll_step(SUBCELL)
+            .track_style(track_style)
+            .thumb_style(thumb_style)
+            .arrow_style(arrow_style)
+            .glyph_set(glyphs.clone());
         let vertical_lengths = ScrollLengths {
             content_len: v_metrics.content_len(),
             viewport_len: v_metrics.viewport_len(),
@@ -198,7 +214,11 @@ impl App {
         let vertical = ScrollBar::vertical(vertical_lengths)
             .arrows(ScrollBarArrows::Both)
             .offset(self.vertical_offset)
-            .scroll_step(SUBCELL);
+            .scroll_step(SUBCELL)
+            .track_style(track_style)
+            .thumb_style(thumb_style)
+            .arrow_style(arrow_style)
+            .glyph_set(glyphs);
 
         frame.render_widget(&horizontal, horizontal_bar);
         frame.render_widget(&vertical, vertical_bar);
