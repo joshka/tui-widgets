@@ -2,6 +2,75 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.3] - 2026-01-02
+
+### 🚀 Features
+
+- *(scrollbar)* Add tui-scrollbar crate ([#164](https://github.com/joshka/tui-widgets/issues/164))
+  > ## Summary
+  >
+  > Introduce `tui-scrollbar`, a new widget crate for Ratatui that renders
+  > smooth, fractional scrollbars
+  > with precise thumb feedback and stateless input handling. The crate
+  > focuses on clear geometry via
+  > `ScrollMetrics`, configurable glyph sets (including legacy computing
+  > symbols), and ergonomic
+  > examples for keyboard and mouse interaction.
+  >
+  > ![ScrollBar demo](https://vhs.charm.sh/vhs-7c6j0GG4Up47YEHK5XLKoR.gif)
+  >
+  > ## Why
+  >
+  > Ratatui’s built-in scrollbar favors full-cell glyphs and stateful use.
+  > This crate prioritizes
+  > fractional thumbs for more accurate feedback, exposes pure metrics for
+  > testing/composition, and
+  > keeps scroll state in the application for predictable input behavior.
+  >
+  > ## Docs and Examples
+  >
+  > The crate-level docs include a quick start, API map, and input-handling
+  > guidance. Two examples
+  > show the fractional glyph sweep and an interactive mouse/keyboard demo.
+  >
+  > ```rust
+  > use ratatui_core::buffer::Buffer;
+  > use ratatui_core::layout::Rect;
+  > use ratatui_core::widgets::Widget;
+  > use tui_scrollbar::{ScrollBar, ScrollBarArrows, ScrollLengths};
+  >
+  > let area = Rect::new(0, 0, 1, 6);
+  > let lengths = ScrollLengths {
+  >     content_len: 120,
+  >     viewport_len: 30,
+  > };
+  > let scrollbar = ScrollBar::vertical(lengths)
+  >     .arrows(ScrollBarArrows::Both)
+  >     .offset(45);
+  >
+  > let mut buffer = Buffer::empty(area);
+  > scrollbar.render(area, &mut buffer);
+  > ```
+
+- *(scrollbar)* Add styled defaults ([#168](https://github.com/joshka/tui-widgets/issues/168))
+  > Set default track/thumb/arrow styles, style the demos with a filled
+  > track, and update arrow glyphs and demo links.
+  >
+  > ![ScrollBar demo](https://vhs.charm.sh/vhs-21HzyozMOar6SYjVDBrpOb.gif)
+
+### ⚙️ Miscellaneous Tasks
+
+- *(tui-scrollbar)* Release v0.2.0 ([#165](https://github.com/joshka/tui-widgets/issues/165))
+  > ## 🤖 New release
+  >
+  > * `tui-scrollbar`: 0.1.0 -> 0.2.0 (⚠ API breaking changes)
+  >
+  > ### ⚠ `tui-scrollbar` breaking changes
+  >
+  > ```text
+  > --- failure inherent_method_missing: pub method removed or renamed ---
+
+
 ## [0.6.2] - 2025-12-27
 
 ### 📚 Documentation
