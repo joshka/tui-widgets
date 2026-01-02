@@ -63,7 +63,7 @@
 //! [`Rect`]: ratatui_core::layout::Rect
 
 use ratatui_core::layout::Rect;
-use ratatui_core::style::Style;
+use ratatui_core::style::{Color, Style};
 
 use crate::glyphs::GlyphSet;
 
@@ -157,7 +157,8 @@ struct ArrowLayout {
 ///
 /// # Styling
 ///
-/// Track glyphs use `track_style`. Thumb glyphs use `thumb_style`.
+/// Track glyphs use `track_style`. Thumb glyphs use `thumb_style`. Arrow endcaps use
+/// `arrow_style`, which defaults to white on dark gray.
 ///
 /// # State
 ///
@@ -254,6 +255,7 @@ pub struct ScrollBar {
     offset: usize,
     track_style: Style,
     thumb_style: Style,
+    arrow_style: Option<Style>,
     glyph_set: GlyphSet,
     arrows: ScrollBarArrows,
     track_click_behavior: TrackClickBehavior,
@@ -280,8 +282,9 @@ impl ScrollBar {
             content_len: lengths.content_len,
             viewport_len: lengths.viewport_len,
             offset: 0,
-            track_style: Style::default(),
-            thumb_style: Style::default(),
+            track_style: Style::new().bg(Color::DarkGray),
+            thumb_style: Style::new().fg(Color::White).bg(Color::DarkGray),
+            arrow_style: Some(Style::new().fg(Color::White).bg(Color::DarkGray)),
             glyph_set: GlyphSet::default(),
             arrows: ScrollBarArrows::default(),
             track_click_behavior: TrackClickBehavior::Page,
@@ -346,6 +349,14 @@ impl ScrollBar {
     /// Thumb styling overrides track styling for covered cells.
     pub const fn thumb_style(mut self, style: Style) -> Self {
         self.thumb_style = style;
+        self
+    }
+
+    /// Sets the style applied to arrow glyphs.
+    ///
+    /// Defaults to white on dark gray.
+    pub const fn arrow_style(mut self, style: Style) -> Self {
+        self.arrow_style = Some(style);
         self
     }
 
@@ -441,6 +452,7 @@ mod tests {
         };
         let track_style = Style::new().fg(Color::Red);
         let thumb_style = Style::new().bg(Color::Blue);
+        let arrow_style = Style::new().fg(Color::Green);
         let glyphs = GlyphSet::unicode();
 
         let scrollbar = ScrollBar::new(ScrollBarOrientation::Vertical, lengths)
@@ -450,6 +462,7 @@ mod tests {
             .offset(3)
             .track_style(track_style)
             .thumb_style(thumb_style)
+            .arrow_style(arrow_style)
             .glyph_set(glyphs.clone())
             .arrows(ScrollBarArrows::End)
             .track_click_behavior(TrackClickBehavior::JumpToClick)
@@ -461,6 +474,7 @@ mod tests {
         assert_eq!(scrollbar.offset, 3);
         assert_eq!(scrollbar.track_style, track_style);
         assert_eq!(scrollbar.thumb_style, thumb_style);
+        assert_eq!(scrollbar.arrow_style, Some(arrow_style));
         assert_eq!(scrollbar.glyph_set, glyphs);
         assert_eq!(scrollbar.arrows, ScrollBarArrows::End);
         assert_eq!(
