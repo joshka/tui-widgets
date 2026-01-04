@@ -96,13 +96,13 @@ pub enum TrackClickBehavior {
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub enum ScrollBarArrows {
     /// Do not render arrow endcaps.
+    #[default]
     None,
     /// Render the arrow at the start of the track (top/left).
     Start,
     /// Render the arrow at the end of the track (bottom/right).
     End,
     /// Render arrows at both ends of the track.
-    #[default]
     Both,
 }
 

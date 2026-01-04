@@ -202,7 +202,9 @@
 //! # Important
 //!
 //! - Zero lengths are treated as 1.
-//! - Arrow endcaps are enabled by default; configure them with [`ScrollBarArrows`].
+//! - Arrow endcaps are disabled by default; configure them with [`ScrollBarArrows`].
+//! - The default [`GlyphSet`] hides the track using spaces; use [`GlyphSet::box_drawing`] or
+//!   [`GlyphSet::unicode`] for a visible track.
 //! - The default glyphs use [Symbols for Legacy Computing] for missing upper/right eighth blocks.
 //!   Use [`GlyphSet::unicode`] if you need only standard Unicode block elements.
 //!
