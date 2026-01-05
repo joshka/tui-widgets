@@ -443,7 +443,10 @@ mod tests {
             content_len: 100,
             viewport_len: 20,
         };
-        let scrollbar = ScrollBar::vertical(lengths).offset(10).scroll_step(5);
+        let scrollbar = ScrollBar::vertical(lengths)
+            .arrows(ScrollBarArrows::Both)
+            .offset(10)
+            .scroll_step(5);
         let area = Rect::new(0, 0, 1, 5);
         let mut interaction = ScrollBarInteraction::default();
         let up = ScrollEvent::Pointer(PointerEvent {

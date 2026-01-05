@@ -28,10 +28,62 @@ pub struct GlyphSet {
 }
 
 impl GlyphSet {
+    /// Minimal glyphs: no visible track by default.
+    ///
+    /// This uses a space character for the track so the scrollbar is "all thumb", with the
+    /// background color coming from `track_style`.
+    ///
+    /// ```plain
+    /// [██      ]
+    /// [🮋█▏     ]
+    /// [🮊█▎     ]
+    /// [🮉█▍     ]
+    /// [▐█▌     ]
+    /// [🮈█▋     ]
+    /// [🮇█▊     ]
+    /// [▕█▉     ]
+    /// [ ██     ]
+    /// ```
+    pub const fn minimal() -> Self {
+        let mut glyphs = Self::symbols_for_legacy_computing();
+        glyphs.track_vertical = ' ';
+        glyphs.track_horizontal = ' ';
+        glyphs
+    }
+
+    /// Glyphs that include box-drawing line symbols for the track.
+    ///
+    /// ```plain
+    /// [██──────]
+    /// [🮋█▏─────]
+    /// [🮊█▎─────]
+    /// [🮉█▍─────]
+    /// [▐█▌─────]
+    /// [🮈█▋─────]
+    /// [🮇█▊─────]
+    /// [▕█▉─────]
+    /// [─██─────]
+    /// ```
+    pub const fn box_drawing() -> Self {
+        Self::symbols_for_legacy_computing()
+    }
+
     /// Glyphs that mix standard block elements with legacy supplement glyphs.
     ///
     /// Use this to get full 1/8th coverage for upper and right edges that the standard block set
     /// lacks; these glyphs come from [Symbols for Legacy Computing].
+    ///
+    /// ```plain
+    /// [██──────]
+    /// [🮋█▏─────]
+    /// [🮊█▎─────]
+    /// [🮉█▍─────]
+    /// [▐█▌─────]
+    /// [🮈█▋─────]
+    /// [🮇█▊─────]
+    /// [▕█▉─────]
+    /// [─██─────]
+    /// ```
     ///
     /// [Symbols for Legacy Computing]: https://en.wikipedia.org/wiki/Symbols_for_Legacy_Computing
     pub const fn symbols_for_legacy_computing() -> Self {
@@ -55,11 +107,32 @@ impl GlyphSet {
 
     /// Glyphs using only standard Unicode block elements.
     ///
-    /// Use this if your font lacks the legacy glyphs; upper/right partials will use the same
-    /// glyphs as lower/left partials.
+    /// Use this if your font lacks the legacy glyphs.
+    ///
+    /// The standard block set does not include 1/8th upper or right fills (those come from
+    /// [Symbols for Legacy Computing]), so this set approximates upper and right partials by
+    /// rounding to coarse blocks:
+    ///
+    /// - ~1/4: `▔` / `▕`
+    /// - ~1/2 and ~3/4: `▀` / `▐`
+    /// - ~7/8 and full: `█`
+    ///
+    /// ```plain
+    /// [██──────]
+    /// [██▏─────]
+    /// [▐█▎─────]
+    /// [▐█▍─────]
+    /// [▐█▌─────]
+    /// [▐█▋─────]
+    /// [▕█▊─────]
+    /// [▕█▉─────]
+    /// [─██─────]
+    /// ```
     pub const fn unicode() -> Self {
-        let vertical = ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
-        let horizontal = ['▏', '▎', '▍', '▌', '▋', '▊', '▉', '█'];
+        let vertical_lower = ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
+        let vertical_upper = ['▔', '▔', '▀', '▀', '▀', '▀', '█', '█'];
+        let horizontal_left = ['▏', '▎', '▍', '▌', '▋', '▊', '▉', '█'];
+        let horizontal_right = ['▕', '▕', '▐', '▐', '▐', '▐', '█', '█'];
         Self {
             track_vertical: '│',
             track_horizontal: '─',
@@ -67,16 +140,16 @@ impl GlyphSet {
             arrow_vertical_end: '▼',
             arrow_horizontal_start: '◀',
             arrow_horizontal_end: '▶',
-            thumb_vertical_lower: vertical,
-            thumb_vertical_upper: vertical,
-            thumb_horizontal_left: horizontal,
-            thumb_horizontal_right: horizontal,
+            thumb_vertical_lower: vertical_lower,
+            thumb_vertical_upper: vertical_upper,
+            thumb_horizontal_left: horizontal_left,
+            thumb_horizontal_right: horizontal_right,
         }
     }
 }
 
 impl Default for GlyphSet {
     fn default() -> Self {
-        Self::symbols_for_legacy_computing()
+        Self::minimal()
     }
 }

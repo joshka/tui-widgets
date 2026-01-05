@@ -143,7 +143,36 @@ mod tests {
     use ratatui_core::layout::Rect;
 
     use super::*;
-    use crate::{ScrollBarArrows, ScrollLengths};
+    use crate::{GlyphSet, ScrollBarArrows, ScrollLengths};
+
+    fn assert_horizontal_thumb_walk(
+        glyph_set: GlyphSet,
+        track_char: char,
+        expected_lines: [&str; 9],
+    ) {
+        let lengths = ScrollLengths {
+            content_len: 8 * crate::SUBCELL,
+            viewport_len: 2 * crate::SUBCELL,
+        };
+
+        for (offset, expected_line) in expected_lines.into_iter().enumerate() {
+            let scrollbar = ScrollBar::horizontal(lengths)
+                .arrows(ScrollBarArrows::None)
+                .glyph_set(glyph_set.clone())
+                .offset(offset);
+            let mut buf = Buffer::empty(Rect::new(0, 0, 8, 1));
+            (&scrollbar).render(buf.area, &mut buf);
+
+            let mut expected = Buffer::with_lines(vec![expected_line]);
+            expected.set_style(expected.area, scrollbar.track_style);
+            for (x, symbol) in expected_line.chars().enumerate() {
+                if symbol != track_char {
+                    expected[(x as u16, 0)].set_style(scrollbar.thumb_style);
+                }
+            }
+            assert_eq!(buf, expected);
+        }
+    }
 
     #[test]
     fn render_vertical_fractional_thumb() {
@@ -155,7 +184,7 @@ mod tests {
         .offset(1);
         let mut buf = Buffer::empty(Rect::new(0, 0, 1, 4));
         (&scrollbar).render(buf.area, &mut buf);
-        let mut expected = Buffer::with_lines(vec!["▅", "▀", "│", "│"]);
+        let mut expected = Buffer::with_lines(vec!["▅", "▀", " ", " "]);
         expected.set_style(expected.area, scrollbar.track_style);
         expected[(0, 0)].set_style(scrollbar.thumb_style);
         expected[(0, 1)].set_style(scrollbar.thumb_style);
@@ -172,11 +201,104 @@ mod tests {
         .offset(1);
         let mut buf = Buffer::empty(Rect::new(0, 0, 4, 1));
         (&scrollbar).render(buf.area, &mut buf);
+        let mut expected = Buffer::with_lines(vec!["🮉▌  "]);
+        expected.set_style(expected.area, scrollbar.track_style);
+        expected[(0, 0)].set_style(scrollbar.thumb_style);
+        expected[(1, 0)].set_style(scrollbar.thumb_style);
+        assert_eq!(buf, expected);
+    }
+
+    #[test]
+    fn render_horizontal_fractional_thumb_box_drawing_track() {
+        let scrollbar = ScrollBar::horizontal(ScrollLengths {
+            content_len: 10,
+            viewport_len: 3,
+        })
+        .arrows(ScrollBarArrows::None)
+        .offset(1)
+        .glyph_set(GlyphSet::box_drawing());
+        let mut buf = Buffer::empty(Rect::new(0, 0, 4, 1));
+        (&scrollbar).render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec!["🮉▌──"]);
         expected.set_style(expected.area, scrollbar.track_style);
         expected[(0, 0)].set_style(scrollbar.thumb_style);
         expected[(1, 0)].set_style(scrollbar.thumb_style);
         assert_eq!(buf, expected);
+    }
+
+    #[test]
+    fn render_horizontal_fractional_thumb_unicode_glyphs() {
+        let scrollbar = ScrollBar::horizontal(ScrollLengths {
+            content_len: 10,
+            viewport_len: 3,
+        })
+        .arrows(ScrollBarArrows::None)
+        .offset(1)
+        .glyph_set(GlyphSet::unicode());
+        let mut buf = Buffer::empty(Rect::new(0, 0, 4, 1));
+        (&scrollbar).render(buf.area, &mut buf);
+        let mut expected = Buffer::with_lines(vec!["▐▌──"]);
+        expected.set_style(expected.area, scrollbar.track_style);
+        expected[(0, 0)].set_style(scrollbar.thumb_style);
+        expected[(1, 0)].set_style(scrollbar.thumb_style);
+        assert_eq!(buf, expected);
+    }
+
+    #[test]
+    fn render_horizontal_thumb_walk_minimal_glyphs() {
+        assert_horizontal_thumb_walk(
+            GlyphSet::minimal(),
+            ' ',
+            [
+                "██      ",
+                "🮋█▏     ",
+                "🮊█▎     ",
+                "🮉█▍     ",
+                "▐█▌     ",
+                "🮈█▋     ",
+                "🮇█▊     ",
+                "▕█▉     ",
+                " ██     ",
+            ],
+        );
+    }
+
+    #[test]
+    fn render_horizontal_thumb_walk_legacy_glyphs() {
+        assert_horizontal_thumb_walk(
+            GlyphSet::symbols_for_legacy_computing(),
+            '─',
+            [
+                "██──────",
+                "🮋█▏─────",
+                "🮊█▎─────",
+                "🮉█▍─────",
+                "▐█▌─────",
+                "🮈█▋─────",
+                "🮇█▊─────",
+                "▕█▉─────",
+                "─██─────",
+            ],
+        );
+    }
+
+    #[test]
+    fn render_horizontal_thumb_walk_unicode_glyphs() {
+        assert_horizontal_thumb_walk(
+            GlyphSet::unicode(),
+            '─',
+            [
+                "██──────",
+                "██▏─────",
+                "▐█▎─────",
+                "▐█▍─────",
+                "▐█▌─────",
+                "▐█▋─────",
+                "▕█▊─────",
+                "▕█▉─────",
+                "─██─────",
+            ],
+        );
     }
 
     #[test]
@@ -198,7 +320,8 @@ mod tests {
         let scrollbar = ScrollBar::vertical(ScrollLengths {
             content_len: 5,
             viewport_len: 2,
-        });
+        })
+        .arrows(ScrollBarArrows::Both);
         let mut buf = Buffer::empty(Rect::new(0, 0, 1, 3));
         (&scrollbar).render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec!["▲", "█", "▼"]);
@@ -213,7 +336,8 @@ mod tests {
         let scrollbar = ScrollBar::horizontal(ScrollLengths {
             content_len: 5,
             viewport_len: 2,
-        });
+        })
+        .arrows(ScrollBarArrows::Both);
         let mut buf = Buffer::empty(Rect::new(0, 0, 3, 1));
         (&scrollbar).render(buf.area, &mut buf);
         let mut expected = Buffer::with_lines(vec!["◀█▶"]);

@@ -36,8 +36,8 @@ use ratatui::text::Line;
 use ratatui::widgets::{Block, Borders, Paragraph};
 use ratatui::DefaultTerminal;
 use tui_scrollbar::{
-    GlyphSet, ScrollBar, ScrollBarArrows, ScrollBarInteraction, ScrollCommand, ScrollLengths,
-    ScrollMetrics, SUBCELL,
+    ScrollBar, ScrollBarArrows, ScrollBarInteraction, ScrollCommand, ScrollLengths, ScrollMetrics,
+    SUBCELL,
 };
 
 const KEY_STEP: usize = 1;
@@ -194,19 +194,13 @@ impl App {
         let track_style = Style::new().bg(SCROLLBAR_TRACK_BG);
         let thumb_style = Style::new().fg(SCROLLBAR_THUMB_FG).bg(SCROLLBAR_THUMB_BG);
         let arrow_style = Style::new().fg(SCROLLBAR_ARROW_FG).bg(SCROLLBAR_TRACK_BG);
-        let glyphs = GlyphSet {
-            track_vertical: ' ',
-            track_horizontal: ' ',
-            ..GlyphSet::default()
-        };
         let horizontal = ScrollBar::horizontal(horizontal_lengths)
             .arrows(ScrollBarArrows::Both)
             .offset(self.horizontal_offset)
             .scroll_step(SUBCELL)
             .track_style(track_style)
             .thumb_style(thumb_style)
-            .arrow_style(arrow_style)
-            .glyph_set(glyphs.clone());
+            .arrow_style(arrow_style);
         let vertical_lengths = ScrollLengths {
             content_len: v_metrics.content_len(),
             viewport_len: v_metrics.viewport_len(),
@@ -217,8 +211,7 @@ impl App {
             .scroll_step(SUBCELL)
             .track_style(track_style)
             .thumb_style(thumb_style)
-            .arrow_style(arrow_style)
-            .glyph_set(glyphs);
+            .arrow_style(arrow_style);
 
         frame.render_widget(&horizontal, horizontal_bar);
         frame.render_widget(&vertical, vertical_bar);
