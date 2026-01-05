@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.2] - 2026-01-05
+
+### 🚀 Features
+
+- *(scrollbar)* Support crossterm 0.28 ([#172](https://github.com/joshka/tui-widgets/issues/172))
+  > Add versioned crossterm feature flags and re-export the selected version
+  > as `tui_scrollbar::crossterm`.
+  >
+  > Add CI checks for the feature matrix and a docs.rs-style build.
+  >
+  > ---------
+
+
 ## [0.2.1] - 2026-01-05
 
 ### 🚀 Features
