@@ -162,7 +162,7 @@ struct ArrowLayout {
 ///
 /// # State
 ///
-/// This widget is stateless. Pointer drag state lives in [`ScrollBarInteraction`].
+/// This widget is stateless. Pointer drag state lives in [`crate::ScrollBarInteraction`].
 ///
 /// # Examples
 ///

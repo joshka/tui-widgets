@@ -125,9 +125,9 @@
 //! let mut interaction = ScrollBarInteraction::new();
 //! let mut offset = 0;
 //!
-//! # #[cfg(feature = "crossterm")]
+//! # #[cfg(any(feature = "crossterm_0_28", feature = "crossterm_0_29"))]
 //! # {
-//! # use crossterm::event::{self, Event};
+//! # use tui_scrollbar::crossterm::event::{self, Event};
 //! if let Event::Mouse(event) = event::read()? {
 //!     if let Some(ScrollCommand::SetOffset(next)) =
 //!         scrollbar.handle_mouse_event(bar_area, event, &mut interaction)
@@ -197,7 +197,13 @@
 //!
 //! # Features
 //!
-//! - `crossterm`: enables the `handle_mouse_event` adapter for crossterm mouse events.
+//! - `crossterm`: enables crossterm mouse events (latest supported version, currently
+//!   `crossterm` 0.29).
+//! - `crossterm_0_28`: enables crossterm mouse events using `crossterm` 0.28.
+//! - `crossterm_0_29`: enables crossterm mouse events using `crossterm` 0.29.
+//!
+//! When multiple crossterm versions are enabled, the latest one is used.
+//! The selected version is re-exported as `tui_scrollbar::crossterm`.
 //!
 //! # Important
 //!
@@ -268,3 +274,23 @@ pub use crate::input::{
 pub use crate::lengths::ScrollLengths;
 pub use crate::metrics::{CellFill, HitTest, ScrollMetrics, SUBCELL};
 pub use crate::scrollbar::{ScrollBar, ScrollBarArrows, ScrollBarOrientation, TrackClickBehavior};
+
+/// Re-export of the selected crossterm version.
+///
+/// This crate supports multiple crossterm versions via feature flags:
+///
+/// - `crossterm` selects the latest supported crossterm version (currently 0.29).
+/// - `crossterm_0_28` selects `crossterm` 0.28.
+/// - `crossterm_0_29` selects `crossterm` 0.29.
+///
+/// When both 0.28 and 0.29 are enabled, this re-export points to 0.29. Downstream code can use
+/// `tui_scrollbar::crossterm::event::*` without needing to match the dependency name/version
+/// selection logic.
+#[cfg(feature = "crossterm_0_29")]
+pub use ::crossterm_0_29 as crossterm;
+
+/// Re-export of the selected crossterm version.
+///
+/// See `tui_scrollbar::crossterm` for the version selection rules.
+#[cfg(all(feature = "crossterm_0_28", not(feature = "crossterm_0_29")))]
+pub use ::crossterm_0_28 as crossterm;
