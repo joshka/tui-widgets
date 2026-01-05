@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2026-01-05
+
+### 🚀 Features
+
+- *(scrollbar)* Update glyph previews and tests ([#169](https://github.com/joshka/tui-widgets/issues/169))
+  > Default ScrollBar renders without arrow endcaps and uses a dark gray
+  > background with a blank (space) track.
+  >
+  > Add glyph set variants and improve the Unicode-only fallback. Document
+  > glyph sets with a 1/8-step horizontal thumb walk, and add snapshot
+  > render tests to keep the glyph combinations stable.
+
+
 ## [0.2.0] - 2025-12-28
 
 ### 🚀 Features
