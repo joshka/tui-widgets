@@ -1,4 +1,6 @@
 name: tui-scrollbar (crossterm matrix)
+permissions:
+  contents: read
 
 on:
   push:
