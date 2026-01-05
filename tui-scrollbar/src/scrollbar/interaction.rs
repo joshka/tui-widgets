@@ -7,8 +7,8 @@
 //! When a pointer presses inside the thumb, the handler stores a subcell grab offset so subsequent
 //! drag events keep the pointer anchored to the same position within the thumb.
 
-#[cfg(feature = "crossterm")]
-use crossterm::event::{MouseButton, MouseEvent, MouseEventKind};
+#[cfg(any(feature = "crossterm_0_28", feature = "crossterm_0_29"))]
+use crate::crossterm::event::{MouseButton, MouseEvent, MouseEventKind};
 use ratatui_core::layout::Rect;
 
 use super::{ArrowHit, ArrowLayout, ScrollBar, ScrollBarOrientation, TrackClickBehavior};
@@ -84,7 +84,7 @@ impl ScrollBar {
         }
     }
 
-    #[cfg(feature = "crossterm")]
+    #[cfg(any(feature = "crossterm_0_28", feature = "crossterm_0_29"))]
     /// Handles crossterm mouse events for this scrollbar.
     ///
     /// This helper converts crossterm events into [`ScrollEvent`] values before delegating to

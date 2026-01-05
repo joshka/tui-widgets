@@ -195,7 +195,13 @@ let scrollbar = ScrollBar::vertical(lengths).glyph_set(GlyphSet::unicode());
 
 ## Features
 
-- `crossterm`: enables the `handle_mouse_event` adapter for crossterm mouse events.
+- `crossterm`: enables crossterm mouse events (latest supported version, currently
+  `crossterm` 0.29).
+- `crossterm_0_28`: enables crossterm mouse events using `crossterm` 0.28.
+- `crossterm_0_29`: enables crossterm mouse events using `crossterm` 0.29.
+
+When multiple crossterm versions are enabled, the latest one is used.
+The selected version is re-exported as `tui_scrollbar::crossterm`.
 
 ## Important
 
