@@ -32,7 +32,7 @@ ratatui-macros = "0.7.0"
 ratatui-widgets = { version = "0.3" }
 rstest = "0.26"
 strum = { version = "0.27", features = ["derive"] }
-tokio = { version = "1.48" }
+tokio = { version = "1.49" }
 
 [lints.rust]
 unused = "warn"
