@@ -1,4 +1,5 @@
 name: tui-scrollbar (crossterm matrix)
+
 permissions:
   contents: read
 
@@ -49,4 +50,4 @@ jobs:
         with:
           tool: cargo-docs-rs
       - name: Cargo doc (docsrs)
-        run: cargo docs-rs -p tui-scrollbar --all-features --no-deps --locked
+        run: cargo docs-rs -p tui-scrollbar --locked
