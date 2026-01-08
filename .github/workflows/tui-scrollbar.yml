@@ -1,0 +1,53 @@
+name: tui-scrollbar (crossterm matrix)
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  check:
+    name: Cargo check (${{ matrix.features.name }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        features:
+          - name: default
+            args: -p tui-scrollbar --locked
+          - name: all-features
+            args: -p tui-scrollbar --locked --all-features
+          - name: crossterm
+            args: -p tui-scrollbar --locked --no-default-features --features crossterm
+          - name: crossterm_0_28
+            args: -p tui-scrollbar --locked --no-default-features --features crossterm_0_28
+          - name: crossterm_0_29
+            args: -p tui-scrollbar --locked --no-default-features --features crossterm_0_29
+          - name: crossterm_0_28+crossterm_0_29
+            args: -p tui-scrollbar --locked --no-default-features --features crossterm_0_28,crossterm_0_29
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Install Rust toolchain (stable)
+        uses: dtolnay/rust-toolchain@stable
+      - name: Cargo check
+        run: cargo check ${{ matrix.features.args }}
+
+  docsrs:
+    name: Docs.rs build (nightly)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Install Rust toolchain (nightly)
+        uses: dtolnay/rust-toolchain@nightly
+      - name: Install cargo-docs-rs
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-docs-rs
+      - name: Cargo doc (docsrs)
+        run: cargo docs-rs -p tui-scrollbar --locked

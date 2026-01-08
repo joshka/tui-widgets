@@ -1,6 +1,6 @@
 [package]
 name = "tui-scrollview"
-version = "0.5.1"
+version = "0.6.2"
 description = "A simple scrollable view for Ratatui"
 
 authors.workspace = true
@@ -13,12 +13,13 @@ rust-version.workspace = true
 
 [dependencies]
 indoc.workspace = true
-ratatui = { workspace = true }
+ratatui-core.workspace = true
+ratatui-widgets.workspace = true
 
 [dev-dependencies]
 color-eyre.workspace = true
 rstest.workspace = true
-ratatui = { workspace = true, features = ["crossterm"] }
+ratatui = { workspace = true, default-features = true }
 lipsum.workspace = true
 
 

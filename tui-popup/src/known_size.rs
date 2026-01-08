@@ -1,4 +1,4 @@
-use ratatui::text::Text;
+use ratatui_core::text::Text;
 
 /// A trait for widgets that have a fixed size.
 ///
@@ -7,7 +7,7 @@ use ratatui::text::Text;
 /// wrap existing widgets in a newtype and implement this trait for the newtype to use them as the
 /// body of a popup.
 ///
-/// This trait was previously called `SizedWidgetRef`, but was renamed to `KnownSize` to avoid
+/// This trait was previously called `SizedWidgetRef`, but was renamed to [`KnownSize`] to avoid
 /// confusion with the `WidgetRef` trait from `ratatui`.
 pub trait KnownSize {
     fn width(&self) -> usize;

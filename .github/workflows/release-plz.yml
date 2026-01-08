@@ -1,0 +1,73 @@
+name: Release-plz
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  release:
+    name: Release-plz release
+    if: ${{ github.repository_owner == 'joshka' }}
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - &checkout
+        name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - &install-rust
+        name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Run release-plz (release)
+        uses: release-plz/action@v0.5
+        with:
+          command: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release_pr:
+    name: Release-plz PR
+    if: ${{ github.repository_owner == 'joshka' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - tui-widgets
+          - tui-bar-graph
+          - tui-big-text
+          - tui-box-text
+          - tui-cards
+          - tui-popup
+          - tui-prompts
+          - tui-qrcode
+          - tui-scrollbar
+          - tui-scrollview
+    permissions:
+      contents: write
+      pull-requests: write
+    concurrency:
+      group: release-plz-${{ github.ref }}-${{ matrix.package }}
+      cancel-in-progress: false
+    steps:
+      - *checkout
+      - *install-rust
+      - name: Install release-plz
+        uses: taiki-e/install-action@v2
+        with:
+          tool: release-plz@0.3.150,cargo-semver-checks@0.45
+      - name: Run release-plz (release-pr)
+        run: >
+          release-plz release-pr
+          --git-token "${{ secrets.GITHUB_TOKEN }}"
+          --repo-url "https://github.com/${{ github.repository }}"
+          --package "${{ matrix.package }}"
+          --config ".github/release-plz/${{ matrix.package }}.toml"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

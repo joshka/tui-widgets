@@ -1,6 +1,6 @@
 [package]
 name = "tui-popup"
-version = "0.6.0"
+version = "0.7.2"
 description = "A simple popup for ratatui"
 documentation = "https://docs.rs/tui-popup"
 
@@ -22,18 +22,21 @@ rustdoc-args = ["--cfg", "docsrs"]
 default = []
 
 ## Enables processing crossterm mouse events using [`PopupState::handle_mouse_event`]
-crossterm = ["ratatui/crossterm"]
+crossterm = ["dep:crossterm"]
 
 [dependencies]
+crossterm = { workspace = true, optional = true }
 document-features.workspace = true
 derive-getters.workspace = true
 derive_setters.workspace = true
-ratatui = { workspace = true, features = ["unstable-widget-ref"] }
+ratatui-core.workspace = true
+ratatui-widgets.workspace = true
 
 [dev-dependencies]
 pretty_assertions.workspace = true
 color-eyre.workspace = true
 lipsum.workspace = true
+ratatui = { workspace = true, default-features = true }
 
 [lints.clippy]
 pedantic = { level = "warn", priority = -1 }

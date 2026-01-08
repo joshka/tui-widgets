@@ -1,7 +1,7 @@
 [package]
 name = "tui-box-text"
 description = "A Ratatui widget for displaying text using the box drawing characters"
-version = "0.2.0"
+version = "0.3.1"
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
@@ -13,7 +13,7 @@ keywords.workspace = true
 [dependencies]
 color-eyre.workspace = true
 indoc.workspace = true
-ratatui = { workspace = true, default-features = true }
+ratatui-core.workspace = true
 
 [dev-dependencies]
 ratatui = { workspace = true, default-features = true }

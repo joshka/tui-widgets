@@ -1,16 +1,18 @@
-//! TUI QR Code is a library for rendering QR codes in a terminal using the [Ratatui] crate.
+//! A [Ratatui] widget to render crisp, scan-happy QR codes in the terminal. Part of the
+//! [tui-widgets] suite by [Joshka].
 //!
-//! [![Crate badge]][tui-qrcode]
-//! [![Docs.rs Badge]][API Docs]
-//! [![Deps.rs Badge]][Dependency Status]
-//! [![License Badge]](./LICENSE-MIT)
+//! ![Demo](https://vhs.charm.sh/vhs-nUpcmCP1igCcGoJ5iio07.gif)
+//!
+//! [![Crate badge]][Crate]
+//! [![Docs Badge]][Docs]
+//! [![Deps Badge]][Dependency Status]
+//! [![License Badge]][License]
+//! [![Coverage Badge]][Coverage]
 //! [![Discord Badge]][Ratatui Discord]
 //!
 //! [GitHub Repository] · [API Docs] · [Examples] · [Changelog] · [Contributing]
 //!
-//! ![Demo](https://vhs.charm.sh/vhs-nUpcmCP1igCcGoJ5iio07.gif)
-//!
-//! # Usage
+//! # Installation
 //!
 //! Add qrcode and tui-qrcode to your Cargo.toml. You can disable the default features of qrcode as
 //! we don't need the code which renders the QR code to an image.
@@ -19,7 +21,7 @@
 //! cargo add qrcode tui-qrcode --no-default-features
 //! ```
 //!
-//! # Example
+//! # Usage
 //!
 //! This example can be found in the `examples` directory of the repository.
 //!
@@ -75,31 +77,42 @@
 //! ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 //! ```
 //!
+//! # More widgets
+//!
+//! For the full suite of widgets, see [tui-widgets].
+//!
 //! [Ratatui]: https://crates.io/crates/ratatui
-//! [Crate badge]: https://img.shields.io/crates/v/tui-qrcode.svg?style=for-the-badge
-//! [tui-qrcode]: https://crates.io/crates/tui-qrcode
-//! [Docs.rs Badge]: https://img.shields.io/badge/docs.rs-tui--qrcode-blue?style=for-the-badge
-//! [API Docs]: https://docs.rs/tui-qrcode
-//! [Deps.rs Badge]: https://deps.rs/repo/github/joshka/tui-qrcode/status.svg?style=for-the-badge
-//! [Dependency Status]: https://deps.rs/repo/github/joshka/tui-qrcode
-//! [License Badge]: https://img.shields.io/crates/l/tui-qrcode?style=for-the-badge
-//! [Discord Badge]:
-//!     https://img.shields.io/discord/1070692720437383208?label=ratatui+discord&logo=discord&style=for-the-badge
+//! [Crate]: https://crates.io/crates/tui-qrcode
+//! [Docs]: https://docs.rs/tui-qrcode/
+//! [Dependency Status]: https://deps.rs/repo/github/joshka/tui-widgets
+//! [Coverage]: https://app.codecov.io/gh/joshka/tui-widgets
 //! [Ratatui Discord]: https://discord.gg/pMCEU9hNEj
+//! [Crate badge]: https://img.shields.io/crates/v/tui-qrcode.svg?logo=rust&style=flat
+//! [Docs Badge]: https://img.shields.io/docsrs/tui-qrcode?logo=rust&style=flat
+//! [Deps Badge]: https://deps.rs/repo/github/joshka/tui-widgets/status.svg?style=flat
+//! [License Badge]: https://img.shields.io/crates/l/tui-qrcode?style=flat
+//! [License]: https://github.com/joshka/tui-widgets/blob/main/LICENSE-MIT
+//! [Coverage Badge]:
+//!     https://img.shields.io/codecov/c/github/joshka/tui-widgets?logo=codecov&style=flat
+//! [Discord Badge]: https://img.shields.io/discord/1070692720437383208?logo=discord&style=flat
 //! [GitHub Repository]: https://github.com/joshka/tui-widgets
+//! [API Docs]: https://docs.rs/tui-qrcode/
 //! [Examples]: https://github.com/joshka/tui-widgets/tree/main/tui-qrcode/examples
 //! [Changelog]: https://github.com/joshka/tui-widgets/blob/main/tui-qrcode/CHANGELOG.md
 //! [Contributing]: https://github.com/joshka/tui-widgets/blob/main/CONTRIBUTING.md
+//!
+//! [Joshka]: https://github.com/joshka
+//! [tui-widgets]: https://crates.io/crates/tui-widgets
 
 use qrcode::render::unicode::Dense1x2;
 use qrcode::QrCode;
-use ratatui::buffer::Buffer;
-use ratatui::layout::{Rect, Size};
-use ratatui::style::{Style, Styled};
-use ratatui::text::Text;
-use ratatui::widgets::Widget;
+use ratatui_core::buffer::Buffer;
+use ratatui_core::layout::{Rect, Size};
+use ratatui_core::style::{Style, Styled};
+use ratatui_core::text::Text;
+use ratatui_core::widgets::Widget;
 
-/// A [Ratatui](ratatui) widget that renders a QR code.
+/// A [Ratatui] widget that renders a QR code.
 ///
 /// This widget can be used to render a QR code in a terminal. It uses the [qrcode] crate to
 /// generate the QR code.
@@ -115,8 +128,8 @@ use ratatui::widgets::Widget;
 /// ```
 ///
 /// The widget can be customized using the `quiet_zone`, `scaling`, `colors`, and `style` methods.
-/// Additionally, the widget implements the `Styled` trait, so all the methods from Ratatui's
-/// [Stylize](ratatui::style::Stylize) trait can be used.
+/// Additionally, the widget implements the [`Styled`] trait, so all the methods from Ratatui's
+/// [`ratatui_core::style::Stylize`] trait can be used.
 ///
 /// ```no_run
 /// use qrcode::QrCode;
@@ -135,6 +148,8 @@ use ratatui::widgets::Widget;
 ///     frame.render_widget(widget, frame.area());
 /// }
 /// ```
+///
+/// [Ratatui]: https://crates.io/crates/ratatui
 pub struct QrCodeWidget {
     qr_code: QrCode,
     quiet_zone: QuietZone,

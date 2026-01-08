@@ -12,3 +12,34 @@ jobs:
     uses: joshka/github-workflows/.github/workflows/rust-check.yml@main
     with:
       msrv: 1.87.0
+  readme:
+    name: Readme
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install cargo-binstall
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-binstall
+      - name: Install cargo-rdme
+        run: |
+          # normally we use https://github.com/taiki-e/install-action, but cargo-rdme 1.5.0
+          # does not publish macOS binaries, so install-action blocks it
+          cargo binstall --no-confirm cargo-rdme@1.5.0
+      - name: Check READMEs
+        run: |
+          set -euo pipefail
+          set -x
+          cargo rdme --check --manifest-path Cargo.toml
+          cargo rdme --check --manifest-path tui-bar-graph/Cargo.toml
+          cargo rdme --check --manifest-path tui-big-text/Cargo.toml
+          cargo rdme --check --manifest-path tui-cards/Cargo.toml
+          cargo rdme --check --manifest-path tui-popup/Cargo.toml
+          cargo rdme --check --manifest-path tui-qrcode/Cargo.toml
+          cargo rdme --check --manifest-path tui-scrollbar/Cargo.toml
+          cargo rdme --check --manifest-path tui-scrollview/Cargo.toml

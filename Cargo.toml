@@ -15,24 +15,24 @@ keywords = ["cli", "console", "ratatui", "terminal", "tui"]
 [workspace.dependencies]
 clap = { version = "4.5", features = ["derive"] }
 color-eyre = "0.6"
-# note that currently, the crossterm version must match the one used by ratatui. This will be fixed
-# in Ratatui 0.30
-crossterm = { version = "0.28" }
+crossterm = { version = "0.29" }
 derive_builder = "0.20"
 derive-getters = "0.5"
-derive_setters = "0.1"
-document-features = "0.2"
+derive_setters = "0.1.8"
+document-features = "0.2.11"
 futures = "0.3"
 itertools = "0.14"
 indoc = "2"
 lipsum = "0.9"
 pretty_assertions = "1.4"
 rand = "0.9"
-ratatui = { version = "0.29", default-features = false }
-ratatui-macros = "0.6"
-rstest = "0.25"
+ratatui = { version = "0.30.0", default-features = false }
+ratatui-core = { version = "0.1" }
+ratatui-macros = "0.7.0"
+ratatui-widgets = { version = "0.3" }
+rstest = "0.26"
 strum = { version = "0.27", features = ["derive"] }
-tokio = { version = "1.47" }
+tokio = { version = "1.49" }
 
 [lints.rust]
 unused = "warn"
@@ -46,7 +46,7 @@ nursery = "warn"
 [package]
 name = "tui-widgets"
 description = "A collection of useful widgets for building terminal user interfaces using Ratatui"
-version = "0.4.1"
+version = "0.7.0"
 documentation = "https://docs.rs/tui-widgets"
 
 authors.workspace = true
@@ -68,6 +68,7 @@ default = [
     "popup",
     "prompts",
     "qrcode",
+    "scrollbar",
     "scrollview",
 ]
 ## Enables the [`bar_graph`] widget
@@ -84,17 +85,20 @@ popup = ["tui-popup"]
 prompts = ["tui-prompts"]
 ## Enables the [`qrcode`] widget
 qrcode = ["tui-qrcode"]
+## Enables the [`scrollbar`] widget
+scrollbar = ["tui-scrollbar"]
 ## Enables the [`scrollview`] widget
 scrollview = ["tui-scrollview"]
 
 [dependencies]
 document-features.workspace = true
-ratatui = { workspace = true }
-tui-bar-graph = { version = "0.1.0", path = "tui-bar-graph", optional = true }
-tui-big-text = { version = "0.7.0", path = "tui-big-text", optional = true }
-tui-box-text = { version = "0.2.0", path = "tui-box-text", optional = true }
-tui-cards = { version = "0.2.0", path = "tui-cards", optional = true }
-tui-popup = { version = "0.6.0", path = "tui-popup", optional = true }
-tui-prompts = { version = "0.5.0", path = "tui-prompts", optional = true }
-tui-qrcode = { version = "0.1.0", path = "tui-qrcode", optional = true }
-tui-scrollview = { version = "0.5.1", path = "tui-scrollview", optional = true }
+ratatui-core = { workspace = true }
+tui-bar-graph = { version = "0.3.1", path = "tui-bar-graph", optional = true }
+tui-big-text = { version = "0.8.1", path = "tui-big-text", optional = true }
+tui-box-text = { version = "0.3.1", path = "tui-box-text", optional = true }
+tui-cards = { version = "0.3.1", path = "tui-cards", optional = true }
+tui-popup = { version = "0.7.2", path = "tui-popup", optional = true }
+tui-prompts = { version = "0.6.1", path = "tui-prompts", optional = true }
+tui-qrcode = { version = "0.2.2", path = "tui-qrcode", optional = true }
+tui-scrollbar = { version = "0.2.2", path = "tui-scrollbar", optional = true }
+tui-scrollview = { version = "0.6.2", path = "tui-scrollview", optional = true }
